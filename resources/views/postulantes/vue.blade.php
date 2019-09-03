@@ -44,10 +44,10 @@ data:{
 
    divprincipal:false,
 
-   modadmisions: [],
+   postulantes: [],
    errors:[],
 
-   fillmodadmision:{'id':'', 'nombre':'', 'descripcion':'','activo':''},
+   fillpostulantes:{'id':'', 'nombre':'', 'descripcion':'','activo':''},
 
    pagination: {
    'total': 0,
@@ -66,47 +66,46 @@ data:{
    thispage:'1',
 
    validated:'0',
-   formularioCrear:true,
+   formularioCrear:false,
 
   
-    tipodoc:'',
+    tipodoc:1,
     doc:'',
     nombres:'',
     apellidopat:'',
     apellidomat:'',
-    genero:'',
-    estadocivil:'',
+    genero:'M',
+    estadocivil:1,
     fechanac:'',
-    esdiscapacitado:'',
+    esdiscapacitado:0,
     discapacidad:'',
-    pais:'',
-    departamento:'',
-    provincia:'',
-    distrito:'',
+    pais:'PERÚ',
+    departamento:'ANCASH',
+    provincia:'HUARAZ',
+    distrito:'HUARAZ',
     direccion:'',
     email:'',
     telefono:'',
 
     codigo:'',
-    semestre_id:'',
-    escuela_id:'',
+    semestre_id:{{$semestresel}},
+    escuela_id:0,
     colegio:'',
-    modalidadadmision_id:'',
-    modalidadestudios:'',
+    modalidadadmision_id:0,
+    modalidadestudios:1,
     puntaje:'',
-    estado:'',
-    opcioningreso:'',
+    estado:0,
+    opcioningreso:0,
     observaciones:'',
-    pais:'',
-    provincia:'',
-    distrito:'',
-    email:'',
-    escuela_id2:'',
-    tipogestioncolegio:'',
+    escuela_id2:0,
+    tipogestioncolegio:1,
+
+    contse:{{$contse}},
+    semestreNombre:'{{$semestreNombre}}',
 
 
 
-
+    persona_id:'0',       
 
 
 },
@@ -150,17 +149,30 @@ computed:{
 },
 
 methods: {
+
+    cambiarSemestre:function(){
+
+        this.semestreNombre=$("#txtseme"+this.semestre_id).val();
+
+        this.$nextTick(function () {
+            this.buscarBtn();
+            });
+
+    },
+
+
+
    getModalidadAdmision: function (page) {
        var busca=this.buscar;
-       var url = 'modadmision?page='+page+'&busca='+busca;
+       var url = 'postulantes?page='+page+'&busca='+busca+'&semestre_id='+this.semestre_id;
 
        axios.get(url).then(response=>{
-           this.modadmisions= response.data.modadmisions.data;
+           this.postulantes= response.data.postulantes.data;
            this.pagination= response.data.pagination;
 
            
 
-           if(this.modadmisions.length==0 && this.thispage!='1'){
+           if(this.postulantes.length==0 && this.thispage!='1'){
                var a = parseInt(this.thispage) ;
                a--;
                this.thispage=a.toString();
@@ -168,11 +180,6 @@ methods: {
            }
        })
    },
-
-   
-
-
-
 
    changePage:function (page) {
        this.pagination.current_page=page;
@@ -183,6 +190,10 @@ methods: {
        this.getModalidadAdmision();
        this.thispage='1';
    },
+
+
+
+
    nuevo:function () {
        this.divNuevo=true;
 
@@ -198,19 +209,147 @@ methods: {
    cancelFormNuevo: function () {
 
 
+    this.tipodoc=1;
+    this.doc='';
+    this.nombres='';
+    this.apellidopat='';
+    this.apellidomat='';
+    this.genero='M';
+    this.estadocivil=1;
+    this.fechanac='';
+    this.esdiscapacitado=0;
+    this.discapacidad='';
+    this.pais='PERÚ';
+    this.departamento='ANCASH';
+    this.provincia='HUARAZ';
+    this.distrito='HUARAZ';
+    this.direccion='';
+    this.email='';
+    this.telefono='';
+    this.codigo='';
+    this.semestre_id={{$semestresel}};
+    this.escuela_id=0;
+    this.colegio='';
+    this.modalidadadmision_id=0;
+    this.modalidadestudios=1;
+    this.puntaje='';
+    this.estado=0;
+    this.opcioningreso=0;
+    this.observaciones='';
+    this.escuela_id2=0;
+    this.tipogestioncolegio=1;
+
+
+    this.persona_id='0';
+
+    this.formularioCrear=false;
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       $('#txtnom').focus();
+       $('#txtDNI').focus();
    },
+
+   pressNuevoDNI: function() {
+
+var url='persona/buscarDNI';
+
+   axios.post(url,{doc:this.doc,tipodoc:this.tipodoc}).then(response=>{
+
+       if(String(response.data.result)=='1'){
+
+           this.formularioCrear=true;
+
+           this.$nextTick(function () {
+                $("#txtapepat").focus();
+            });
+
+           toastr.success(response.data.msj);
+       }else if (String(response.data.result)=='2') {
+
+        this.persona_id=response.data.idPer;
+
+        this.nombres=response.data.persona.nombres;
+    this.apellidopat=response.data.persona.apellidopat;
+    this.apellidomat=response.data.persona.apellidomat;
+    this.genero=response.data.persona.genero;
+    this.estadocivil=response.data.persona.estadocivil;
+    this.fechanac=response.data.persona.fechanac;
+    this.esdiscapacitado=response.data.persona.esdiscapacitado;
+    this.discapacidad=response.data.persona.discapacidad;
+    this.pais=response.data.persona.pais;
+    this.departamento=response.data.persona.departamento;
+    this.provincia=response.data.persona.provincia;
+    this.distrito=response.data.persona.distrito;
+    this.direccion=response.data.persona.direccion;
+    this.email=response.data.persona.email;
+    this.telefono=response.data.persona.telefono;
+
+
+        this.formularioCrear=true;
+
+        this.$nextTick(function () {
+                $("#txtapepat").focus();
+            });
+
+        }else{
+           $('#'+response.data.selector).focus();
+           $('#'+response.data.selector).css( "border", "1px solid red" );
+           toastr.error(response.data.msj);
+       }
+   }).catch(error=>{
+       //this.errors=error.response.data
+   })
+
+},
+
+
+
+
+/*
+    this.tipodoc=1;
+    this.doc='';
+    this.nombres='';
+    this.apellidopat='';
+    this.apellidomat='';
+    this.genero='M';
+    this.estadocivil=1;
+    this.fechanac='';
+    this.esdiscapacitado=0;
+    this.discapacidad='';
+    this.pais='PERÚ';
+    this.departamento='ANCASH';
+    this.provincia='HUARAZ';
+    this.distrito='HUARAZ';
+    this.direccion='';
+    this.email='';
+    this.telefono='';
+    this.codigo='';
+    this.semestre_id={{$semestresel}};
+    this.escuela_id=0;
+    this.colegio='';
+    this.modalidadadmision_id=0;
+    this.modalidadestudios=1;
+    this.puntaje='';
+    this.estado=0;
+    this.opcioningreso=0;
+    this.observaciones='';
+    this.escuela_id2=0;
+    this.tipogestioncolegio=1;
+    persona_id
+
+*/
+
+
    create:function () {
-       var url='modadmision';
+       var url='postulantes';
        $("#btnGuardar").attr('disabled', true);
        $("#btnCancel").attr('disabled', true);
        $("#btnClose").attr('disabled', true);
        this.divloaderNuevo=true;
+
        $(".form-control").css("border","1px solid #d2d6de");
-       axios.post(url,{nombre:this.nombre, descripcion:this.descripcion, activo:this.activo}).then(response=>{
+
+       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, codigo:this.codigo, semestre_id:this.semestre_id, escuela_id:this.escuela_id, colegio:this.colegio, modalidadadmision_id:this.modalidadadmision_id, modalidadestudios:this.modalidadestudios, puntaje:this.puntaje, estado:this.estado, opcioningreso:this.opcioningreso, observaciones:this.observaciones, escuela_id2:this.escuela_id2, tipogestioncolegio:this.tipogestioncolegio, persona_id:this.persona_id }).then(response=>{
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -233,7 +372,11 @@ methods: {
            //this.errors=error.response.data
        })
    },
-   borrar:function (modadmision) {
+
+
+
+
+   borrar:function (postulantes) {
 
 
     
@@ -249,7 +392,7 @@ methods: {
 
             if (result.value) {
 
-                var url = 'modadmision/'+modadmision.id;
+                var url = 'postulantes/'+postulantes.id;
                 axios.delete(url).then(response=>{//eliminamos
 
                 if(response.data.result=='1'){
@@ -269,31 +412,31 @@ methods: {
 
 
 
-   edit:function (modAdmision) {
+   edit:function (postulantes) {
 
        /*
-               fillmodadmision:{'id':'', 'codigo':'', 'descripcion':'','codnum':'','eqcodcentral':'','jurisprudencia':'','visualiza':'','activo':''},
+               fillpostulantes:{'id':'', 'codigo':'', 'descripcion':'','codnum':'','eqcodcentral':'','jurisprudencia':'','visualiza':'','activo':''},
 
                */
 
-       this.fillmodadmision.id=modAdmision.id;
-       this.fillmodadmision.nombre=modAdmision.nombre;
-       this.fillmodadmision.descripcion=modAdmision.descripcion;
-       this.fillmodadmision.activo=modAdmision.activo;
+       this.fillpostulantes.id=postulantes.id;
+       this.fillpostulantes.nombre=postulantes.nombre;
+       this.fillpostulantes.descripcion=postulantes.descripcion;
+       this.fillpostulantes.activo=postulantes.activo;
 
 
-       $("#boxTitulo").text('Modalidad de Admisión: '+modAdmision.nombre);
+       $("#boxTitulo").text('Modalidad de Admisión: '+postulantes.nombre);
        $("#modalEditar").modal('show');
 
        $("#txtnomE").focus();
    },
    update:function (id) {
-       var url="modadmision/"+id;
+       var url="postulantes/"+id;
        $("#btnSaveE").attr('disabled', true);
        $("#btnCancelE").attr('disabled', true);
        this.divloaderEdit=true;
 
-       axios.put(url, this.fillmodadmision).then(response=>{
+       axios.put(url, this.fillpostulantes).then(response=>{
 
            $("#btnSaveE").removeAttr("disabled");
            $("#btnCancelE").removeAttr("disabled");
@@ -301,7 +444,7 @@ methods: {
            
            if(response.data.result=='1'){   
            this.getModalidadAdmision(this.thispage);
-           this.fillmodadmision={'id':'', 'nombre':'', 'descripcion':'','activo':''};
+           this.fillpostulantes={'id':'', 'nombre':'', 'descripcion':'','activo':''};
            this.errors=[];
            $("#modalEditar").modal('hide');
            toastr.success(response.data.msj);
@@ -315,7 +458,7 @@ methods: {
            this.errors=error.response.data
        })
    },
-   baja:function (modAdmision) {
+   baja:function (postulantes) {
 
 
     swal.fire({
@@ -330,7 +473,7 @@ methods: {
 
             if (result.value) {
 
-                var url = 'modadmision/altabaja/'+modAdmision.id+'/0';
+                var url = 'postulantes/altabaja/'+postulantes.id+'/0';
                        axios.get(url).then(response=>{//eliminamos
 
                        if(response.data.result=='1'){
@@ -347,7 +490,7 @@ methods: {
                }).catch(swal.noop);  
 
    },
-   alta:function (modAdmision) {
+   alta:function (postulantes) {
 
     swal.fire({
              title: '¿Estás seguro?',
@@ -361,7 +504,7 @@ methods: {
 
             if (result.value) {
 
-                var url = 'modadmision/altabaja/'+modAdmision.id+'/1';
+                var url = 'postulantes/altabaja/'+postulantes.id+'/1';
                        axios.get(url).then(response=>{//eliminamos
 
                        if(response.data.result=='1'){

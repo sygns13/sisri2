@@ -131,6 +131,60 @@ class PersonaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function buscarDNI(Request $request)
+     {
+        $doc=$request->doc;
+        $tipodoc=$request->tipodoc;
+
+        $result='1';
+        $msj='Complete el Formulario';
+        $selector='';
+        $idPer="0";
+        $persona="";
+
+        $input1  = array('doc' => $doc);
+        $reglas1 = array('doc' => 'required');
+
+        $input2  = array('tipodoc' => $tipodoc);
+        $reglas2 = array('tipodoc' => 'required');
+
+        $validator1 = Validator::make($input1, $reglas1);
+        $validator2 = Validator::make($input2, $reglas2);
+
+        if ($validator1->fails())
+        {
+            $result='0';
+            $msj='Complete un Documento de Identidad Válido (Mínimo 08 caracteres)';
+            $selector='txtDNI';
+
+        }elseif ($validator2->fails())
+        {
+            $result='0';
+            $msj='Seleccione un Tipo de Documento de Identidad Válido';
+            $selector='cbutipodoc';
+
+        }
+        else{
+
+            $personaBuscada=Persona::where('tipodoc',$tipodoc)->where('doc',$doc)->where('borrado','0')->get();
+            
+            foreach ($personaBuscada as $key => $dato) {
+                $idPer=$dato->id;
+                $result='2';
+            }
+
+            $persona=Persona::find($idPer);
+        }
+
+
+
+        return response()->json(["result"=>$result,'msj'=>$msj,'selector'=>$selector,'idPer'=>$idPer,'persona'=>$persona]);
+
+     }
+
+
+
     public function create()
     {
         //

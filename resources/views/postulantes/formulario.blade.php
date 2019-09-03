@@ -25,7 +25,7 @@
           <input type="text" class="form-control" id="txtDNI" name="txtDNI" placeholder="N° de Doc" maxlength="8"
             autofocus v-model="doc" @keyup.enter="pressNuevoDNI()" required
             @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" :disabled="validated == 1"
-            onkeypress="return soloNumeros(event);">
+           >
         </div>
         <div class="col-sm-6">
           <a href="#" class="btn btn-success btn-sm" v-on:click.prevent="pressNuevoDNI()"><span
@@ -79,8 +79,8 @@
             <label for="cbugenero" class="col-sm-2 control-label">Género:*</label>
             <div class="col-sm-2">
               <select class="form-control" id="cbugenero" name="cbugenero" v-model="genero">
-                <option value="1">Masculino</option>
-                <option value="2">Femenino</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
               </select>
             </div>
 
@@ -115,10 +115,10 @@
                 </div>
 
                 <template v-if="esdiscapacitado=='1'">
-                <label for="txtapemat" class="col-sm-2 control-label">Discapacidad que Padece:*</label>
+                <label for="txtdiscapacidad" class="col-sm-2 control-label">Discapacidad que Padece:*</label>
           <div class="col-sm-6">
-              <input type="text" class="form-control" id="txtapemat" name="txtapemat" placeholder="Discapacidad"
-                maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="apellidomat">
+              <input type="text" class="form-control" id="txtdiscapacidad" name="txtdiscapacidad" placeholder="Discapacidad"
+                maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="discapacidad">
             </div>
           </template>
             </div>
@@ -228,26 +228,7 @@
       </center>
 
 
-      <div class="col-md-12" style="padding-top: 15px;">
-          <div class="form-group">
 
-
-              <label for="cbusemestre" class="col-sm-2 control-label">Semestre de Postulación:*</label>
-              <div class="col-sm-3">
-                  <select class="form-control" id="cbusemestre" name="cbusemestre" v-model="semestre_id">
-                    @foreach ($semestres as $dato)
-                    @if($dato->estado=="1")
-                    <option value="{{$dato->id}}" selected>{{$dato->nombre}}</option>                        
-                    @else
-                    <option value="{{$dato->id}}">{{$dato->nombre}}</option>    
-                    
-                    @endif
-                    @endforeach
-                  </select>
-                </div>
-
-            </div>
-          </div>
 
       <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
@@ -267,6 +248,7 @@
                   <label for="cbucarrera1" class="col-sm-2 control-label">Carrera Primera Opción:*</label>
                   <div class="col-sm-10">
                       <select class="form-control" id="cbucarrera1" name="cbucarrera1" v-model="escuela_id">
+                          <option value="0" disabled>Seleccione un Programa Profesional...</option>
                         @foreach ($escuelas as $dato)
                         <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
                         @endforeach                   
@@ -299,6 +281,7 @@
                           <label for="cbumodalidadadmision" class="col-sm-2 control-label">Modalidad de Admisión:*</label>
                           <div class="col-sm-4">
                               <select class="form-control" id="cbumodalidadadmision" name="cbumodalidadadmision" v-model="modalidadadmision_id">
+                                  <option value="0" disabled>Seleccione una Modalidad de Admisión...</option>
                                 @foreach ($modalidadAdmision as $dato)
                                 <option value="{{$dato->id}}">{{$dato->nombre}}</option>                        
                                 @endforeach
@@ -378,9 +361,9 @@
         class="fa fa-floppy-o"></span> Guardar</button>
 
     <button v-if="formularioCrear" type="reset" class="btn btn-warning" id="btnCancel"
-      @click="cancelFormUsuario()"><span class="fa fa-rotate-left"></span> Cancelar</button>
+      @click="cancelFormNuevo()"><span class="fa fa-rotate-left"></span> Cancelar</button>
 
-    <button type="button" class="btn btn-danger" id="btnClose" @click.prevent="cerrarFormUsuario()"><span
+    <button type="button" class="btn btn-danger" id="btnClose" @click.prevent="cerrarFormNuevo()"><span
         class="fa fa-power-off"></span> Cerrar</button>
 
     <div class="sk-circle" v-show="divloaderNuevo">

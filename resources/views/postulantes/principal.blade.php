@@ -7,7 +7,42 @@
       
       <div class="box-body" style="border: 1px solid #3c8dbc;">
           <div class="form-group form-primary">
+
+
+            <template v-if="contse!='0'">
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
+
+            <label for="cbusemestre" class="col-sm-2 control-label">Semestre:*</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="cbusemestre" name="cbusemestre" v-model="semestre_id" @change="cambiarSemestre">
+                          <option value="0" disabled>Seleccione un Semestre...</option>
+                          @foreach ($semestres as $dato)
+                          @if($dato->estado=="1")
+                          <option value="{{$dato->id}}" selected>{{$dato->nombre}}</option>                        
+                          @else
+                          <option value="{{$dato->id}}">{{$dato->nombre}}</option>    
+                          @endif
+                          @endforeach
+                        </select>
+                      </div>
+                      @foreach ($semestres as $dato)
+                      <input type="hidden" id="txtseme{{$dato->id}}" value="{{$dato->nombre}}">
+                      @endforeach
+            </template>
+
+            <template v-if="contse=='0'">
+              <h3 style="color:red;">No cuenta con semestres configurados en el sistema, primero configure uno para que pueda ingresar registros</h3>
+                <a class="btn btn-danger" id="btnLink" href="{{URL::to('semestres')}}"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Configurar un Semestre Académico</a>
+              </template>
+
+     
+      
+      
+                    
+      
+             
+
+
           </div>     
           </div>
       
@@ -20,13 +55,15 @@
   </div>
   @include('postulantes.formulario')  
 </div>
+
+
+
       
       
       
-      
-      <div class="box box-primary" style="border: 1px solid #3c8dbc;">
+      <div class="box box-primary" style="border: 1px solid #3c8dbc;" v-if="semestre_id!='0'">
         <div class="box-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-          <h3 class="box-title">Listado de Postulantes</h3>
+        <h3 class="box-title">Listado de Postulantes del Semestre: @{{semestreNombre}}</h3>
       
           <div class="box-tools">
             <div class="input-group input-group-sm" style="width: 300px;">
@@ -44,36 +81,32 @@
         <div class="box-body table-responsive">
           <table class="table table-hover table-bordered table-dark table-condensed table-striped" >
             <tbody><tr>
-              <th style="border:1px solid #ddd;padding: 5px; width: 5%;">#</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 30%;">Apellidos y Nombres</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 30%;">DNI</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 40%;">Carrera 1° Opción</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 10%;">Carrera 2° Opción</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 10%;">Modalidad de Admisión</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 10%;">Estado</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 10%;">Puntaje Obtenido</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 10%;">Carrera Ingreso</th>
-              <th style="border:1px solid #ddd;padding: 5px; width: 15%;">Gestión</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 3%;">#</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 14%;">Apellidos y Nombres</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 7%;">DNI</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 14%;">Carrera 1° Opción</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 13%;">Carrera 2° Opción</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 13%;">Modalidad de Admisión</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Estado</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 7%;">Puntaje Obtenido</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 13%;">Carrera Ingreso</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Gestión</th>
             </tr>
-            <tr v-for="modadmision, key in modadmisions">
-              <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">@{{key+pagination.from}}</td>
-              <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">@{{ modadmision.nombre }}</td>
-              <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">@{{ modadmision.descripcion }}</td>
-              <td style="border:1px solid #ddd;font-size: 13px; padding: 5px; vertical-align: middle;">
-                  <center>
-               <span class="label label-success" v-if="modadmision.activo=='1'">Activo</span>
-               <span class="label label-warning" v-if="modadmision.activo=='0'">Inactivo</span>
-              </center>
-             </td>
-             <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">
-      <center>
-               <a href="#" v-if="modadmision.activo=='1'" class="btn bg-navy btn-sm" v-on:click.prevent="baja(modadmision)" data-placement="top" data-toggle="tooltip" title="Desactivar Modalidad de Admisión"><i class="fa fa-arrow-circle-down"></i></a>
-      
-               <a href="#" v-if="modadmision.activo=='0'" class="btn btn-success btn-sm" v-on:click.prevent="alta(modadmision)" data-placement="top" data-toggle="tooltip" title="Activar Modalidad de Admisión"><i class="fa fa-check-circle"></i></a>
-      
-      
-               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(modadmision)" data-placement="top" data-toggle="tooltip" title="Editar Modalidad de Admisión"><i class="fa fa-edit"></i></a>
-               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(modadmision)" data-placement="top" data-toggle="tooltip" title="Borrar Modalidad de Admisión"><i class="fa fa-trash"></i></a>
+            <tr v-for="postulante, key in postulantes">
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{key+pagination.from}}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.nombres }} @{{ postulante.apellidopat }} @{{ postulante.apellidomat }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.doc }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.escuela1 }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.escuela2 }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.modalidadadmision }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;" v-if="postulante.estado=='1'">Ingresó</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;" v-if="postulante.estado=='0'">Mo Ingresó</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.puntaje }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.escuelaing }}</td>
+             <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
+      <center>      
+               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(postulante)" data-placement="top" data-toggle="tooltip" title="Editar Modalidad de Admisión"><i class="fa fa-edit"></i></a>
+               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(postulante)" data-placement="top" data-toggle="tooltip" title="Borrar Modalidad de Admisión"><i class="fa fa-trash"></i></a>
       </center>
              </td>
            </tr>
