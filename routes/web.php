@@ -60,11 +60,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('facultad/altabaja/{id}/{var}','FacultadController@altabaja');
     Route::get('escuela/altabaja/{id}/{var}','EscuelaController@altabaja');
     Route::get('modadmision/altabaja/{id}/{var}','ModalidadadmisionController@altabaja');
-    Route::get('postulantes/altabaja/{id}/{var}','PostulanteController@altabaja');
+    
 
 
 
     Route::post('persona/buscarDNI','PersonaController@buscarDNI');
+    Route::get('postulantes/imprimirExcel/{var1}','PostulanteController@imprimirExcel');
 
 
     

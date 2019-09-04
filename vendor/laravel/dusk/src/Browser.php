@@ -5,6 +5,7 @@ namespace Laravel\Dusk;
 use Closure;
 use BadMethodCallException;
 use Illuminate\Support\Str;
+use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverPoint;
 use Illuminate\Support\Traits\Macroable;
 use Facebook\WebDriver\WebDriverDimension;
@@ -247,6 +248,22 @@ class Browser
     }
 
     /**
+     * Make the browser window as large as the content.
+     *
+     * @return $this
+     */
+    public function fitContent()
+    {
+        $body = $this->driver->findElement(WebDriverBy::tagName('body'));
+
+        if (! empty($body)) {
+            $this->resize($body->getSize()->getWidth(), $body->getSize()->getHeight());
+        }
+
+        return $this;
+    }
+
+    /**
      * Move the browser window.
      *
      * @param  int  $x
@@ -270,9 +287,15 @@ class Browser
      */
     public function screenshot($name)
     {
-        $this->driver->takeScreenshot(
-            sprintf('%s/%s.png', rtrim(static::$storeScreenshotsAt, '/'), $name)
-        );
+        $filePath = sprintf('%s/%s.png', rtrim(static::$storeScreenshotsAt, '/'), $name);
+
+        $directoryPath = dirname($filePath);
+
+        if (! is_dir($directoryPath)) {
+            mkdir($directoryPath, 0777, true);
+        }
+
+        $this->driver->takeScreenshot($filePath);
 
         return $this;
     }

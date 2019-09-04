@@ -2461,7 +2461,7 @@ CREATE TABLE `escuelas` (
   PRIMARY KEY (`id`),
   KEY `fk_escuelas_facultads1_idx` (`facultad_id`),
   CONSTRAINT `fk_escuelas_facultads1` FOREIGN KEY (`facultad_id`) REFERENCES `facultads` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `escuelas`
@@ -2470,7 +2470,9 @@ CREATE TABLE `escuelas` (
 /*!40000 ALTER TABLE `escuelas` DISABLE KEYS */;
 INSERT INTO `escuelas` (`id`,`nombre`,`activo`,`borrado`,`created_at`,`updated_at`,`facultad_id`) VALUES 
  (1,'Ingeniería de Sistemas e Informática',1,0,'2019-08-24 18:56:24','2019-08-24 18:56:42',1),
- (2,'asdasd',1,1,'2019-08-24 18:56:48','2019-08-24 18:57:57',1);
+ (2,'asdasd',1,1,'2019-08-24 18:56:48','2019-08-24 18:57:57',1),
+ (3,'Estadística e Informática',1,0,'2019-09-03 21:39:12','2019-09-03 21:39:12',1),
+ (4,'Matemática',1,0,'2019-09-03 21:39:20','2019-09-03 21:39:20',1);
 /*!40000 ALTER TABLE `escuelas` ENABLE KEYS */;
 
 
@@ -2855,7 +2857,7 @@ CREATE TABLE `personas` (
   `email` varchar(500) DEFAULT NULL,
   `telefono` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `personas`
@@ -2863,7 +2865,12 @@ CREATE TABLE `personas` (
 
 /*!40000 ALTER TABLE `personas` DISABLE KEYS */;
 INSERT INTO `personas` (`id`,`tipodoc`,`doc`,`nombres`,`apellidopat`,`apellidomat`,`genero`,`estadocivil`,`fechanac`,`esdiscapacitado`,`discapacidad`,`pais`,`departamento`,`provincia`,`distrito`,`direccion`,`activo`,`borrado`,`created_at`,`updated_at`,`email`,`telefono`) VALUES 
- (1,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,NULL,'Perú','Ancash','Huaraz','Huaraz','Hz',1,0,NULL,NULL,'cristian_7_70@hotmail.com','423544');
+ (1,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,NULL,'Perú','Ancash','Huaraz','Huaraz','Hz',1,0,NULL,NULL,'cristian_7_70@hotmail.com','423544'),
+ (2,1,'14725836','Marco','Quispe','Quiroga','M','1','1991-11-13',0,NULL,'PERÚ','ANCASH','HUARAZP','HUARAZD','Av. Luzuriaga 234',1,0,'2019-09-03 21:25:41','2019-09-03 21:30:17','asdsad@mail.com','423544'),
+ (3,1,'78945613','Juana','Loli','Telma','F','2','1980-12-13',1,'Ceguera Parcial','PERÚ','ANCASH','HUARAZ','HUARAZ','Psje. Los Villos 234',1,0,'2019-09-03 21:41:35','2019-09-03 22:52:49','juanita@mail.com','426598'),
+ (4,1,'25836985','dsasdas asd','asdasd','Urrutia','M','1','2019-09-18',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asdasd',1,0,'2019-09-03 21:45:08','2019-09-03 21:45:08','asdasd@asdas.com','13123'),
+ (5,1,'25896325','dddd','dddddd','Benjas','M','1','2019-09-04',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','dddd',1,0,'2019-09-03 21:48:02','2019-09-03 21:48:02','ddd@ddd.ccc','31234123'),
+ (6,1,'85263258','dsadas','adasdasd','dsadasd','M','1','2019-09-11',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asdasdsad',1,0,'2019-09-03 22:21:15','2019-09-03 22:21:15','asdasdasd@mail.com','423544');
 /*!40000 ALTER TABLE `personas` ENABLE KEYS */;
 
 
@@ -2899,7 +2906,6 @@ CREATE TABLE `postulantes` (
   `email` varchar(500) DEFAULT NULL,
   `escuela_id2` int(11) DEFAULT NULL,
   `tipogestioncolegio` tinyint(4) DEFAULT NULL,
-  `escuela_ingreso` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_postulantes_semestres1_idx` (`semestre_id`),
   KEY `fk_postulantes_escuelas1_idx` (`escuela_id`),
@@ -2909,13 +2915,18 @@ CREATE TABLE `postulantes` (
   CONSTRAINT `fk_postulantes_modalidadadmisions1` FOREIGN KEY (`modalidadadmision_id`) REFERENCES `modalidadadmisions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_postulantes_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_postulantes_semestres1` FOREIGN KEY (`semestre_id`) REFERENCES `semestres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `postulantes`
 --
 
 /*!40000 ALTER TABLE `postulantes` DISABLE KEYS */;
+INSERT INTO `postulantes` (`id`,`codigo`,`semestre_id`,`escuela_id`,`colegio`,`modalidadadmision_id`,`modalidadestudios`,`puntaje`,`estado`,`opcioningreso`,`persona_id`,`observaciones`,`activo`,`borrado`,`created_at`,`updated_at`,`tipo`,`grado`,`nombreGrado`,`pais`,`provincia`,`distrito`,`universidadCulminoPregrado`,`email`,`escuela_id2`,`tipogestioncolegio`) VALUES 
+ (1,'AR71',1,1,'SANTA ROSA DE VITERBO',1,'1',105,0,0,2,'detalle postulante',1,0,'2019-09-03 21:30:17','2019-09-03 21:30:17',1,NULL,NULL,NULL,NULL,NULL,NULL,'asdsad@mail.com',0,1),
+ (2,'AR72',1,3,'LA INMACULADA',1,'1',180,1,4,3,'INGRESÓ A LA SEGUNDA OPCION',1,0,'2019-09-03 21:41:35','2019-09-03 22:52:49',1,NULL,NULL,NULL,NULL,NULL,NULL,'juanita@mail.com',4,2),
+ (3,'asdsa',2,4,'daasdasdsad',3,'2',250,0,0,4,'dasdasd',1,0,'2019-09-03 21:45:08','2019-09-03 21:45:08',1,NULL,NULL,NULL,NULL,NULL,NULL,'asdasd@asdas.com',0,1),
+ (5,'312dsad',1,1,'SANTA ROSA DE VITERBO',1,'2',150,0,0,6,'asdsadsad',1,0,'2019-09-03 22:21:15','2019-09-03 22:21:15',1,NULL,NULL,NULL,NULL,NULL,NULL,'asdasdasd@mail.com',0,1);
 /*!40000 ALTER TABLE `postulantes` ENABLE KEYS */;
 
 

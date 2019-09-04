@@ -12,6 +12,8 @@
             <template v-if="contse!='0'">
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
 
+            <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Plantilla</button>
+
             <label for="cbusemestre" class="col-sm-2 control-label">Semestre:*</label>
                     <div class="col-sm-3">
                         <select class="form-control" id="cbusemestre" name="cbusemestre" v-model="semestre_id" @change="cambiarSemestre">
@@ -57,6 +59,19 @@
 </div>
 
 
+<div class="box box-warning" v-if="divEdit">
+  <div class="box-header with-border" style="border: 1px solid #f39c12; background-color: #f39c12; color: white;">
+    <h3 class="box-title" id="tituloAgregar">Editar Postulante: @{{ fillpostulantes.nombres }} @{{ fillpostulantes.apellidopat }} @{{ fillpostulantes.apellidomat }}
+
+
+    </h3>
+  </div>
+
+  @include('postulantes.editar')  
+
+</div>
+
+
 
       
       
@@ -94,7 +109,7 @@
             </tr>
             <tr v-for="postulante, key in postulantes">
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{key+pagination.from}}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.nombres }} @{{ postulante.apellidopat }} @{{ postulante.apellidomat }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ postulante.apellidopat }} @{{ postulante.apellidomat }}, @{{ postulante.nombres }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.doc }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.escuela1 }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.escuela2 }}</td>

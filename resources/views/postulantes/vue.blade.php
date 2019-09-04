@@ -47,7 +47,7 @@ data:{
    postulantes: [],
    errors:[],
 
-   fillpostulantes:{'id':'', 'nombre':'', 'descripcion':'','activo':''},
+   fillpostulantes:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':''},
 
    pagination: {
    'total': 0,
@@ -60,6 +60,7 @@ data:{
            offset: 9,
    buscar:'',
    divNuevo:false,
+   divEdit:false,
    divloaderNuevo:false,
    divloaderEdit:false,
 
@@ -110,7 +111,7 @@ data:{
 
 },
 created:function () {
-   this.getModalidadAdmision(this.thispage);
+   this.getPostulante(this.thispage);
 
 },
 mounted: function () {
@@ -162,7 +163,7 @@ methods: {
 
 
 
-   getModalidadAdmision: function (page) {
+   getPostulante: function (page) {
        var busca=this.buscar;
        var url = 'postulantes?page='+page+'&busca='+busca+'&semestre_id='+this.semestre_id;
 
@@ -183,11 +184,11 @@ methods: {
 
    changePage:function (page) {
        this.pagination.current_page=page;
-       this.getModalidadAdmision(page);
+       this.getPostulante(page);
        this.thispage=page;
    },
    buscarBtn: function () {
-       this.getModalidadAdmision();
+       this.getPostulante();
        this.thispage='1';
    },
 
@@ -195,6 +196,8 @@ methods: {
 
 
    nuevo:function () {
+
+       this.divEdit=false;
        this.divNuevo=true;
 
        this.$nextTick(function () {
@@ -227,7 +230,6 @@ methods: {
     this.email='';
     this.telefono='';
     this.codigo='';
-    this.semestre_id={{$semestresel}};
     this.escuela_id=0;
     this.colegio='';
     this.modalidadadmision_id=0;
@@ -304,42 +306,6 @@ var url='persona/buscarDNI';
 
 
 
-
-/*
-    this.tipodoc=1;
-    this.doc='';
-    this.nombres='';
-    this.apellidopat='';
-    this.apellidomat='';
-    this.genero='M';
-    this.estadocivil=1;
-    this.fechanac='';
-    this.esdiscapacitado=0;
-    this.discapacidad='';
-    this.pais='PERÚ';
-    this.departamento='ANCASH';
-    this.provincia='HUARAZ';
-    this.distrito='HUARAZ';
-    this.direccion='';
-    this.email='';
-    this.telefono='';
-    this.codigo='';
-    this.semestre_id={{$semestresel}};
-    this.escuela_id=0;
-    this.colegio='';
-    this.modalidadadmision_id=0;
-    this.modalidadestudios=1;
-    this.puntaje='';
-    this.estado=0;
-    this.opcioningreso=0;
-    this.observaciones='';
-    this.escuela_id2=0;
-    this.tipogestioncolegio=1;
-    persona_id
-
-*/
-
-
    create:function () {
        var url='postulantes';
        $("#btnGuardar").attr('disabled', true);
@@ -359,7 +325,7 @@ var url='persona/buscarDNI';
 
    
            if(String(response.data.result)=='1'){
-               this.getModalidadAdmision(this.thispage);
+               this.getPostulante(this.thispage);
                this.errors=[];
                this.cerrarFormNuevo();
                toastr.success(response.data.msj);
@@ -376,13 +342,13 @@ var url='persona/buscarDNI';
 
 
 
-   borrar:function (postulantes) {
+   borrar:function (postulante) {
 
 
     
         swal.fire({
              title: '¿Estás seguro?',
-             text: "¿Desea eliminar la Modalidad de Admisión Seleccionada? -- Nota: este proceso no se podrá revertir.",
+             text: "¿Desea eliminar el Postulante Seleccionado? -- Nota: este proceso no se podrá revertir.",
              type: 'info',
              showCancelButton: true,
              confirmButtonColor: '#3085d6',
@@ -392,11 +358,11 @@ var url='persona/buscarDNI';
 
             if (result.value) {
 
-                var url = 'postulantes/'+postulantes.id;
+                var url = 'postulantes/'+postulante.id;
                 axios.delete(url).then(response=>{//eliminamos
 
                 if(response.data.result=='1'){
-                    app.getModalidadAdmision(app.thispage);//listamos
+                    app.getPostulante(app.thispage);//listamos
                     toastr.success(response.data.msj);//mostramos mensaje
                 }else{
                     // $('#'+response.data.selector).focus();
@@ -412,43 +378,78 @@ var url='persona/buscarDNI';
 
 
 
-   edit:function (postulantes) {
+   edit:function (postulante) {
 
-       /*
-               fillpostulantes:{'id':'', 'codigo':'', 'descripcion':'','codnum':'','eqcodcentral':'','jurisprudencia':'','visualiza':'','activo':''},
-
-               */
-
-       this.fillpostulantes.id=postulantes.id;
-       this.fillpostulantes.nombre=postulantes.nombre;
-       this.fillpostulantes.descripcion=postulantes.descripcion;
-       this.fillpostulantes.activo=postulantes.activo;
+       this.cerrarFormNuevo();
 
 
-       $("#boxTitulo").text('Modalidad de Admisión: '+postulantes.nombre);
-       $("#modalEditar").modal('show');
+       this.fillpostulantes.id=postulante.id;
+       this.fillpostulantes.tipodoc=postulante.tipodoc;
+       this.fillpostulantes.doc=postulante.doc;
+       this.fillpostulantes.nombres=postulante.nombres;
+       this.fillpostulantes.apellidopat=postulante.apellidopat;
+       this.fillpostulantes.apellidomat=postulante.apellidomat;
+       this.fillpostulantes.genero=postulante.genero;
+       this.fillpostulantes.estadocivil=postulante.estadocivil;
+       this.fillpostulantes.fechanac=postulante.fechanac;
+       this.fillpostulantes.esdiscapacitado=postulante.esdiscapacitado;
+       this.fillpostulantes.discapacidad=postulante.discapacidad;
+       this.fillpostulantes.pais=postulante.pais;
+       this.fillpostulantes.departamento=postulante.departamento;
+       this.fillpostulantes.provincia=postulante.provincia;
+       this.fillpostulantes.distrito=postulante.distrito;
+       this.fillpostulantes.direccion=postulante.direccion;
+       this.fillpostulantes.email=postulante.email;
+       this.fillpostulantes.telefono=postulante.telefono;
+       this.fillpostulantes.codigo=postulante.codigo;
+       this.fillpostulantes.semestre_id=postulante.semestre_id;
+       this.fillpostulantes.escuela_id=postulante.escuela_id;
+       this.fillpostulantes.colegio=postulante.colegio;
+       this.fillpostulantes.modalidadadmision_id=postulante.modalidadadmision_id;
+       this.fillpostulantes.modalidadestudios=postulante.modalidadestudios;
+       this.fillpostulantes.puntaje=postulante.puntaje;
+       this.fillpostulantes.estado=postulante.estado;
+       this.fillpostulantes.opcioningreso=postulante.opcioningreso;
+       this.fillpostulantes.observaciones=postulante.observaciones;
+       this.fillpostulantes.escuela_id2=postulante.escuela_id2;
+       this.fillpostulantes.tipogestioncolegio=postulante.tipogestioncolegio;
+       this.fillpostulantes.persona_id=postulante.persona_id;
 
-       $("#txtnomE").focus();
+
+
+        this.divEdit=true;
+
+        this.$nextTick(function () {
+            $("#txtDNIE").focus();
+        });
+       
+
+       
    },
+
+   cerrarFormE:function(){
+        this.divEdit=false;
+   },
+
    update:function (id) {
        var url="postulantes/"+id;
        $("#btnSaveE").attr('disabled', true);
-       $("#btnCancelE").attr('disabled', true);
+       $("#btnCloseE").attr('disabled', true);
        this.divloaderEdit=true;
 
        axios.put(url, this.fillpostulantes).then(response=>{
 
            $("#btnSaveE").removeAttr("disabled");
-           $("#btnCancelE").removeAttr("disabled");
+           $("#btnCloseE").removeAttr("disabled");
            this.divloaderEdit=false;
            
            if(response.data.result=='1'){   
-           this.getModalidadAdmision(this.thispage);
-           this.fillpostulantes={'id':'', 'nombre':'', 'descripcion':'','activo':''};
+           this.getPostulante(this.thispage);
+           this.fillpostulantes={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':''};
            this.errors=[];
-           $("#modalEditar").modal('hide');
-           toastr.success(response.data.msj);
 
+           this.cerrarFormE();
+           toastr.success(response.data.msj);
            }else{
                $('#'+response.data.selector).focus();
                toastr.error(response.data.msj);
@@ -458,68 +459,11 @@ var url='persona/buscarDNI';
            this.errors=error.response.data
        })
    },
-   baja:function (postulantes) {
 
 
-    swal.fire({
-             title: '¿Estás seguro?',
-             text: "Desea desactivar esta Modalidad de Admisión",
-             type: 'info',
-             showCancelButton: true,
-             confirmButtonColor: '#3085d6',
-             cancelButtonColor: '#d33',
-             confirmButtonText: 'Si, Desactivar'
-           }).then((result) => {
-
-            if (result.value) {
-
-                var url = 'postulantes/altabaja/'+postulantes.id+'/0';
-                       axios.get(url).then(response=>{//eliminamos
-
-                       if(response.data.result=='1'){
-                           app.getModalidadAdmision(app.thispage);//listamos
-                           toastr.success(response.data.msj);//mostramos mensaje
-                       }else{
-                          // $('#'+response.data.selector).focus();
-                           toastr.error(response.data.msj);
-                       }
-                       });
-                }
-
-                   
-               }).catch(swal.noop);  
-
-   },
-   alta:function (postulantes) {
-
-    swal.fire({
-             title: '¿Estás seguro?',
-             text: "Desea activar esta Modalidad de Admisión",
-             type: 'info',
-             showCancelButton: true,
-             confirmButtonColor: '#3085d6',
-             cancelButtonColor: '#d33',
-             confirmButtonText: 'Si, Activar'
-           }).then((result) => {
-
-            if (result.value) {
-
-                var url = 'postulantes/altabaja/'+postulantes.id+'/1';
-                       axios.get(url).then(response=>{//eliminamos
-
-                       if(response.data.result=='1'){
-                           app.getModalidadAdmision(app.thispage);//listamos
-                           toastr.success(response.data.msj);//mostramos mensaje
-                       }else{
-                          // $('#'+response.data.selector).focus();
-                           toastr.error(response.data.msj);
-                       }
-                       });
-                }
-
-                   
-               }).catch(swal.noop);  
-
+   descargarPlantilla:function(){
+    //window.location="postulantes/imprimirExcel/"+buscar+"/"+fech+"/"+fec1+"/"+fec2+"/"+tipoP+"";
+    window.location="postulantes/imprimirExcel/"+3;
    },
 }
 });

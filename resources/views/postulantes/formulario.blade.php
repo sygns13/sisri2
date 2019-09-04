@@ -1,4 +1,4 @@
-<form v-on:submit.prevent="createUsuario">
+<form v-on:submit.prevent="create">
   <div class="box-body" style="font-size: 14px;">
 
     <div class="col-md-12">
@@ -22,7 +22,7 @@
         <label for="txtDNI" class="col-sm-1 control-label">Documento:*</label>
 
         <div class="col-sm-2">
-          <input type="text" class="form-control" id="txtDNI" name="txtDNI" placeholder="N° de Doc" maxlength="8"
+          <input type="text" class="form-control" id="txtDNI" name="txtDNI" placeholder="N° de Doc" maxlength="20"
             autofocus v-model="doc" @keyup.enter="pressNuevoDNI()" required
             @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" :disabled="validated == 1"
            >
@@ -184,9 +184,9 @@
           <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
   
-                  <label for="txtprov" class="col-sm-2 control-label">Teléfono:*</label>
+                  <label for="txtfono" class="col-sm-2 control-label">Teléfono:*</label>
                   <div class="col-sm-2">
-                    <input type="text" class="form-control" id="txtprov" name="txtprov" placeholder="Telef / Cell"
+                    <input type="text" class="form-control" id="txtfono" name="txtfono" placeholder="Telef / Cell"
                       maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="telefono">
                   </div>
   
@@ -201,7 +201,7 @@
 
                     <label for="txtcolegio" class="col-sm-2 control-label">Colegio de Procedencia:</label>
                     <div class="col-sm-6">
-                      <input type="text" class="form-control" id="txtcolegio" name="txtcolegio" placeholder="Av. Jr. Psje."
+                      <input type="text" class="form-control" id="txtcolegio" name="txtcolegio" placeholder="Nombre de Colegio"
                         maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="colegio">
                     </div>
 
@@ -323,13 +323,13 @@
                           </div>
 
 
-                          <div class="col-md-12" style="padding-top: 15px;">
+                          <div class="col-md-12" style="padding-top: 15px;" v-if="estado=='1'">
                               <div class="form-group">
                 
                                   <label for="cbucarreraing" class="col-sm-2 control-label">Carrera Ingreso:*</label>
                                   <div class="col-sm-10">
                                       <select class="form-control" id="cbucarreraing" name="cbucarreraing" v-model="opcioningreso">
-                                        <option value="0">No Ingresó</option>
+                                        <option value="0" disabled>Seleccione un Programa Profesional...</option>
                                         @foreach ($escuelas as $dato)
                                         <option value="{{$dato->id}}">{{$dato->nombre}}</option>                        
                                         @endforeach

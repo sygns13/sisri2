@@ -1,6 +1,39 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/dusk/compare/v5.1.0...5.0)
+## [Unreleased](https://github.com/laravel/dusk/compare/v5.5.0...5.0)
+
+
+## [v5.5.0 (2019-08-06)](https://github.com/laravel/dusk/compare/v5.4.0...v5.5.0)
+
+### Added
+- Allow saving screenshots in a subdirectory ([#662](https://github.com/laravel/dusk/pull/662))
+
+
+## [v5.4.0 (2019-07-30)](https://github.com/laravel/dusk/compare/v5.3.0...v5.4.0)
+
+### Added
+- Add assertion checks if a button is disabled or enabled ([#661](https://github.com/laravel/dusk/pull/661))
+
+### Fixed
+- Update constraints for Laravel 6.0 ([e4b4d63](https://github.com/laravel/dusk/commit/e4b4d63c179bb1f228db22852bd776db750d1ec6))
+
+
+## [v5.3.0 (2019-07-11)](https://github.com/laravel/dusk/compare/v5.2.0...v5.3.0)
+
+### Added
+- Add proxy support to the `dusk:install` command ([#659](https://github.com/laravel/dusk/pull/659))
+
+
+## [v5.2.0 (2019-06-25)](https://github.com/laravel/dusk/compare/v5.1.1...v5.2.0)
+
+### Added
+- Add option to fullsize the browser ([#655](https://github.com/laravel/dusk/pull/655))
+
+
+## [v5.1.1 (2019-06-14)](https://github.com/laravel/dusk/compare/v5.1.0...v5.1.1)
+
+### Fixed
+- Add latest version of Facebook Webdriver ([#654](https://github.com/laravel/dusk/pull/654))
 
 
 ## [v5.1.0 (2019-05-02)](https://github.com/laravel/dusk/compare/v5.0.3...v5.1.0)
