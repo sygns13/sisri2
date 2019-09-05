@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('datosfacultad/{id}','DatosfacultadController@index1');
     Route::get('modalidadadmision','ModalidadadmisionController@index1');
     Route::get('postulantespregrado','PostulanteController@index1');
+    Route::get('docentes','DocenteController@index1');
 
 
 
@@ -49,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('datosfacultad','DatosfacultadController');
     Route::resource('modadmision','ModalidadadmisionController');
     Route::resource('postulantes','PostulanteController');
+    Route::resource('docente','DocenteController');
 
 
 

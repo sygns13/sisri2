@@ -319,7 +319,7 @@ INSERT INTO `datosfacultads` (`id`,`nombre`,`descripcion`,`cantidad`,`subnombre`
  (15,NULL,'',23,'','',0,1,0,'2019-08-25 16:40:57','2019-08-25 16:40:57',14,6,1),
  (16,NULL,'',16,'','',0,1,0,'2019-08-25 16:41:03','2019-08-25 16:41:03',15,6,1),
  (17,NULL,'',17,'','',0,1,0,'2019-08-25 16:41:08','2019-08-25 16:41:08',16,6,1),
- (18,NULL,'',13,'','',0,1,0,'2019-08-25 16:41:13','2019-08-25 16:41:13',17,6,1),
+ (18,NULL,'',14,'','',0,1,0,'2019-08-25 16:41:13','2019-09-04 23:15:08',17,6,1),
  (19,NULL,'',87,'','',0,1,0,'2019-08-25 16:41:18','2019-08-25 16:41:18',18,6,1),
  (20,NULL,'',66,'','',0,1,0,'2019-08-25 16:41:38','2019-08-25 16:41:38',18,6,2);
 /*!40000 ALTER TABLE `datosfacultads` ENABLE KEYS */;
@@ -407,37 +407,6 @@ CREATE TABLE `detalleatencions` (
 
 /*!40000 ALTER TABLE `detalleatencions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `detalleatencions` ENABLE KEYS */;
-
-
---
--- Definition of table `detalledocentes`
---
-
-DROP TABLE IF EXISTS `detalledocentes`;
-CREATE TABLE `detalledocentes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `semestre_id` int(11) NOT NULL,
-  `docente_id` int(11) NOT NULL,
-  `escuela_id` int(11) NOT NULL,
-  `horaslectivas` int(11) DEFAULT NULL,
-  `horasnolectivas` int(11) DEFAULT NULL,
-  `horasinvestigacion` int(11) DEFAULT NULL,
-  `horasdedicacion` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_detalledocentes_semestres1_idx` (`semestre_id`),
-  KEY `fk_detalledocentes_docentes1_idx` (`docente_id`),
-  KEY `fk_detalledocentes_escuelas1_idx` (`escuela_id`),
-  CONSTRAINT `fk_detalledocentes_docentes1` FOREIGN KEY (`docente_id`) REFERENCES `docentes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_detalledocentes_escuelas1` FOREIGN KEY (`escuela_id`) REFERENCES `escuelas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_detalledocentes_semestres1` FOREIGN KEY (`semestre_id`) REFERENCES `semestres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `detalledocentes`
---
-
-/*!40000 ALTER TABLE `detalledocentes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `detalledocentes` ENABLE KEYS */;
 
 
 --
@@ -2407,9 +2376,19 @@ CREATE TABLE `docentes` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `persona_id` int(11) NOT NULL,
+  `horaslectivas` int(11) DEFAULT NULL,
+  `horasnolectivas` int(11) DEFAULT NULL,
+  `horasinvestigacion` int(11) DEFAULT NULL,
+  `horasdedicacion` int(11) DEFAULT NULL,
+  `escuela_id` int(11) DEFAULT NULL,
+  `facultad_id` int(11) DEFAULT NULL,
+  `dependencia` varchar(600) DEFAULT NULL,
+  `semestres_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_docentes_personas1_idx` (`persona_id`),
-  CONSTRAINT `fk_docentes_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_docentes_semestres1_idx` (`semestres_id`),
+  CONSTRAINT `fk_docentes_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_docentes_semestres1` FOREIGN KEY (`semestres_id`) REFERENCES `semestres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2461,7 +2440,7 @@ CREATE TABLE `escuelas` (
   PRIMARY KEY (`id`),
   KEY `fk_escuelas_facultads1_idx` (`facultad_id`),
   CONSTRAINT `fk_escuelas_facultads1` FOREIGN KEY (`facultad_id`) REFERENCES `facultads` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `escuelas`
@@ -2472,7 +2451,29 @@ INSERT INTO `escuelas` (`id`,`nombre`,`activo`,`borrado`,`created_at`,`updated_a
  (1,'Ingeniería de Sistemas e Informática',1,0,'2019-08-24 18:56:24','2019-08-24 18:56:42',1),
  (2,'asdasd',1,1,'2019-08-24 18:56:48','2019-08-24 18:57:57',1),
  (3,'Estadística e Informática',1,0,'2019-09-03 21:39:12','2019-09-03 21:39:12',1),
- (4,'Matemática',1,0,'2019-09-03 21:39:20','2019-09-03 21:39:20',1);
+ (4,'Matemática',1,0,'2019-09-03 21:39:20','2019-09-03 21:39:20',1),
+ (5,'Administración',1,0,'2019-09-04 23:17:58','2019-09-04 23:17:58',6),
+ (6,'Turismo',1,0,'2019-09-04 23:19:48','2019-09-04 23:19:48',6),
+ (7,'Agronomía',1,0,'2019-09-04 23:20:16','2019-09-04 23:20:16',7),
+ (8,'Ingeniería agrícola',1,0,'2019-09-04 23:20:26','2019-09-04 23:20:26',7),
+ (9,'Ingeniería ambiental',1,0,'2019-09-04 23:20:38','2019-09-04 23:20:38',4),
+ (10,'Ingeniería sanitaria',1,0,'2019-09-04 23:20:49','2019-09-04 23:20:49',4),
+ (11,'Enfermería',1,0,'2019-09-04 23:21:01','2019-09-04 23:21:01',3),
+ (12,'Obstetricia',1,0,'2019-09-04 23:21:11','2019-09-04 23:21:11',3),
+ (13,'Ciencias de la comunicación',1,0,'2019-09-04 23:21:25','2019-09-04 23:21:25',12),
+ (14,'Lengua extranjera ingles',1,0,'2019-09-04 23:21:39','2019-09-04 23:21:39',12),
+ (15,'Matemática e informática',1,0,'2019-09-04 23:21:50','2019-09-04 23:21:50',12),
+ (16,'Arqueología',1,0,'2019-09-04 23:22:02','2019-09-04 23:22:02',12),
+ (17,'Educación primaria bilingüe intercultural',1,0,'2019-09-04 23:22:15','2019-09-04 23:22:15',12),
+ (18,'Comunicación lingüística y literatura',1,0,'2019-09-04 23:22:26','2019-09-04 23:22:26',12),
+ (19,'Derecho y ciencias políticas',1,0,'2019-09-04 23:22:40','2019-09-04 23:22:40',10),
+ (20,'Economía',1,0,'2019-09-04 23:22:56','2019-09-04 23:22:56',5),
+ (21,'Contabilidad',1,0,'2019-09-04 23:23:10','2019-09-04 23:23:10',5),
+ (22,'Ingeniería civil',1,0,'2019-09-04 23:23:24','2019-09-04 23:23:24',8),
+ (23,'Arquitectura y urbanismo',1,0,'2019-09-04 23:23:34','2019-09-04 23:23:34',8),
+ (24,'Ingeniería industrial',1,0,'2019-09-04 23:23:46','2019-09-04 23:23:46',11),
+ (25,'Ingeniería de industrias alimentarias',1,0,'2019-09-04 23:23:59','2019-09-04 23:23:59',11),
+ (26,'Ingeniería de minas',1,0,'2019-09-04 23:24:13','2019-09-04 23:24:13',9);
 /*!40000 ALTER TABLE `escuelas` ENABLE KEYS */;
 
 
@@ -2692,7 +2693,7 @@ CREATE TABLE `modalidadadmisions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `modalidadadmisions`
@@ -2700,10 +2701,17 @@ CREATE TABLE `modalidadadmisions` (
 
 /*!40000 ALTER TABLE `modalidadadmisions` DISABLE KEYS */;
 INSERT INTO `modalidadadmisions` (`id`,`nombre`,`descripcion`,`activo`,`borrado`,`created_at`,`updated_at`) VALUES 
- (1,'Ordinario','Examen Ordinario',1,0,'2019-08-25 19:07:41','2019-08-25 19:20:43'),
+ (1,'Examen Ordinario','Examen Ordinario',1,0,'2019-08-25 19:07:41','2019-09-04 23:24:53'),
  (2,'asdsa','sadasd',1,1,'2019-08-25 19:11:26','2019-08-25 19:11:29'),
- (3,'Primeros Puestos','Primeros Puestos',1,0,'2019-08-25 19:17:44','2019-09-02 21:21:22'),
- (4,'Ingreso por CPU','Centro Pre Universitario',1,0,'2019-09-02 21:21:40','2019-09-02 21:21:40');
+ (3,'Centro pre universitario','Centro pre universitario',1,0,'2019-08-25 19:17:44','2019-09-04 23:25:06'),
+ (4,'Convenios con comunidades campesinas','Convenios con comunidades campesinas',1,0,'2019-09-02 21:21:40','2019-09-04 23:25:19'),
+ (5,'Graduados y titulados','Graduados y titulados',1,0,'2019-09-04 23:25:33','2019-09-04 23:25:33'),
+ (6,'Traslado externo de universidades','Traslado externo de universidades',1,0,'2019-09-04 23:25:44','2019-09-04 23:25:44'),
+ (7,'Primer y segundo puesto','Primer y segundo puesto',1,0,'2019-09-04 23:25:54','2019-09-04 23:25:54'),
+ (8,'Deportistas destacados','Deportistas destacados',1,0,'2019-09-04 23:26:05','2019-09-04 23:26:05'),
+ (9,'Personas con discapacidad','Personas con discapacidad',1,0,'2019-09-04 23:26:15','2019-09-04 23:26:15'),
+ (10,'Víctimas de la violencia subversiva','Víctimas de la violencia subversiva',1,0,'2019-09-04 23:26:25','2019-09-04 23:26:25'),
+ (11,'Convenio entre la UNASAM y otras instituciones','Convenio entre la UNASAM y otras instituciones',1,0,'2019-09-04 23:26:51','2019-09-04 23:26:51');
 /*!40000 ALTER TABLE `modalidadadmisions` ENABLE KEYS */;
 
 
