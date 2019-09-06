@@ -66,7 +66,7 @@
 
          @if(accesoUser([1,2]))
             <li class="treeview" v-bind:class="classMenu2">
-                <a href="#"><i class='fa fa-laptop'></i> <span>Registro de Información</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="#"><i class='fa fa-laptop'></i> <span>Gestión Académica</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                         <li><a href="postulantespregrado"><i class='fa fa-gg'></i> Postulantes de Pregrado</a></li>
                         <li><a href="docentes"><i class='fa fa-gg'></i> Docentes</a></li>

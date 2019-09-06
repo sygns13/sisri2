@@ -45,7 +45,7 @@
       </div>
 
       <center>
-        <h4>Datos Personales del Postulante</h4>
+        <h4>Datos Personales del Docente</h4>
       </center>
 
       <div class="col-md-12" style="padding-top: 15px;">
@@ -195,37 +195,213 @@
             </div>
 
 
-            <div class="col-md-12" style="padding-top: 15px;">
-                <div class="form-group">
-
-
-                    <label for="txtcolegio" class="col-sm-2 control-label">Colegio de Procedencia:</label>
-                    <div class="col-sm-6">
-                      <input type="text" class="form-control" id="txtcolegio" name="txtcolegio" placeholder="Nombre de Colegio"
-                        maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="colegio">
-                    </div>
-
-                    <label for="cbutipogestion" class="col-sm-2 control-label">Tipo de Gestión:*</label>
-                    <div class="col-sm-2">
-                        <select class="form-control" id="cbutipogestion" name="cbutipogestion" v-model="tipogestioncolegio">
-                          <option value="1">Pública</option>
-                          <option value="2">Privada</option>
-                          <option value="3">Viudo (a)</option>
-                          <option value="4">Divorsiado (a)</option>
-                        </select>
-                      </div>
-
-                  </div>
-                </div>
-
-
+   
       <div class="col-md-12">
         <hr>
       </div>
 
       <center>
-        <h4>Datos de Postulación</h4>
+        <h4>Datos de Docencia</h4>
       </center>
+
+
+      <div class="col-md-12" style="padding-top: 15px;">
+        <div class="form-group">
+
+
+            <label for="cbufacultad" class="col-sm-2 control-label">Facultad:*</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="cbufacultad" name="cbufacultad" v-model="facultad_id">
+                    <option value="0" disabled>Seleccione un Programa Profesional...</option>
+                  @foreach ($facultads as $dato)
+                  <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
+                  @endforeach                   
+                </select>
+              </div>
+
+          </div>
+        </div>
+
+
+        <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
+  
+  
+              <label for="cbuescuela" class="col-sm-2 control-label">Escuela:*</label>
+              <div class="col-sm-10">
+                  <select class="form-control" id="cbuescuela" name="cbuescuela" v-model="facultad_id">
+                      <option value="0" disabled>No adscrito a una Escuela Profesional</option>
+                    @foreach ($facultads as $dato)
+                    <template v-if="facultad_id=={{$dato->facultad_id}}">
+                      <option value="{{$dato->id}}">{{$dato->nombre}}</option>  
+                    </template>   
+                    @endforeach                   
+                  </select>
+                </div>
+  
+            </div>
+          </div>
+
+        <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
+
+
+              <label for="cbucarrera1" class="col-sm-2 control-label">Carrera Primera Opción:*</label>
+              <div class="col-sm-10">
+                  <select class="form-control" id="cbucarrera1" name="cbucarrera1" v-model="escuela_id">
+                      <option value="0" disabled>Seleccione un Programa Profesional...</option>
+                    @foreach ($escuelas as $dato)
+                    <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
+                    @endforeach                   
+                  </select>
+                </div>
+
+            </div>
+          </div>
+
+          <div class="col-md-12" style="padding-top: 15px;">
+            <div class="form-group">
+
+              <label for="cbucargo" class="col-sm-2 control-label">Cargo General:*</label>
+
+              <div class="col-sm-3">
+                <select class="form-control" id="cbucargo" name="cbucargo" v-model="cargogeneral">
+                    <option value="0">Ninguno</option>                        
+                    <option value="Rector">Rector</option>                        
+                    <option value="Vicerrector Académico">Vicerrector Académico</option>                        
+                    <option value="Vicerrector de Investigación">Vicerrector de Investigación</option>                        
+                    <option value="Vicerrector Administrativo">Vicerrector Administrativo</option>                        
+                    <option value="Decano">Decano</option>                        
+                    <option value="Director de Escuela">Director de Escuela</option>                        
+                    <option value="Director de Oficina">Director de Oficina</option>                        
+                    <option value="Jefe de Oficina">Jefe de Oficina</option>                        
+                    <option value="Jefe de Departamento Académico">Jefe de Departamento Académico</option>                        
+                    <option value="Coordinador">Coordinador</option>                        
+                    <option value="Asesor">Asesor</option>                        
+                    <option value="Asistente Administrativo">Asistente Administrativo</option>                        
+                    <option value="Especialista">Especialista</option>                        
+                    <option value="Analista">Analista</option>                        
+                  </select>
+                </div>
+
+
+
+                <template v-if="cargogeneral!='0'">
+                <label for="txtdependencia" class="col-sm-2 control-label">Dependencia de Cargo:*</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="txtdependencia" name="txtdependencia" placeholder="Dependencia"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="descripcioncargo">
+                </div>
+              </template>
+
+            </div>
+          </div>
+
+
+          <div class="col-md-12" style="padding-top: 15px;" v-if="cargogeneral!='0'">
+            <div class="form-group">
+                <label for="txtdescCargo" class="col-sm-2 control-label">Descripción del Cargo:</label>
+                <div class="col-sm-10">
+            <textarea name="txtdescCargo" id="txtdescCargo" rows="4" v-model="descripcioncargo" style="width:100%;"></textarea>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+          <div class="col-md-12" style="padding-top: 15px;">
+            <div class="form-group">
+
+                <label for="cbuPersonalAcademico" class="col-sm-2 control-label">Personal Académico:*</label>
+                <div class="col-sm-4">
+                    <select class="form-control" id="cbuPersonalAcademico" name="cbuPersonalAcademico" v-model="personalacademico">
+                      <option value="Docente">Docente</option>
+                      <option value="Jefe de Práctica">Jefe de Práctica</option>
+
+                    </select>
+                  </div>
+
+                  <label for="cbuPersonalAcademico" class="col-sm-2 control-label">Máximo Grado Académico:*</label>
+                  <div class="col-sm-4">
+                    <select class="form-control" id="cbucargo" name="cbucargo" v-model="maximogrado">
+                        <option value="0">Sin grado</option>                        
+                        <option value="Primaria completa">Primaria completa</option>                        
+                        <option value="Secundaria completa">Secundaria completa</option>                        
+                        <option value="Técnico">Técnico</option>                        
+                        <option value="Bachiller">Bachiller</option>                        
+                        <option value="Maestro">Maestro</option>                        
+                        <option value="Doctor">Doctor</option>                                             
+                      </select>
+                    </div>
+
+
+              </div>
+            </div>
+
+
+            <div class="col-md-12" style="padding-top: 15px;" v-if="cargogeneral!='0'">
+              <div class="form-group">
+                  <label for="txtdescGrado" class="col-sm-3 control-label">Descripción del Máximo Grado:</label>
+                  <div class="col-sm-9">
+              <textarea name="txtdescGrado" id="txtdescGrado" rows="4" v-model="descmaximogrado" style="width:100%;"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12" style="padding-top: 15px;">
+              <div class="form-group">
+  
+                  <label for="txtunivmaxgrado" class="col-sm-3 control-label">Universidad Donde Obtuvo el Máximo Grado:*</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="txtunivmaxgrado" name="txtunivmaxgrado" placeholder="Universidad"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="universidadgrado">
+                  </div>
+  
+ 
+              </div>
+            </div>
+
+
+
+            <div class="col-md-12" style="padding-top: 15px;">
+              <div class="form-group">
+  
+                  <label for="cbuPersonalAcademico" class="col-sm-2 control-label">Lugar del Máximo Grado:*</label>
+                  <div class="col-sm-4">
+                      <select class="form-control" id="cbuPersonalAcademico" name="cbuPersonalAcademico" v-model="personalacademico">
+                        <option value="Docente">Docente</option>
+                        <option value="Jefe de Práctica">Jefe de Práctica</option>
+  
+                      </select>
+                    </div>
+  
+                    <label for="cbuPersonalAcademico" class="col-sm-2 control-label">Máximo Grado Académico:*</label>
+                    <div class="col-sm-4">
+                      <select class="form-control" id="cbucargo" name="cbucargo" v-model="maximogrado">
+                          <option value="0">Sin grado</option>                        
+                          <option value="Primaria completa">Primaria completa</option>                        
+                          <option value="Secundaria completa">Secundaria completa</option>                        
+                          <option value="Técnico">Técnico</option>                        
+                          <option value="Bachiller">Bachiller</option>                        
+                          <option value="Maestro">Maestro</option>                        
+                          <option value="Doctor">Doctor</option>                                             
+                        </select>
+                      </div>
+  
+  
+                </div>
+              </div>
+  
+
+
+
+
+
+
+
+      
 
 
 

@@ -2383,12 +2383,12 @@ CREATE TABLE `docentes` (
   `escuela_id` int(11) DEFAULT NULL,
   `facultad_id` int(11) DEFAULT NULL,
   `dependencia` varchar(600) DEFAULT NULL,
-  `semestres_id` int(11) NOT NULL,
+  `semestre_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_docentes_personas1_idx` (`persona_id`),
-  KEY `fk_docentes_semestres1_idx` (`semestres_id`),
+  KEY `fk_docentes_semestres1_idx` (`semestre_id`),
   CONSTRAINT `fk_docentes_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_docentes_semestres1` FOREIGN KEY (`semestres_id`) REFERENCES `semestres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_docentes_semestres1` FOREIGN KEY (`semestre_id`) REFERENCES `semestres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

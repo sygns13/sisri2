@@ -87,6 +87,9 @@ desired effect
 @elseif($modulo=="postulantes")
 @include('postulantes.vue')
 
+@elseif($modulo=="docentes")
+@include('docentes.vue')
+
 
 
 @endif
