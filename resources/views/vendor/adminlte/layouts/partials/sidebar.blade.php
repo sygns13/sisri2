@@ -6,7 +6,7 @@
 
             <div class="no-print user-panel-unasam">
                     <div class="no-print image" style="text-align: center;">
-                        <img src="{{asset('/img/unasam.png')}}"  alt="User Image" style="margin-top: 15px;height: 120px;" />
+                        <img src="{{asset('/img/unasam.png')}}"  alt="User Image" style="margin-top: 15px;height: 60px;" />
                         <ul class="no-print sidebar-menu">
                         <li class="no-print stroke treeview" style="font-family: Monotype Corsiva;font-size: 21px;color: #f9c52c;margin-top: 5px;">"Una Nueva Universidad<br>Para el Desarrollo"</li>
                         </ul>
@@ -68,11 +68,97 @@
             <li class="treeview" v-bind:class="classMenu2">
                 <a href="#"><i class='fa fa-laptop'></i> <span>Gestión Académica</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                        <li><a href="postulantespregrado"><i class='fa fa-gg'></i> Postulantes de Pregrado</a></li>
-                        <li><a href="docentes"><i class='fa fa-gg'></i> Docentes</a></li>
+                    <li><a href="postulantespregrado"><i class='fa fa-gg'></i> Postulantes de Pregrado</a></li>
+                    <li><a href="alumnospregrado"><i class='fa fa-gg'></i> Matriculados Pregrado</a></li>
+                    <li><a href="alumnosegresadospregrado"><i class='fa fa-gg'></i> Egresados Pregrado</a></li>
+                    <li><a href="postulantespostgrado"><i class='fa fa-gg'></i> Postulantes de Postgrado</a></li>
+                    <li><a href="alumnospostgrado"><i class='fa fa-gg'></i> Matriculados Postgrado</a></li>
+                    <li><a href="alumnosegresadospostgrado"><i class='fa fa-gg'></i> Egresados Posrgrado</a></li>
+                    <li><a href="docentes"><i class='fa fa-gg'></i> Docentes</a></li>
                 </ul>
             </li>
             @endif
+
+
+
+            @if(accesoUser([1,2]))
+            <li class="treeview" v-bind:class="classMenu3">
+                <a href="#"><i class='fa fa-graduation-cap'></i> <span>Grados y Títulos</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Bachilleres</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Titulados</a></li>
+                    <li><a href="maestros"><i class='fa fa-gg'></i> Maestros</a></li>
+                    <li><a href="doctores"><i class='fa fa-gg'></i> Doctores</a></li>
+                </ul>
+            </li>
+            @endif
+
+
+            @if(accesoUser([1,2]))
+            <li class="treeview" v-bind:class="classMenu4">
+                <a href="#"><i class='fa fa-rocket'></i> <span>Investigación</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Investigadores</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Investigaciones</a></li>
+                    <li><a href="maestros"><i class='fa fa-gg'></i> Tesis</a></li>
+                    <li><a href="doctores"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
+                </ul>
+            </li>
+            @endif
+
+
+            @if(accesoUser([1,2]))
+            <li class="treeview" v-bind:class="classMenu5">
+                <a href="#"><i class='fa fa-users'></i> <span>Gestión y Soporte</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Administrativos</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Locación de Servicios</a></li>
+
+                </ul>
+            </li>
+            @endif
+
+            @if(accesoUser([1,2]))
+            <li class="treeview" v-bind:class="classMenu6">
+                <a href="#"><i class='fa fa-plus-square'></i> <span>Bienestar Universitario</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Beneficiarios del Comedor</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Beneficiarios del GYM</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Beneficiarios de Talleres Deportivos</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Programas de Salud</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Campalas de DBU</a></li>
+
+                </ul>
+            </li>
+            @endif
+
+            @if(accesoUser([1,2]))
+            <li class="treeview" v-bind:class="classMenu7">
+                <a href="#"><i class='fa fa-slideshare'></i> <span>Proyección Social</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Lista de Proyectos</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Eventos Culturales</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Talleres</a></li>
+                </ul>
+            </li>
+            @endif
+
+            @if(accesoUser([1,2]))
+            <li class="treeview" v-bind:class="classMenu8">
+                <a href="#"><i class='fa fa-suitcase'></i> <span>Convenios e Intercambio</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Convenios Marco</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Convenios Específicos</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Convenios de Colaboración</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Alumnos Pasantías</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Docentes Pasantías</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Administrativos Pasantías</a></li>
+                    <li><a href="titulados"><i class='fa fa-gg'></i> Personas Llegaron UNASAM</a></li>
+                </ul>
+            </li>
+            @endif
+
+
   {{--  
             @if(accesoUser([1,2,3]))
             <li class="treeview" v-bind:class="classMenu3">

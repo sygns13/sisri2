@@ -193,27 +193,6 @@
             </div>
 
 
-            <div class="col-md-12" style="padding-top: 15px;">
-                <div class="form-group">
-
-
-                    <label for="txtcolegioE" class="col-sm-2 control-label">Colegio de Procedencia:</label>
-                    <div class="col-sm-6">
-                      <input type="text" class="form-control" id="txtcolegioE" name="txtcolegioE" placeholder="Nombre de Colegio"
-                        maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillpostulantes.colegio">
-                    </div>
-
-                    <label for="cbutipogestionE" class="col-sm-2 control-label">Tipo de Gestión:*</label>
-                    <div class="col-sm-2">
-                        <select class="form-control" id="cbutipogestionE" name="cbutipogestionE" v-model="fillpostulantes.tipogestioncolegio">
-                          <option value="1">Pública</option>
-                          <option value="2">Privada</option>
-                        </select>
-                      </div>
-
-                  </div>
-                </div>
-
 
       <div class="col-md-12">
         <hr>
@@ -224,6 +203,28 @@
       </center>
 
 
+
+      <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
+
+
+                <label for="cbugradoE" class="col-sm-2 control-label">Grado de Postulación:*</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="cbugradoE" name="cbugradoE" v-model="fillpostulantes.grado">
+                    <option value="3">Maestría</option>                        
+                    <option value="4">Doctorado</option>                                               
+                  </select>
+                </div>
+
+                <label for="txtgradoE" class="col-sm-2 control-label">Denominación de Grado y Mensión:*</label>
+
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="txtgradoE" name="txtgradoE" placeholder="Nombre de Grado y Mensión"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillpostulantes.nombreGrado">
+                  </div>
+
+            </div>
+          </div>
 
 
       <div class="col-md-12" style="padding-top: 15px;">
@@ -237,39 +238,21 @@
           </div>
 
 
+ 
+
           <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
-    
-    
-                  <label for="cbucarrera1E" class="col-sm-2 control-label">Carrera Primera Opción:*</label>
-                  <div class="col-sm-10">
-                      <select class="form-control" id="cbucarrera1E" name="cbucarrera1E" v-model="fillpostulantes.escuela_id">
-                          <option value="0" disabled>Seleccione un Programa Profesional...</option>
-                        @foreach ($escuelas as $dato)
-                        <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
-                        @endforeach                   
-                      </select>
-                    </div>
-    
-                </div>
-              </div>
-
-
-              <div class="col-md-12" style="padding-top: 15px;">
-                  <div class="form-group">
-    
-                      <label for="cbucarrera2E" class="col-sm-2 control-label">Carrera Segunda Opción:*</label>
-                      <div class="col-sm-10">
-                          <select class="form-control" id="cbucarrera2E" name="cbucarrera2E" v-model="fillpostulantes.escuela_id2">
-                            <option value="0">No hubo segunda opción</option>
-                            @foreach ($escuelas as $dato)
-                            <option value="{{$dato->id}}">{{$dato->nombre}}</option>                        
-                            @endforeach
-                          </select>
-                        </div>
-        
-                    </div>
+  
+                  <label for="txtuniversidadterminoestudiosE" class="col-sm-3 control-label">Universidad Donde Culminó sus Estudios:*</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="txtuniversidadterminoestudiosE" name="txtuniversidadterminoestudiosE" placeholder="Nombre de Universidad"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillpostulantes.universidadCulminoPregrado">
                   </div>
+  
+ 
+              </div>
+            </div>
+
 
                   <div class="col-md-12" style="padding-top: 15px;">
                       <div class="form-group">
@@ -319,21 +302,7 @@
                           </div>
 
 
-                          <div class="col-md-12" style="padding-top: 15px;" v-if="fillpostulantes.estado=='1'">
-                              <div class="form-group">
-                
-                                  <label for="cbucarreraingE" class="col-sm-2 control-label">Carrera Ingreso:*</label>
-                                  <div class="col-sm-10">
-                                      <select class="form-control" id="cbucarreraingE" name="cbucarreraingE" v-model="fillpostulantes.opcioningreso">
-                                        <option value="0" disabled>Seleccione un Programa Profesional...</option>
-                                        @foreach ($escuelas as $dato)
-                                        <option value="{{$dato->id}}">{{$dato->nombre}}</option>                        
-                                        @endforeach
-                                      </select>
-                                    </div>
-                    
-                                </div>
-                              </div>
+         
 
                               <div class="col-md-12" style="padding-top: 15px;">
                                   <div class="form-group">

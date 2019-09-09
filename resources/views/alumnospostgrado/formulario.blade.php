@@ -45,7 +45,7 @@
       </div>
 
       <center>
-        <h4>Datos Personales del Postulante</h4>
+        <h4>Datos Personales del Alumno</h4>
       </center>
 
       <div class="col-md-12" style="padding-top: 15px;">
@@ -195,147 +195,98 @@
             </div>
 
 
-            <div class="col-md-12" style="padding-top: 15px;">
-                <div class="form-group">
-
-
-                    <label for="txtcolegio" class="col-sm-2 control-label">Colegio de Procedencia:</label>
-                    <div class="col-sm-6">
-                      <input type="text" class="form-control" id="txtcolegio" name="txtcolegio" placeholder="Nombre de Colegio"
-                        maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="colegio">
-                    </div>
-
-                    <label for="cbutipogestion" class="col-sm-2 control-label">Tipo de Gestión:*</label>
-                    <div class="col-sm-2">
-                        <select class="form-control" id="cbutipogestion" name="cbutipogestion" v-model="tipogestioncolegio">
-                          <option value="1">Pública</option>
-                          <option value="2">Privada</option>
-                        </select>
-                      </div>
-
-                  </div>
-                </div>
-
 
       <div class="col-md-12">
         <hr>
       </div>
 
       <center>
-        <h4>Datos de Postulación</h4>
+        <h4>Datos Académicos</h4>
       </center>
 
+
+      <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
+
+
+                <label for="cbugrado" class="col-sm-2 control-label">Grado:*</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="cbugrado" name="cbugrado" v-model="grado">
+                    <option value="3">Maestría</option>                        
+                    <option value="4">Doctorado</option>                                               
+                  </select>
+                </div>
+
+                <label for="txtgrado" class="col-sm-2 control-label">Denominación de Grado y Mensión:*</label>
+
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="txtgrado" name="txtgrado" placeholder="Nombre de Grado y Mensión"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="nombreGrado">
+                  </div>
+
+            </div>
+          </div>
 
 
 
       <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
-              <label for="txtcodigo" class="col-sm-2 control-label">Código de Postulante:</label>
+
+              <label for="txtcodigo" class="col-sm-2 control-label">Código del Alumno:</label>
               <div class="col-sm-2">
                 <input type="text" class="form-control" id="txtcodigo" name="txtcodigo" placeholder="Código"
                   maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="codigo">
               </div>
+
+              <label for="cbuEscalaPago" class="col-sm-2 control-label">Escala de Pago:*</label>
+              <div class="col-sm-3">
+                  <select class="form-control" id="cbuEscalaPago" name="cbuEscalaPago" v-model="escalaPago">
+                      <option value="0">Ninguna</option>                        
+                      <option value="1">Si Cuenta con Escala de Pago</option>                                           
+                    </select>
+                  </div>
+
+
             </div>
           </div>
 
 
-          <div class="col-md-12" style="padding-top: 15px;">
+          <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(escalaPago)!=0">
               <div class="form-group">
-    
-    
-                  <label for="cbucarrera1" class="col-sm-2 control-label">Carrera Primera Opción:*</label>
+  
+                  <label for="txtEsclaPago" class="col-sm-2 control-label">Describa su Escala de Pago:*</label>
                   <div class="col-sm-10">
-                      <select class="form-control" id="cbucarrera1" name="cbucarrera1" v-model="escuela_id">
-                          <option value="0" disabled>Seleccione un Programa Profesional...</option>
-                        @foreach ($escuelas as $dato)
-                        <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
-                        @endforeach                   
-                      </select>
-                    </div>
-    
-                </div>
-              </div>
-
-
-              <div class="col-md-12" style="padding-top: 15px;">
-                  <div class="form-group">
-    
-                      <label for="cbucarrera2" class="col-sm-2 control-label">Carrera Segunda Opción:*</label>
-                      <div class="col-sm-10">
-                          <select class="form-control" id="cbucarrera2" name="cbucarrera2" v-model="escuela_id2">
-                            <option value="0">No hubo segunda opción</option>
-                            @foreach ($escuelas as $dato)
-                            <option value="{{$dato->id}}">{{$dato->nombre}}</option>                        
-                            @endforeach
-                          </select>
-                        </div>
-        
-                    </div>
+                    <input type="text" class="form-control" id="txtEsclaPago" name="txtEsclaPago" placeholder="Escala de Pago"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="escalaPagodesc">
                   </div>
+  
+ 
+              </div>
+            </div>
 
-                  <div class="col-md-12" style="padding-top: 15px;">
-                      <div class="form-group">
-        
-                          <label for="cbumodalidadadmision" class="col-sm-2 control-label">Modalidad de Admisión:*</label>
-                          <div class="col-sm-4">
-                              <select class="form-control" id="cbumodalidadadmision" name="cbumodalidadadmision" v-model="modalidadadmision_id">
-                                  <option value="0" disabled>Seleccione una Modalidad de Admisión...</option>
-                                @foreach ($modalidadAdmision as $dato)
-                                <option value="{{$dato->id}}">{{$dato->nombre}}</option>                        
-                                @endforeach
-                              </select>
-                            </div>
 
-                            <label for="cbumodalidadestudios" class="col-sm-2 control-label">Modalidad de Estudios:*</label>
-                            <div class="col-sm-4">
-                            <select class="form-control" id="cbumodalidadestudios" name="cbumodalidadestudios" v-model="modalidadestudios">
-                                <option value="1">Presencial</option>                        
-                                <option value="2">Semipresencial</option>                        
-                                <option value="3">Virtual</option>                        
-                              </select>
-                            </div>
-            
+            <div class="col-md-12" style="padding-top: 15px;">
+                <div class="form-group">
+
+
+                      <label for="txtpromedioponderado" class="col-sm-2 control-label">Promedio Ponderado:*</label>
+                      <div class="col-sm-2">
+                          <input type="text" class="form-control" id="txtpromedioponderado" name="txtpromedioponderado" placeholder="" onkeypress="return soloNumeros(event);"
+                            maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="promedioPonderado">
                         </div>
-                      </div>
+
+                        <label for="txtpromediosemestre" class="col-sm-2 control-label">Promedio del Semestre:*</label>
+                      <div class="col-sm-2">
+                          <input type="text" class="form-control" id="txtpromediosemestre" name="txtpromediosemestre" placeholder="" onkeypress="return soloNumeros(event);"
+                            maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="promedioSemestre">
+                        </div>
+
+
+                  </div>
+                </div>
 
 
 
-                      <div class="col-md-12" style="padding-top: 15px;">
-                          <div class="form-group">
-            
-                              <label for="cbuestadoingreso" class="col-sm-2 control-label">Estado de Ingreso:*</label>
-                              <div class="col-sm-2">
-                                  <select class="form-control" id="cbuestadoingreso" name="cbuestadoingreso" v-model="estado">
-                                    <option value="1">Ingresó</option>
-                                    <option value="0">No Ingresó</option>
-     
-                                  </select>
-                                </div>
-
-                                <label for="txtpuntaje" class="col-sm-2 control-label">Puntaje Obtenido:*</label>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="txtpuntaje" name="txtpuntaje" placeholder="" onkeypress="return soloNumeros(event);"
-                                      maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="puntaje">
-                                  </div>
-                            </div>
-                          </div>
-
-
-                          <div class="col-md-12" style="padding-top: 15px;" v-if="estado=='1'">
-                              <div class="form-group">
-                
-                                  <label for="cbucarreraing" class="col-sm-2 control-label">Carrera Ingreso:*</label>
-                                  <div class="col-sm-10">
-                                      <select class="form-control" id="cbucarreraing" name="cbucarreraing" v-model="opcioningreso">
-                                        <option value="0" disabled>Seleccione un Programa Profesional...</option>
-                                        @foreach ($escuelas as $dato)
-                                        <option value="{{$dato->id}}">{{$dato->nombre}}</option>                        
-                                        @endforeach
-                                      </select>
-                                    </div>
-                    
-                                </div>
-                              </div>
 
                               <div class="col-md-12" style="padding-top: 15px;">
                                   <div class="form-group">

@@ -47,7 +47,7 @@ data:{
    docentes: [],
    errors:[],
 
-   filldocentes:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','personalacademico':'','cargogeneral':'','descripcioncargo':'','maximogrado':'','descmaximogrado':'','universidadgrado':'','lugarmaximogrado':'','paismaximogrado':'','otrogrado':'','estadootrogrado':'','univotrogrado':'','lugarotrogrado':'','paisotrogrado':'','titulo':'','descripciontitulo':'','condicion':'','categoria':'','regimen':'','investigador':'','pregrado':'','postgrado':'','esdestacado':'','fechaingreso':'','modalidadingreso':'','observaciones':'','persona_id':'','horaslectivas':'','horasnolectivas':'','horasinvestigacion':'','horasdedicacion':'','escuela_id':'','facultad_id':'','dependencia':'','semestre_id':'','id':''},
+   filldocente:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','personalacademico':'','cargogeneral':'','descripcioncargo':'','maximogrado':'','descmaximogrado':'','universidadgrado':'','lugarmaximogrado':'','paismaximogrado':'','otrogrado':'','estadootrogrado':'','univotrogrado':'','lugarotrogrado':'','paisotrogrado':'','titulo':'','descripciontitulo':'','condicion':'','categoria':'','regimen':'','investigador':'','pregrado':'','postgrado':'','esdestacado':'','fechaingreso':'','modalidadingreso':'','observaciones':'','persona_id':'','horaslectivas':'','horasnolectivas':'','horasinvestigacion':'','horasdedicacion':'','escuela_id':'','facultad_id':'','dependencia':'','semestre_id':'','id':''},
 
    pagination: {
    'total': 0,
@@ -94,18 +94,18 @@ data:{
     maximogrado:0,
     descmaximogrado:'',
     universidadgrado:'',
-    lugarmaximogrado:'',
+    lugarmaximogrado:'Nacional',
     paismaximogrado:'',
     otrogrado:'',
-    estadootrogrado:'',
+    estadootrogrado:'No',
     univotrogrado:'',
-    lugarotrogrado:'',
+    lugarotrogrado:'Nacional',
     paisotrogrado:'',
-    titulo:'',
+    tituloUniv:'Si',
     descripciontitulo:'',
-    condicion:'',
-    categoria:'',
-    regimen:'',
+    condicion:'Nombrado',
+    categoria:'Auxiliar',
+    regimen:'Tiempo completo',
     investigador:1,
     pregrado:1,
     postgrado:0,
@@ -120,6 +120,8 @@ data:{
     escuela_id:0,
     facultad_id:0,
     dependencia:'',
+
+ 
     
     semestre_id:{{$semestresel}},
     contse:{{$contse}},
@@ -132,7 +134,7 @@ data:{
 
 },
 created:function () {
-   this.getPostulante(this.thispage);
+   this.getDocentes(this.thispage);
 
 },
 mounted: function () {
@@ -184,7 +186,7 @@ methods: {
 
 
 
-   getPostulante: function (page) {
+   getDocentes: function (page) {
        var busca=this.buscar;
        var url = 'docente?page='+page+'&busca='+busca+'&semestre_id='+this.semestre_id;
 
@@ -205,11 +207,11 @@ methods: {
 
    changePage:function (page) {
        this.pagination.current_page=page;
-       this.getPostulante(page);
+       this.getDocentes(page);
        this.thispage=page;
    },
    buscarBtn: function () {
-       this.getPostulante();
+       this.getDocentes();
        this.thispage='1';
    },
 
@@ -250,18 +252,39 @@ methods: {
     this.direccion='';
     this.email='';
     this.telefono='';
-    this.codigo='';
-    this.escuela_id=0;
-    this.colegio='';
-    this.modalidadadmision_id=0;
-    this.modalidadestudios=1;
-    this.puntaje='';
-    this.estado=0;
-    this.opcioningreso=0;
+    
+    this.personalacademico='Docente';
+    this.cargogeneral=0;
+    this.descripcioncargo='';
+    this.maximogrado=0;
+    this.descmaximogrado='';
+    this.universidadgrado='';
+    this.lugarmaximogrado='Nacional';
+    this.paismaximogrado='';
+    this.otrogrado='';
+    this.estadootrogrado='No';
+    this.univotrogrado='';
+    this.lugarotrogrado='Nacional';
+    this.paisotrogrado='';
+    this.tituloUniv='Si';
+    this.descripciontitulo='';
+    this.condicion='Nombrado';
+    this.categoria='Auxiliar';
+    this.regimen='Tiempo completo';
+    this.investigador=1;
+    this.pregrado=1;
+    this.postgrado=0;
+    this.esdestacado=1;
+    this.fechaingreso='';
+    this.modalidadingreso='';
     this.observaciones='';
-    this.escuela_id2=0;
-    this.tipogestioncolegio=1;
-
+    this.horaslectivas='';
+    this.horasnolectivas='';
+    this.horasinvestigacion='';
+    this.horasdedicacion='';
+    this.escuela_id=0;
+    this.facultad_id=0;
+    this.dependencia='';
 
     this.persona_id='0';
 
@@ -328,7 +351,7 @@ var url='persona/buscarDNI';
 
 
    create:function () {
-       var url='docentes';
+       var url='docente';
        $("#btnGuardar").attr('disabled', true);
        $("#btnCancel").attr('disabled', true);
        $("#btnClose").attr('disabled', true);
@@ -336,7 +359,7 @@ var url='persona/buscarDNI';
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, codigo:this.codigo, semestre_id:this.semestre_id, escuela_id:this.escuela_id, colegio:this.colegio, modalidadadmision_id:this.modalidadadmision_id, modalidadestudios:this.modalidadestudios, puntaje:this.puntaje, estado:this.estado, opcioningreso:this.opcioningreso, observaciones:this.observaciones, escuela_id2:this.escuela_id2, tipogestioncolegio:this.tipogestioncolegio, persona_id:this.persona_id }).then(response=>{
+       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, personalacademico:this.personalacademico, semestre_id:this.semestre_id, cargogeneral:this.cargogeneral, descripcioncargo:this.descripcioncargo, maximogrado:this.maximogrado, descmaximogrado:this.descmaximogrado, universidadgrado:this.universidadgrado, lugarmaximogrado:this.lugarmaximogrado, paismaximogrado:this.paismaximogrado, otrogrado:this.otrogrado, estadootrogrado:this.estadootrogrado, univotrogrado:this.univotrogrado, lugarotrogrado:this.lugarotrogrado, paisotrogrado:this.paisotrogrado, tituloUniv:this.tituloUniv, descripciontitulo:this.descripciontitulo, condicion:this.condicion, categoria:this.categoria, regimen:this.regimen, investigador:this.investigador, pregrado:this.pregrado, postgrado:this.postgrado, esdestacado:this.esdestacado, fechaingreso:this.fechaingreso, modalidadingreso:this.modalidadingreso, observaciones:this.observaciones, horaslectivas:this.horaslectivas, horasnolectivas:this.horasnolectivas, horasinvestigacion:this.horasinvestigacion, horasdedicacion:this.horasdedicacion, escuela_id:this.escuela_id, facultad_id:this.facultad_id, dependencia:this.dependencia, persona_id:this.persona_id  }).then(response=>{
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -346,7 +369,7 @@ var url='persona/buscarDNI';
 
    
            if(String(response.data.result)=='1'){
-               this.getPostulante(this.thispage);
+               this.getDocentes(this.thispage);
                this.errors=[];
                this.cerrarFormNuevo();
                toastr.success(response.data.msj);
@@ -363,13 +386,13 @@ var url='persona/buscarDNI';
 
 
 
-   borrar:function (postulante) {
+   borrar:function (docente) {
 
 
     
         swal.fire({
              title: '¿Estás seguro?',
-             text: "¿Desea eliminar el Postulante Seleccionado? -- Nota: este proceso no se podrá revertir.",
+             text: "¿Desea eliminar el Docente Seleccionado? -- Nota: este proceso no se podrá revertir.",
              type: 'info',
              showCancelButton: true,
              confirmButtonColor: '#3085d6',
@@ -379,11 +402,11 @@ var url='persona/buscarDNI';
 
             if (result.value) {
 
-                var url = 'docentes/'+postulante.id;
+                var url = 'docente/'+docente.id;
                 axios.delete(url).then(response=>{//eliminamos
 
                 if(response.data.result=='1'){
-                    app.getPostulante(app.thispage);//listamos
+                    app.getDocentes(app.thispage);//listamos
                     toastr.success(response.data.msj);//mostramos mensaje
                 }else{
                     // $('#'+response.data.selector).focus();
@@ -399,42 +422,64 @@ var url='persona/buscarDNI';
 
 
 
-   edit:function (postulante) {
+   edit:function (docente) {
 
        this.cerrarFormNuevo();
 
 
-       this.filldocentes.id=postulante.id;
-       this.filldocentes.tipodoc=postulante.tipodoc;
-       this.filldocentes.doc=postulante.doc;
-       this.filldocentes.nombres=postulante.nombres;
-       this.filldocentes.apellidopat=postulante.apellidopat;
-       this.filldocentes.apellidomat=postulante.apellidomat;
-       this.filldocentes.genero=postulante.genero;
-       this.filldocentes.estadocivil=postulante.estadocivil;
-       this.filldocentes.fechanac=postulante.fechanac;
-       this.filldocentes.esdiscapacitado=postulante.esdiscapacitado;
-       this.filldocentes.discapacidad=postulante.discapacidad;
-       this.filldocentes.pais=postulante.pais;
-       this.filldocentes.departamento=postulante.departamento;
-       this.filldocentes.provincia=postulante.provincia;
-       this.filldocentes.distrito=postulante.distrito;
-       this.filldocentes.direccion=postulante.direccion;
-       this.filldocentes.email=postulante.email;
-       this.filldocentes.telefono=postulante.telefono;
-       this.filldocentes.codigo=postulante.codigo;
-       this.filldocentes.semestre_id=postulante.semestre_id;
-       this.filldocentes.escuela_id=postulante.escuela_id;
-       this.filldocentes.colegio=postulante.colegio;
-       this.filldocentes.modalidadadmision_id=postulante.modalidadadmision_id;
-       this.filldocentes.modalidadestudios=postulante.modalidadestudios;
-       this.filldocentes.puntaje=postulante.puntaje;
-       this.filldocentes.estado=postulante.estado;
-       this.filldocentes.opcioningreso=postulante.opcioningreso;
-       this.filldocentes.observaciones=postulante.observaciones;
-       this.filldocentes.escuela_id2=postulante.escuela_id2;
-       this.filldocentes.tipogestioncolegio=postulante.tipogestioncolegio;
-       this.filldocentes.persona_id=postulante.persona_id;
+       this.filldocente.id=docente.id;
+       this.filldocente.tipodoc=docente.tipodoc;
+       this.filldocente.doc=docente.doc;
+       this.filldocente.nombres=docente.nombres;
+       this.filldocente.apellidopat=docente.apellidopat;
+       this.filldocente.apellidomat=docente.apellidomat;
+       this.filldocente.genero=docente.genero;
+       this.filldocente.estadocivil=docente.estadocivil;
+       this.filldocente.fechanac=docente.fechanac;
+       this.filldocente.esdiscapacitado=docente.esdiscapacitado;
+       this.filldocente.discapacidad=docente.discapacidad;
+       this.filldocente.pais=docente.pais;
+       this.filldocente.departamento=docente.departamento;
+       this.filldocente.provincia=docente.provincia;
+       this.filldocente.distrito=docente.distrito;
+       this.filldocente.direccion=docente.direccion;
+       this.filldocente.email=docente.email;
+       this.filldocente.telefono=docente.telefono;
+
+       this.filldocente.personalacademico=docente.personalacademico;
+       this.filldocente.cargogeneral=docente.cargogeneral;
+       this.filldocente.descripcioncargo=docente.descripcioncargo;
+       this.filldocente.maximogrado=docente.maximogrado;
+       this.filldocente.descmaximogrado=docente.descmaximogrado;
+       this.filldocente.universidadgrado=docente.universidadgrado;
+       this.filldocente.lugarmaximogrado=docente.lugarmaximogrado;
+       this.filldocente.paismaximogrado=docente.paismaximogrado;
+       this.filldocente.otrogrado=docente.otrogrado;
+       this.filldocente.estadootrogrado=docente.estadootrogrado;
+       this.filldocente.univotrogrado=docente.univotrogrado;
+       this.filldocente.lugarotrogrado=docente.lugarotrogrado;
+       this.filldocente.paisotrogrado=docente.paisotrogrado;
+       this.filldocente.titulo=docente.titulo;
+       this.filldocente.descripciontitulo=docente.descripciontitulo;
+       this.filldocente.condicion=docente.condicion;
+       this.filldocente.categoria=docente.categoria;
+       this.filldocente.regimen=docente.regimen;
+       this.filldocente.investigador=docente.investigador;
+       this.filldocente.pregrado=docente.pregrado;
+       this.filldocente.postgrado=docente.postgrado;
+       this.filldocente.esdestacado=docente.esdestacado;
+       this.filldocente.fechaingreso=docente.fechaingreso;
+       this.filldocente.modalidadingreso=docente.modalidadingreso;
+       this.filldocente.observaciones=docente.observaciones;
+       this.filldocente.persona_id=docente.persona_id;
+       this.filldocente.horaslectivas=docente.horaslectivas;
+       this.filldocente.horasnolectivas=docente.horasnolectivas;
+       this.filldocente.horasinvestigacion=docente.horasinvestigacion;
+       this.filldocente.horasdedicacion=docente.horasdedicacion;
+       this.filldocente.escuela_id=docente.escuela_id;
+       this.filldocente.facultad_id=docente.facultad_id;
+       this.filldocente.dependencia=docente.dependencia;
+       this.filldocente.semestre_id=docente.semestre_id;
 
 
 
@@ -453,20 +498,20 @@ var url='persona/buscarDNI';
    },
 
    update:function (id) {
-       var url="docentes/"+id;
+       var url="docente/"+id;
        $("#btnSaveE").attr('disabled', true);
        $("#btnCloseE").attr('disabled', true);
        this.divloaderEdit=true;
 
-       axios.put(url, this.filldocentes).then(response=>{
+       axios.put(url, this.filldocente).then(response=>{
 
            $("#btnSaveE").removeAttr("disabled");
            $("#btnCloseE").removeAttr("disabled");
            this.divloaderEdit=false;
            
            if(response.data.result=='1'){   
-           this.getPostulante(this.thispage);
-           this.filldocentes={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':''};
+           this.getDocentes(this.thispage);
+           this.filldocente={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','personalacademico':'','cargogeneral':'','descripcioncargo':'','maximogrado':'','descmaximogrado':'','universidadgrado':'','lugarmaximogrado':'','paismaximogrado':'','otrogrado':'','estadootrogrado':'','univotrogrado':'','lugarotrogrado':'','paisotrogrado':'','titulo':'','descripciontitulo':'','condicion':'','categoria':'','regimen':'','investigador':'','pregrado':'','postgrado':'','esdestacado':'','fechaingreso':'','modalidadingreso':'','observaciones':'','persona_id':'','horaslectivas':'','horasnolectivas':'','horasinvestigacion':'','horasdedicacion':'','escuela_id':'','facultad_id':'','dependencia':'','semestre_id':'','id':''};
            this.errors=[];
 
            this.cerrarFormE();

@@ -73,33 +73,107 @@ class PostulanteController extends Controller
     }
 
 
+    public function index2()
+    {
+        if(accesoUser([1,2])){
+
+
+            $idtipouser=Auth::user()->tipouser_id;
+            $tipouser=Tipouser::find($idtipouser);
+
+            $escuelas = DB::table('escuelas')
+            ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+            ->where('escuelas.borrado','0')
+  
+            ->orderBy('facultads.nombre')
+            ->orderBy('escuelas.nombre')
+            ->select('escuelas.id','escuelas.nombre','escuelas.activo','escuelas.borrado','escuelas.facultad_id','facultads.nombre as facultad')
+            ->get();
+
+            $semestres=Semestre::where('activo','1')->where('borrado','0')->orderBy('fechafin','desc')->get();
+            $modalidadAdmision=Modalidadadmision::where('activo','1')->where('borrado','0')->get();
+
+            $semestresel="0";
+            $contse=0;
+            $semestreNombre="";
+            foreach ($semestres as $key => $dato) {
+                $contse++;
+                if($dato->estado="1"){
+                    $semestresel=$dato->id;
+                    $semestreNombre=$dato->nombre;
+                    break;
+                }
+            }
+
+
+            $modulo="postulantespostgrado";
+            return view('postulantespostgrado.index',compact('tipouser','modulo','escuelas','semestres','modalidadAdmision','semestresel','contse','semestreNombre'));
+        }
+        else
+        {
+            return redirect('home');           
+        }
+    }
+
+
     public function index(Request $request)
     {   
      $buscar=$request->busca;
      $semestre_id=$request->semestre_id;
+     $tipo=$request->tipo;
 
-     $postulantes = DB::table('postulantes')
-     ->join('personas', 'personas.id', '=', 'postulantes.persona_id')
-     ->join('semestres', 'semestres.id', '=', 'postulantes.semestre_id')
-     ->join('modalidadadmisions', 'modalidadadmisions.id', '=', 'postulantes.modalidadadmision_id')
-     ->join('escuelas as escuela1', 'escuela1.id', '=', 'postulantes.escuela_id')
-     ->leftjoin('escuelas as escuela2', 'escuela2.id', '=', 'postulantes.escuela_id2')
-     ->leftjoin('escuelas as escuelaing', 'escuelaing.id', '=', 'postulantes.opcioningreso')
-     ->where('postulantes.borrado','0')
-     ->where('postulantes.tipo','1')
-     ->where('semestres.id',$semestre_id)
-     ->where(function($query) use ($buscar){
-        $query->where('personas.nombres','like','%'.$buscar.'%');
-        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
-        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
-        $query->orWhere('personas.doc','like','%'.$buscar.'%');
-        $query->orWhere('postulantes.codigo','like','%'.$buscar.'%');
-        })
-     ->orderBy('personas.apellidopat')
-     ->orderBy('personas.apellidomat')
-     ->orderBy('personas.nombres')
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','postulantes.id','postulantes.codigo','postulantes.semestre_id','postulantes.escuela_id','postulantes.colegio','postulantes.modalidadadmision_id','postulantes.modalidadestudios','postulantes.puntaje','postulantes.estado','postulantes.opcioningreso','postulantes.persona_id','postulantes.observaciones','postulantes.tipo','postulantes.email','postulantes.escuela_id2','postulantes.tipogestioncolegio','postulantes.opcioningreso','semestres.nombre as semestre','modalidadadmisions.id as idmodadmi','modalidadadmisions.nombre as modalidadadmision','escuela1.nombre as escuela1',DB::Raw("IFNULL( `escuela2`.`nombre` , 'No hubo 2° Opción' ) as escuela2"),DB::Raw("IFNULL( `escuelaing`.`nombre` , 'No Ingresó' ) as escuelaing"))
-     ->paginate(50);
+     $postulantes="";
+
+     if($tipo==1)
+     {
+        $postulantes = DB::table('postulantes')
+        ->join('personas', 'personas.id', '=', 'postulantes.persona_id')
+        ->join('semestres', 'semestres.id', '=', 'postulantes.semestre_id')
+        ->join('modalidadadmisions', 'modalidadadmisions.id', '=', 'postulantes.modalidadadmision_id')
+        ->join('escuelas as escuela1', 'escuela1.id', '=', 'postulantes.escuela_id')
+        ->leftjoin('escuelas as escuela2', 'escuela2.id', '=', 'postulantes.escuela_id2')
+        ->leftjoin('escuelas as escuelaing', 'escuelaing.id', '=', 'postulantes.opcioningreso')
+        ->where('postulantes.borrado','0')
+        ->where('postulantes.tipo',$tipo)
+        ->where('semestres.id',$semestre_id)
+        ->where(function($query) use ($buscar){
+           $query->where('personas.nombres','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+           $query->orWhere('personas.doc','like','%'.$buscar.'%');
+           $query->orWhere('postulantes.codigo','like','%'.$buscar.'%');
+           })
+        ->orderBy('personas.apellidopat')
+        ->orderBy('personas.apellidomat')
+        ->orderBy('personas.nombres')
+        ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','postulantes.id','postulantes.codigo','postulantes.semestre_id','postulantes.escuela_id','postulantes.colegio','postulantes.modalidadadmision_id','postulantes.modalidadestudios','postulantes.puntaje','postulantes.estado','postulantes.opcioningreso','postulantes.persona_id','postulantes.observaciones','postulantes.tipo','postulantes.email','postulantes.escuela_id2','postulantes.tipogestioncolegio','postulantes.opcioningreso','semestres.nombre as semestre','modalidadadmisions.id as idmodadmi','modalidadadmisions.nombre as modalidadadmision','escuela1.nombre as escuela1',DB::Raw("IFNULL( `escuela2`.`nombre` , 'No hubo 2° Opción' ) as escuela2"),DB::Raw("IFNULL( `escuelaing`.`nombre` , 'No Ingresó' ) as escuelaing"),'postulantes.grado','postulantes.nombreGrado','postulantes.universidadCulminoPregrado')
+        ->paginate(50);
+     }
+
+     elseif($tipo==2)
+     {
+        $postulantes = DB::table('postulantes')
+        ->join('personas', 'personas.id', '=', 'postulantes.persona_id')
+        ->join('semestres', 'semestres.id', '=', 'postulantes.semestre_id')
+        ->join('modalidadadmisions', 'modalidadadmisions.id', '=', 'postulantes.modalidadadmision_id')
+
+        ->where('postulantes.borrado','0')
+        ->where('postulantes.tipo',$tipo)
+        ->where('semestres.id',$semestre_id)
+        ->where(function($query) use ($buscar){
+           $query->where('personas.nombres','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+           $query->orWhere('personas.doc','like','%'.$buscar.'%');
+           $query->orWhere('postulantes.codigo','like','%'.$buscar.'%');
+           })
+        ->orderBy('personas.apellidopat')
+        ->orderBy('personas.apellidomat')
+        ->orderBy('personas.nombres')
+        ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','postulantes.id','postulantes.codigo','postulantes.semestre_id','postulantes.escuela_id','postulantes.colegio','postulantes.modalidadadmision_id','postulantes.modalidadestudios','postulantes.puntaje','postulantes.estado','postulantes.opcioningreso','postulantes.persona_id','postulantes.observaciones','postulantes.tipo','postulantes.email','postulantes.escuela_id2','postulantes.tipogestioncolegio','postulantes.opcioningreso','semestres.nombre as semestre','modalidadadmisions.id as idmodadmi','modalidadadmisions.nombre as modalidadadmision','postulantes.grado','postulantes.nombreGrado','postulantes.universidadCulminoPregrado')
+        ->paginate(50);
+     }
+
 
 
      return [
@@ -164,13 +238,38 @@ class PostulanteController extends Controller
         $escuela_id2=$request->escuela_id2;
         $tipogestioncolegio=$request->tipogestioncolegio;
         $persona_id=$request->persona_id;
+        $tipo=$request->tipo;
 
 
+        if(intval($esdiscapacitado)==0)
+        {
+            $discapacidad="";
+        }
+
+        $grado=0;
+        $nombreGrado="";
+        $universidadCulminoPregrado="";
+
+        if(intval($tipo)==2)
+        {
+            $grado=$request->grado;
+            $nombreGrado=$request->nombreGrado;
+            $universidadCulminoPregrado=$request->universidadCulminoPregrado;
+        }
 
 
         $result='1';
         $msj='';
         $selector='';
+
+
+        $regla0=DB::table('postulantes')
+        ->join('personas', 'personas.id', '=', 'postulantes.persona_id')
+        ->where('personas.tipodoc',$tipodoc)
+        ->where('personas.doc',$doc)
+        ->where('postulantes.tipo',$tipo)
+        ->where('postulantes.semestre_id',$semestre_id)
+        ->where('postulantes.modalidadadmision_id',$modalidadadmision_id)->count();
 
         $input1  = array('tipodoc' => $tipodoc);
         $reglas1 = array('tipodoc' => 'required');
@@ -267,8 +366,12 @@ class PostulanteController extends Controller
         $validator22 = Validator::make($input22, $reglas22);
         $validator23 = Validator::make($input23, $reglas23);
 
-
-        if($validator1->fails()){
+        if($regla0>0){
+            $result='0';
+            $msj='Ya se encuentra registrado un Postulante con el Tipo y Documento de Identidad ingresado, del semestre y modalidad de admisión seleccionada';
+            $selector='txtDNI';
+        }
+        elseif($validator1->fails()){
             $result='0';
             $msj='Seleccione un tipo de Documento Válido';
             $selector='cbutipodoc';
@@ -363,12 +466,12 @@ class PostulanteController extends Controller
             $msj='Seleccione el Semestre de Postulación del Postulante';
             $selector='cbusemestre';
         }
-        elseif ($validator17->fails() || intval($escuela_id)==0) {
+        elseif (($validator17->fails() || intval($escuela_id)==0) && intval($tipo)==1) {
             $result='0';
             $msj='Seleccione el Programa Profesional de primera opción del postulante';
             $selector='cbucarrera1';
         }
-        elseif ($validator18->fails()) {
+        elseif ($validator18->fails() && intval($tipo)==1) {
             $result='0';
             $msj='Ingrese el Colegio de Procedencia del Postulante';
             $selector='txtcolegio';
@@ -394,16 +497,28 @@ class PostulanteController extends Controller
             $msj='Ingrese el estado de Ingreso del postulante';
             $selector='cbuestadoingreso';
         }
-        elseif ($validator23->fails()) {
+        elseif ($validator23->fails() && intval($tipo)==1) {
             $result='0';
             $msj='Seleccione el tipo de Gestión Administrativa del Colegio de Procedencia del Postulante';
             $selector='cbutipogestion';
         }
 
-        elseif (intval($estado)==1 && intval($opcioningreso)==0) {
+        elseif (intval($estado)==1 && intval($opcioningreso)==0 && intval($tipo)==1) {
             $result='0';
             $msj='Si ha seleccionado que el postulante ingresó a un Programa Profesional, indicar a cual fue';
             $selector='cbucarreraing';
+        }
+
+        elseif (intval($tipo)==2 && strlen($nombreGrado)==0) {
+            $result='0';
+            $msj='Ingrese el nombre y mensión del Grado al que Postula';
+            $selector='txtgrado';
+        }
+
+        elseif (intval($tipo)==2 && strlen($universidadCulminoPregrado)==0) {
+            $result='0';
+            $msj='Ingrese el nombre de la Universidad en la que Culminó su Pregrado';
+            $selector='txtuniversidadterminoestudios';
         }
 
       
@@ -411,7 +526,13 @@ class PostulanteController extends Controller
 
 
 
-            /*        
+            /*      
+            
+            $grado=$request->grado;
+            $nombreGrado=$request->nombreGrado;
+            $universidadCulminoPregrado=$request->universidadCulminoPregrado;
+
+
         $tipodoc=$request->tipodoc;
         $doc=$request->doc;
         $nombres=$request->nombres;
@@ -495,7 +616,10 @@ class PostulanteController extends Controller
             $persona_id=$newPersona->id;
         }
 
-        $newPostulante = new Postulante();
+
+        if($tipo==1)
+        {
+            $newPostulante = new Postulante();
         $newPostulante->codigo=$codigo;
         $newPostulante->semestre_id=$semestre_id;
         $newPostulante->escuela_id=$escuela_id;
@@ -507,14 +631,38 @@ class PostulanteController extends Controller
         $newPostulante->opcioningreso=$opcioningreso;
         $newPostulante->persona_id=$persona_id;
         $newPostulante->observaciones=$observaciones;
-        $newPostulante->tipo='1';
+        $newPostulante->tipo=$tipo;
         $newPostulante->email=$email;
         $newPostulante->escuela_id2=$escuela_id2;
         $newPostulante->tipogestioncolegio=$tipogestioncolegio;
+
         $newPostulante->activo='1';
         $newPostulante->borrado='0';
 
         $newPostulante->save();
+        }
+        elseif($tipo==2)
+        {
+            $newPostulante = new Postulante();
+        $newPostulante->codigo=$codigo;
+        $newPostulante->semestre_id=$semestre_id;
+        $newPostulante->modalidadadmision_id=$modalidadadmision_id;
+        $newPostulante->modalidadestudios=$modalidadestudios;
+        $newPostulante->puntaje=$puntaje;
+        $newPostulante->estado=$estado;
+        $newPostulante->persona_id=$persona_id;
+        $newPostulante->observaciones=$observaciones;
+        $newPostulante->tipo=$tipo;
+        $newPostulante->email=$email;
+        $newPostulante->grado=$grado;
+        $newPostulante->nombreGrado=$nombreGrado;
+        $newPostulante->universidadCulminoPregrado=$universidadCulminoPregrado;
+        $newPostulante->activo='1';
+        $newPostulante->borrado='0';
+
+        $newPostulante->save();
+        }
+        
 
            
 
@@ -522,7 +670,11 @@ class PostulanteController extends Controller
         }
 
 
-
+/*
+        $grado=$request->grado;
+            $nombreGrado=$request->nombreGrado;
+            $universidadCulminoPregrado=$request->universidadCulminoPregrado;
+*/
 
        //Areaunasam::create($request->all());
 
@@ -589,15 +741,40 @@ class PostulanteController extends Controller
         $observaciones=$request->observaciones;
         $escuela_id2=$request->escuela_id2;
         $tipogestioncolegio=$request->tipogestioncolegio;
+        $tipo=$request->tipo;
         
         $persona_id=$request->persona_id;
 
+        if(intval($esdiscapacitado)==0)
+        {
+            $discapacidad="";
+        }
 
+        $grado=0;
+        $nombreGrado="";
+        $universidadCulminoPregrado="";
+
+        if(intval($tipo)==2)
+        {
+            $grado=$request->grado;
+            $nombreGrado=$request->nombreGrado;
+            $universidadCulminoPregrado=$request->universidadCulminoPregrado;
+        }
 
 
         $result='1';
         $msj='';
         $selector='';
+
+
+        $regla0=DB::table('postulantes')
+        ->join('personas', 'personas.id', '=', 'postulantes.persona_id')
+        ->where('postulantes.id','<>',$id)
+        ->where('personas.tipodoc',$tipodoc)
+        ->where('personas.doc',$doc)
+        ->where('postulantes.tipo',$tipo)
+        ->where('postulantes.semestre_id',$semestre_id)
+        ->where('postulantes.modalidadadmision_id',$modalidadadmision_id)->count();
 
         $input1  = array('tipodoc' => $tipodoc);
         $reglas1 = array('tipodoc' => 'required');
@@ -668,6 +845,8 @@ class PostulanteController extends Controller
         $input23  = array('tipogestioncolegio' => $tipogestioncolegio);
         $reglas23 = array('tipogestioncolegio' => 'required');
 
+        
+
 
 
         $validator1 = Validator::make($input1, $reglas1);
@@ -695,7 +874,12 @@ class PostulanteController extends Controller
         $validator23 = Validator::make($input23, $reglas23);
 
 
-        if($validator1->fails()){
+        if($regla0>0){
+            $result='0';
+            $msj='Ya se encuentra registrado un Postulante con el Tipo y Documento de Identidad ingresado, del semestre y modalidad de admisión seleccionada';
+            $selector='txtDNIE';
+        }
+        elseif($validator1->fails()){
             $result='0';
             $msj='Seleccione un tipo de Documento Válido';
             $selector='cbutipodocE';
@@ -790,12 +974,12 @@ class PostulanteController extends Controller
             $msj='Seleccione el Semestre de Postulación del Postulante';
             $selector='cbusemestreE';
         }
-        elseif ($validator17->fails() || intval($escuela_id)==0) {
+        elseif (($validator17->fails() || intval($escuela_id)==0)&& intval($tipo)==1) {
             $result='0';
             $msj='Seleccione el Programa Profesional de primera opción del postulante';
             $selector='cbucarrera1E';
         }
-        elseif ($validator18->fails()) {
+        elseif ($validator18->fails() && intval($tipo)==1) {
             $result='0';
             $msj='Ingrese el Colegio de Procedencia del Postulante';
             $selector='txtcolegioE';
@@ -821,16 +1005,28 @@ class PostulanteController extends Controller
             $msj='Ingrese el estado de Ingreso del postulante';
             $selector='cbuestadoingresoE';
         }
-        elseif ($validator23->fails()) {
+        elseif ($validator23->fails() && intval($tipo)==1) {
             $result='0';
             $msj='Seleccione el tipo de Gestión Administrativa del Colegio de Procedencia del Postulante';
             $selector='cbutipogestionE';
         }
 
-        elseif (intval($estado)==1 && intval($opcioningreso)==0) {
+        elseif (intval($estado)==1 && intval($opcioningreso)==0 && intval($tipo)==1) {
             $result='0';
             $msj='Si ha seleccionado que el postulante ingresó a un Programa Profesional, indicar a cual fue';
             $selector='cbucarreraingE';
+        }
+
+        elseif (intval($tipo)==2 && strlen($nombreGrado)==0) {
+            $result='0';
+            $msj='Ingrese el nombre y mensión del Grado al que Postula';
+            $selector='txtgradoE';
+        }
+
+        elseif (intval($tipo)==2 && strlen($universidadCulminoPregrado)==0) {
+            $result='0';
+            $msj='Ingrese el nombre de la Universidad en la que Culminó su Pregrado';
+            $selector='txtuniversidadterminoestudiosE';
         }
 
       
@@ -861,7 +1057,9 @@ class PostulanteController extends Controller
             $editPersona->save();
       
 
-        $editPostulante =Postulante::find($id);
+            if($tipo==1)
+            {
+                $editPostulante =Postulante::find($id);
         $editPostulante->codigo=$codigo;
         $editPostulante->semestre_id=$semestre_id;
         $editPostulante->escuela_id=$escuela_id;
@@ -873,14 +1071,38 @@ class PostulanteController extends Controller
         $editPostulante->opcioningreso=$opcioningreso;
         $editPostulante->persona_id=$persona_id;
         $editPostulante->observaciones=$observaciones;
-        $editPostulante->tipo='1';
+
         $editPostulante->email=$email;
         $editPostulante->escuela_id2=$escuela_id2;
         $editPostulante->tipogestioncolegio=$tipogestioncolegio;
-        $editPostulante->activo='1';
-        $editPostulante->borrado='0';
+
 
         $editPostulante->save();
+            }
+        
+
+        elseif($tipo==2)
+        {
+            $editPostulante = Postulante::find($id);
+        $editPostulante->codigo=$codigo;
+        $editPostulante->semestre_id=$semestre_id;
+        $editPostulante->modalidadadmision_id=$modalidadadmision_id;
+        $editPostulante->modalidadestudios=$modalidadestudios;
+        $editPostulante->puntaje=$puntaje;
+        $editPostulante->estado=$estado;
+        $editPostulante->persona_id=$persona_id;
+        $editPostulante->observaciones=$observaciones;
+
+        $editPostulante->email=$email;
+        $editPostulante->grado=$grado;
+        $editPostulante->nombreGrado=$nombreGrado;
+        $editPostulante->universidadCulminoPregrado=$universidadCulminoPregrado;
+
+
+        $editPostulante->save();
+        }
+
+        
 
            
 

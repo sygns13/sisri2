@@ -113,13 +113,12 @@ DROP TABLE IF EXISTS `alumnos`;
 CREATE TABLE `alumnos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `periodoMatricula` varchar(500) DEFAULT NULL,
-  `alumnoscol` varchar(45) DEFAULT NULL,
   `escuela_id` int(11) DEFAULT NULL,
   `escalaPago` tinyint(4) DEFAULT NULL,
   `promedioPonderado` double DEFAULT NULL,
   `promedioSemestre` double DEFAULT NULL,
-  `periodoIngreso` varchar(500) DEFAULT NULL,
-  `primerPeriodoMatricula` varchar(500) DEFAULT NULL,
+  `periodoIngreso` int(11) DEFAULT NULL,
+  `primerPeriodoMatricula` int(11) DEFAULT NULL,
   `alumnoRiesgo` tinyint(4) DEFAULT NULL,
   `numCursosRiesgo` int(11) DEFAULT NULL,
   `observaciones` text,
@@ -140,18 +139,34 @@ CREATE TABLE `alumnos` (
   `nombreGrado` varchar(500) DEFAULT NULL,
   `escalaPagodesc` varchar(500) DEFAULT NULL,
   `semestre_id` int(11) DEFAULT NULL,
+  `movinacional` text,
+  `moviinternacional` text,
+  `ismovnacional` tinyint(4) DEFAULT NULL,
+  `ismovinternacional` tinyint(4) DEFAULT NULL,
+  `otrotitulo` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_alumnos_escuelas1_idx` (`escuela_id`),
   KEY `fk_alumnos_personas1_idx` (`persona_id`),
   CONSTRAINT `fk_alumnos_escuelas1` FOREIGN KEY (`escuela_id`) REFERENCES `escuelas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_alumnos_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `alumnos`
 --
 
 /*!40000 ALTER TABLE `alumnos` DISABLE KEYS */;
+INSERT INTO `alumnos` (`id`,`periodoMatricula`,`escuela_id`,`escalaPago`,`promedioPonderado`,`promedioSemestre`,`periodoIngreso`,`primerPeriodoMatricula`,`alumnoRiesgo`,`numCursosRiesgo`,`observaciones`,`activo`,`borrado`,`created_at`,`updated_at`,`persona_id`,`estado`,`descestado`,`codigo`,`tituladoOtraCarrera`,`egresadoOtraCarrera`,`otraCarrera`,`email`,`tipo`,`grado`,`nombreGrado`,`escalaPagodesc`,`semestre_id`,`movinacional`,`moviinternacional`,`ismovnacional`,`ismovinternacional`,`otrotitulo`) VALUES 
+ (2,NULL,9,1,12,11,2,2,1,2,'alumno prueba edited',1,0,'2019-09-08 15:08:19','2019-09-08 16:49:07',12,1,NULL,'081.2502.635',0,0,'','emailexample@mail.com',1,0,'','se paga esta',1,'se fue a esta en la nacional','',1,0,''),
+ (3,NULL,16,1,12,11,2,1,0,0,'none',1,0,'2019-09-08 15:40:34','2019-09-08 15:40:34',13,1,NULL,'082.5695',0,0,'','jorge@unasam.edu.pe',1,0,'','paga 50 soles al mes',1,'','',0,0,NULL),
+ (5,NULL,4,0,12,4,2,1,0,0,'asdasasd',1,0,'2019-09-08 16:26:40','2019-09-08 16:55:22',15,1,NULL,'adasd',1,1,'egres','asdsa@mail.com',2,0,'','',1,'','',0,0,'titut'),
+ (6,NULL,3,0,12,11,2,2,0,0,'asdsad',1,0,'2019-09-08 16:31:27','2019-09-08 16:54:47',11,1,NULL,'123123',1,0,'','asdsad@mail.com',2,0,'','',1,'','',0,0,'otra carrera2'),
+ (7,NULL,10,0,15,11,2,2,0,0,'asdasd',1,0,'2019-09-08 16:48:01','2019-09-08 16:49:27',16,1,NULL,'21dsad12ads',0,1,'asdasdasd','daasdsa@mail.com',2,0,'','',1,'','',0,0,''),
+ (8,NULL,1,1,12,11,2,2,1,2,'asdsad',1,0,'2019-09-08 16:48:57','2019-09-08 16:48:57',17,1,NULL,'aasdsa123sadsad',0,0,'','asdsad@mail.com',1,0,'','adasd213asdsa',1,'asdas','asdasd',1,1,''),
+ (11,NULL,NULL,1,12,11,0,0,0,0,'asdsadasd edited',1,0,'2019-09-08 22:12:23','2019-09-08 22:34:20',26,1,NULL,'asdsa12adsad',0,0,'','dasdsadas@mail.com',3,3,'assadsadasd','asdsadsad edited 50 soles',1,'','',0,0,''),
+ (12,NULL,6,0,12,14,2,2,0,0,'asdsadsad',1,0,'2019-09-08 22:14:11','2019-09-08 22:14:11',27,1,NULL,'5683',0,0,'','asdasd@mail.com',1,0,'','asdsadsa123',1,'sadsad','asdsadsad',1,1,''),
+ (13,NULL,1,0,12,14,1,1,0,0,'asdasd',1,0,'2019-09-08 22:15:49','2019-09-08 22:15:49',28,1,NULL,'asdasdas',0,0,'','asdasd@mail.com',1,0,'','',1,'','',0,0,''),
+ (16,NULL,NULL,0,16,17,0,0,0,0,'asdsad asdsad asdsa sad edited',1,0,'2019-09-08 22:53:47','2019-09-08 22:54:39',30,1,NULL,'12312sad',0,0,'','dasdsa@mail.com',4,3,'Informatica','',2,'','',0,0,'');
 /*!40000 ALTER TABLE `alumnos` ENABLE KEYS */;
 
 
@@ -432,36 +447,6 @@ CREATE TABLE `detalleeventos` (
 
 /*!40000 ALTER TABLE `detalleeventos` DISABLE KEYS */;
 /*!40000 ALTER TABLE `detalleeventos` ENABLE KEYS */;
-
-
---
--- Definition of table `detalleinvestigacions`
---
-
-DROP TABLE IF EXISTS `detalleinvestigacions`;
-CREATE TABLE `detalleinvestigacions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `docentes_id` int(11) NOT NULL,
-  `investigaciones_id` int(11) NOT NULL,
-  `cargo` varchar(500) DEFAULT NULL,
-  `tipoAutor` varchar(500) DEFAULT NULL,
-  `activo` tinyint(4) DEFAULT NULL,
-  `borrado` tinyint(4) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_docentes_has_investigaciones_investigaciones1_idx` (`investigaciones_id`),
-  KEY `fk_docentes_has_investigaciones_docentes1_idx` (`docentes_id`),
-  CONSTRAINT `fk_docentes_has_investigaciones_docentes1` FOREIGN KEY (`docentes_id`) REFERENCES `docentes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_docentes_has_investigaciones_investigaciones1` FOREIGN KEY (`investigaciones_id`) REFERENCES `investigacions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `detalleinvestigacions`
---
-
-/*!40000 ALTER TABLE `detalleinvestigacions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `detalleinvestigacions` ENABLE KEYS */;
 
 
 --
@@ -2349,7 +2334,7 @@ CREATE TABLE `docentes` (
   `personalacademico` varchar(200) DEFAULT NULL,
   `cargogeneral` varchar(200) DEFAULT NULL,
   `descripcioncargo` text,
-  `maximogrado` tinyint(4) DEFAULT NULL,
+  `maximogrado` varchar(50) DEFAULT NULL,
   `descmaximogrado` varchar(500) DEFAULT NULL,
   `universidadgrado` varchar(500) DEFAULT NULL,
   `lugarmaximogrado` varchar(500) DEFAULT NULL,
@@ -2359,7 +2344,7 @@ CREATE TABLE `docentes` (
   `univotrogrado` varchar(500) DEFAULT NULL,
   `lugarotrogrado` varchar(500) DEFAULT NULL,
   `paisotrogrado` varchar(500) DEFAULT NULL,
-  `titulo` tinyint(4) DEFAULT NULL,
+  `titulo` varchar(50) DEFAULT NULL,
   `descripciontitulo` varchar(500) DEFAULT NULL,
   `condicion` varchar(500) DEFAULT NULL,
   `categoria` varchar(500) DEFAULT NULL,
@@ -2384,18 +2369,22 @@ CREATE TABLE `docentes` (
   `facultad_id` int(11) DEFAULT NULL,
   `dependencia` varchar(600) DEFAULT NULL,
   `semestre_id` int(11) NOT NULL,
+  `email` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_docentes_personas1_idx` (`persona_id`),
   KEY `fk_docentes_semestres1_idx` (`semestre_id`),
   CONSTRAINT `fk_docentes_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_docentes_semestres1` FOREIGN KEY (`semestre_id`) REFERENCES `semestres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `docentes`
 --
 
 /*!40000 ALTER TABLE `docentes` DISABLE KEYS */;
+INSERT INTO `docentes` (`id`,`personalacademico`,`cargogeneral`,`descripcioncargo`,`maximogrado`,`descmaximogrado`,`universidadgrado`,`lugarmaximogrado`,`paismaximogrado`,`otrogrado`,`estadootrogrado`,`univotrogrado`,`lugarotrogrado`,`paisotrogrado`,`titulo`,`descripciontitulo`,`condicion`,`categoria`,`regimen`,`investigador`,`pregrado`,`postgrado`,`esdestacado`,`fechaingreso`,`modalidadingreso`,`observaciones`,`activo`,`borrado`,`created_at`,`updated_at`,`persona_id`,`horaslectivas`,`horasnolectivas`,`horasinvestigacion`,`horasdedicacion`,`escuela_id`,`facultad_id`,`dependencia`,`semestre_id`,`email`) VALUES 
+ (2,'Docente','Vicerrector de Investigación','vicerrector descrito','Maestro','Ciencias de Informatica','UNASAM','Internacional','Suiza','Ing. Agrónoma','Si','Merida UAN','Internacional','Francia','Si','Ing. Industrial','Nombrado','Asociado','Tiempo parcial',1,1,0,1,'1965-09-08','Examen de Ingreso','Obs',1,0,'2019-09-08 00:01:45','2019-09-08 00:01:45',10,13,14,6,8,11,3,'Vicerrector',2,'manuel@robinson.com'),
+ (3,'Docente','Decano','Decano','Bachiller','Electrico','UNI','Nacional','PERÚ','','No','','','','Si','Electrico','Contratado a plazo determinado –a','Asociado','Tiempo parcial',1,1,0,1,'2002-04-25','Postulación','Obs',1,0,'2019-09-08 00:09:09','2019-09-08 00:45:49',11,2,4,7,4,5,6,'Decano',1,'asdsad@mail.com');
 /*!40000 ALTER TABLE `docentes` ENABLE KEYS */;
 
 
@@ -2865,7 +2854,7 @@ CREATE TABLE `personas` (
   `email` varchar(500) DEFAULT NULL,
   `telefono` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `personas`
@@ -2873,12 +2862,36 @@ CREATE TABLE `personas` (
 
 /*!40000 ALTER TABLE `personas` DISABLE KEYS */;
 INSERT INTO `personas` (`id`,`tipodoc`,`doc`,`nombres`,`apellidopat`,`apellidomat`,`genero`,`estadocivil`,`fechanac`,`esdiscapacitado`,`discapacidad`,`pais`,`departamento`,`provincia`,`distrito`,`direccion`,`activo`,`borrado`,`created_at`,`updated_at`,`email`,`telefono`) VALUES 
- (1,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,NULL,'Perú','Ancash','Huaraz','Huaraz','Hz',1,0,NULL,NULL,'cristian_7_70@hotmail.com','423544'),
+ (1,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,'','Perú','Ancash','Huaraz','Huaraz','Hz',1,0,NULL,'2019-09-08 14:58:33','cristian_7_70@hotmail.com','423544'),
  (2,1,'14725836','Marco','Quispe','Quiroga','M','1','1991-11-13',0,NULL,'PERÚ','ANCASH','HUARAZP','HUARAZD','Av. Luzuriaga 234',1,0,'2019-09-03 21:25:41','2019-09-03 21:30:17','asdsad@mail.com','423544'),
  (3,1,'78945613','Juana','Loli','Telma','F','2','1980-12-13',1,'Ceguera Parcial','PERÚ','ANCASH','HUARAZ','HUARAZ','Psje. Los Villos 234',1,0,'2019-09-03 21:41:35','2019-09-03 22:52:49','juanita@mail.com','426598'),
  (4,1,'25836985','dsasdas asd','asdasd','Urrutia','M','1','2019-09-18',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asdasd',1,0,'2019-09-03 21:45:08','2019-09-03 21:45:08','asdasd@asdas.com','13123'),
  (5,1,'25896325','dddd','dddddd','Benjas','M','1','2019-09-04',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','dddd',1,0,'2019-09-03 21:48:02','2019-09-03 21:48:02','ddd@ddd.ccc','31234123'),
- (6,1,'85263258','dsadas','adasdasd','dsadasd','M','1','2019-09-11',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asdasdsad',1,0,'2019-09-03 22:21:15','2019-09-03 22:21:15','asdasdasd@mail.com','423544');
+ (6,1,'85263258','dsadas','adasdasd','dsadasd','M','1','2019-09-11',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asdasdsad',1,0,'2019-09-03 22:21:15','2019-09-03 22:21:15','asdasdasd@mail.com','423544'),
+ (7,1,'14765852','dasdsad','asdasd','dasdsad','M','1','2019-02-12',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asd',1,0,'2019-09-07 20:48:55','2019-09-07 20:48:55','dsadsad@mail.com','asdsad'),
+ (8,1,'14765852','dasdsad','asdasd','dasdsad','M','1','2019-02-12',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asd',1,0,'2019-09-07 20:49:55','2019-09-07 20:49:55','dsadsad@mail.com','asdsad'),
+ (9,1,'14765852','dasdsad','asdasd','dasdsad','M','1','2019-02-12',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asd',1,0,'2019-09-07 20:51:50','2019-09-07 20:51:50','dsadsad@mail.com','asdsad'),
+ (10,1,'12345678','Manuel','Sanchez','Torres','M','2','1995-02-10',1,'Aneurisma','PERÚ','ANCASH','HUARAZ','HUARAZ','Jr. Los Maizales 234',1,0,'2019-09-08 00:01:44','2019-09-08 00:01:44','manuel@robinson.com','85652598'),
+ (11,1,'14785236','Diana','Quiroz','Ortega','F','1','1980-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','aasdsad',1,0,'2019-09-08 00:09:09','2019-09-08 16:31:26','asdsad@mail.com','12312331'),
+ (12,1,'11458654','Basilia','Chauca','Martinez','F','2','2000-01-01',1,'rodillas caidas','PERÚ','ANCASH','HUARAZ','HUARAZ','Jr Santa Carmela 169',1,0,'2019-09-08 15:08:19','2019-09-08 15:30:01','emailexample@mail.com','84957485'),
+ (13,1,'25874165','Jorge','Roman','Quiroz','M','1','2000-05-12',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','Psj. Belen 213',1,0,'2019-09-08 15:40:34','2019-09-08 15:40:34','jorge@unasam.edu.pe',NULL),
+ (14,1,'98765432','cdasdsadsadas','asdsad','bdasdas','M','2','1960-06-02',1,'dasdsad','PERÚ','ANCASH','HUARAZ','HUARAZ','Jr. Los paijares 234',1,0,'2019-09-08 16:23:03','2019-09-08 16:23:03','asasdas@asdsad.com','425896'),
+ (15,1,'25874123','dasd','asdad','da','M','1','1980-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','dasd',1,0,'2019-09-08 16:26:40','2019-09-08 16:26:40','asdsa@mail.com','123123'),
+ (16,1,'14725863','dsadsad','asdsad','dasd','M','1','1985-02-05',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdasd asda',1,0,'2019-09-08 16:48:01','2019-09-08 16:48:01','daasdsa@mail.com','123123123'),
+ (17,1,'25874126','dasdasdasd','asdasd','dasdasd','M','3','1963-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad',1,0,'2019-09-08 16:48:57','2019-09-08 16:48:57','asdsad@mail.com','13123123'),
+ (18,1,'25889648','dsadsad','adsasdasd','dasdsad','M','1','2002-08-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','dsadsa',1,0,'2019-09-08 17:06:46','2019-09-08 17:06:46','dasdsa@mail.com','123sdsad'),
+ (19,1,'25874125','Rocio','Rios','Zavala','F','1','1968-12-05',1,'piernas rotas','PERÚ','ANCASH','HUARAZ','HUARAZ','Belen',1,0,'2019-09-08 21:05:03','2019-09-08 21:05:03','rocio@mail.com','943589658'),
+ (20,1,'25874125','Rocio','Rios','Zavala','F','1','1968-12-05',1,'piernas rotas','PERÚ','ANCASH','HUARAZ','HUARAZ','Belen',1,0,'2019-09-08 21:07:12','2019-09-08 21:07:12','rocio@mail.com','943589658'),
+ (21,1,'36547852','asdsad','dasdd','dsasda','M','2','2017-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','adasd',1,0,'2019-09-08 21:13:17','2019-09-08 21:13:17','dsadasd@mail.com','12312312'),
+ (22,1,'258741365','Cidrolax','Montana','Roselin','M','1','2000-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','adsadsad',1,0,'2019-09-08 21:21:11','2019-09-08 21:32:13','asdsad@mail.com','13asd3asd'),
+ (23,1,'312312asdsa','dsadasd','asdsad','dasd','M','1','1985-02-05',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad',1,0,'2019-09-08 21:22:06','2019-09-08 21:22:06','dasdasd@mail.com','123123asd'),
+ (24,1,'14785235','dsadasd','asdsad','dsad','M','1','2003-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad',1,0,'2019-09-08 22:09:42','2019-09-08 22:09:42','dasdsadas@mail.com','sasa'),
+ (25,1,'14785235','dsadasd','asdsad','dsad','M','1','2003-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad',1,0,'2019-09-08 22:10:55','2019-09-08 22:10:55','dasdsadas@mail.com','sasa'),
+ (26,1,'14785235','dsadasd','asdsad','dsad','M','1','2003-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad',1,0,'2019-09-08 22:12:23','2019-09-08 22:12:23','dasdsadas@mail.com','sasa'),
+ (27,1,'213123123','dsadsad','asdsad','dsadsa','M','1','2000-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','sadasdd',1,0,'2019-09-08 22:14:11','2019-09-08 22:14:11','asdasd@mail.com','123221sad'),
+ (28,1,'asdsadsa','asdasd','asdasdasd','dsadsa','M','1','2019-09-03',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad',1,0,'2019-09-08 22:15:49','2019-09-08 22:15:49','asdasd@mail.com','1312sad'),
+ (29,1,'65478985','Cristian','Vilchez','Samaso','M','1','1985-02-05',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad1asd',1,0,'2019-09-08 22:52:39','2019-09-08 22:52:39','13123sda@mail.com','945856592'),
+ (30,1,'98741258','Carmen','Quiroga','Rios','F','1','1995-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','adssad asdsa',1,0,'2019-09-08 22:53:47','2019-09-08 22:54:39','dasdsa@mail.com','123asd12s');
 /*!40000 ALTER TABLE `personas` ENABLE KEYS */;
 
 
@@ -2923,7 +2936,7 @@ CREATE TABLE `postulantes` (
   CONSTRAINT `fk_postulantes_modalidadadmisions1` FOREIGN KEY (`modalidadadmision_id`) REFERENCES `modalidadadmisions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_postulantes_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_postulantes_semestres1` FOREIGN KEY (`semestre_id`) REFERENCES `semestres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `postulantes`
@@ -2934,7 +2947,11 @@ INSERT INTO `postulantes` (`id`,`codigo`,`semestre_id`,`escuela_id`,`colegio`,`m
  (1,'AR71',1,1,'SANTA ROSA DE VITERBO',1,'1',105,0,0,2,'detalle postulante',1,0,'2019-09-03 21:30:17','2019-09-03 21:30:17',1,NULL,NULL,NULL,NULL,NULL,NULL,'asdsad@mail.com',0,1),
  (2,'AR72',1,3,'LA INMACULADA',1,'1',180,1,4,3,'INGRESÓ A LA SEGUNDA OPCION',1,0,'2019-09-03 21:41:35','2019-09-03 22:52:49',1,NULL,NULL,NULL,NULL,NULL,NULL,'juanita@mail.com',4,2),
  (3,'asdsa',2,4,'daasdasdsad',3,'2',250,0,0,4,'dasdasd',1,0,'2019-09-03 21:45:08','2019-09-03 21:45:08',1,NULL,NULL,NULL,NULL,NULL,NULL,'asdasd@asdas.com',0,1),
- (5,'312dsad',1,1,'SANTA ROSA DE VITERBO',1,'2',150,0,0,6,'asdsadsad',1,0,'2019-09-03 22:21:15','2019-09-03 22:21:15',1,NULL,NULL,NULL,NULL,NULL,NULL,'asdasdasd@mail.com',0,1);
+ (5,'312dsad',1,1,'SANTA ROSA DE VITERBO',1,'2',150,0,0,6,'asdsadsad',1,0,'2019-09-03 22:21:15','2019-09-03 22:21:15',1,NULL,NULL,NULL,NULL,NULL,NULL,'asdasdasd@mail.com',0,1),
+ (6,'asd123sad',1,7,'asdsad123dsad',6,'2',156,1,12,18,'asdsad',1,0,'2019-09-08 17:06:46','2019-09-08 17:06:46',1,NULL,NULL,NULL,NULL,NULL,NULL,'dasdsa@mail.com',8,2),
+ (8,'pos142585',1,NULL,NULL,1,'1',145,1,NULL,20,'obs del postulante',1,0,'2019-09-08 21:07:12','2019-09-08 21:07:12',2,3,'Maestría en Ingeniería, Mensión en Seguridad e Informática',NULL,NULL,NULL,'San Marcos','rocio@mail.com',NULL,NULL),
+ (9,'asdsad',1,4,'asdsad2asdsa',5,'2',123,1,8,21,'asdsad',1,0,'2019-09-08 21:13:17','2019-09-08 21:13:17',1,NULL,NULL,NULL,NULL,NULL,NULL,'dsadasd@mail.com',7,1),
+ (10,'311asdsa',1,NULL,NULL,5,'2',123,1,NULL,22,'asdsadasd',1,0,'2019-09-08 21:21:11','2019-09-08 21:32:13',2,3,'adasd',NULL,NULL,NULL,'asdsadsad','asdsad@mail.com',NULL,NULL);
 /*!40000 ALTER TABLE `postulantes` ENABLE KEYS */;
 
 

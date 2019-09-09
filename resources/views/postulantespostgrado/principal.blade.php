@@ -1,6 +1,6 @@
 <div class="box box-primary panel-group">
         <div class="box-header with-border" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-          <h3 class="box-title">Gestión de Docentes</h3>
+          <h3 class="box-title">Gestión de Postulantes de Postgrado</h3>
           <a style="float: right;" type="button" class="btn btn-default" href="{{URL::to('home')}}"><i class="fa fa-reply-all" aria-hidden="true"></i> 
           Volver</a>
         </div>
@@ -52,22 +52,22 @@
       
 <div class="box box-success" v-if="divNuevo">
   <div class="box-header with-border" style="border: 1px solid rgb(0, 166, 90); background-color: rgb(0, 166, 90); color: white;">
-    <h3 class="box-title" id="tituloAgregar">Nuevo Docente
+    <h3 class="box-title" id="tituloAgregar">Nuevo Postulante de Postgrado
     </h3>
   </div>
- @include('docentes.formulario')  
+  @include('postulantespostgrado.formulario')  
 </div>
 
 
 <div class="box box-warning" v-if="divEdit">
   <div class="box-header with-border" style="border: 1px solid #f39c12; background-color: #f39c12; color: white;">
-    <h3 class="box-title" id="tituloAgregar">Editar Docente: @{{ filldocente.nombres }} @{{ filldocente.apellidopat }} @{{ filldocente.apellidomat }}
+    <h3 class="box-title" id="tituloAgregar">Editar Postulante de Postgrado: @{{ fillpostulantes.nombres }} @{{ fillpostulantes.apellidopat }} @{{ fillpostulantes.apellidomat }}
 
 
     </h3>
   </div>
 
-  @include('docentes.editar')  
+  @include('postulantespostgrado.editar')  
 
 </div>
 
@@ -78,7 +78,7 @@
       
       <div class="box box-primary" style="border: 1px solid #3c8dbc;" v-if="semestre_id!='0'">
         <div class="box-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-        <h3 class="box-title">Listado de Docentes del Semestre: @{{semestreNombre}}</h3>
+        <h3 class="box-title">Listado de Postulantes de Postgrado del Semestre: @{{semestreNombre}}</h3>
       
           <div class="box-tools">
             <div class="input-group input-group-sm" style="width: 300px;">
@@ -96,33 +96,33 @@
         <div class="box-body table-responsive">
           <table class="table table-hover table-bordered table-dark table-condensed table-striped" >
             <tbody><tr>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 3%;">#</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 13%;">Apellidos y Nombres</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 7%;">DNI</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Facultad</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Escuela</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 11%;">Máximo Grado</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 10%;">Personal Académico</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 11%;">Condición</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 7%;">Categoría</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 7%;">Régimen</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 7%;">Gestión</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 4%;">#</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 15%;">Apellidos y Nombres</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">DNI</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Grado a Postular</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 18%;">Denominación del Grado y Mensión</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 15%;">Modalidad de Admisión</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 10%;">Estado</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 10%;">Puntaje Obtenido</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Gestión</th>
             </tr>
-            <tr v-for="docente, key in docentes">
+            <tr v-for="postulante, key in postulantes">
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{key+pagination.from}}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ docente.apellidopat }} @{{ docente.apellidomat }}, @{{ docente.nombres }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.doc }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.facultad }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.escuela }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.maximogrado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.personalacademico }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.condicion }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.categoria }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.regimen }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ postulante.apellidopat }} @{{ postulante.apellidomat }}, @{{ postulante.nombres }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.doc }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
+                  <template v-if="parseInt(postulante.grado)==3">Maestría</template>
+                  <template v-if="parseInt(postulante.grado)==4">Doctorado</template>
+              </td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.nombreGrado }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.modalidadadmision }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;" v-if="postulante.estado=='1'">Ingresó</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;" v-if="postulante.estado=='0'">Mo Ingresó</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.puntaje }}</td>
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      
-               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(docente)" data-placement="top" data-toggle="tooltip" title="Editar Docente"><i class="fa fa-edit"></i></a>
-               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(docente)" data-placement="top" data-toggle="tooltip" title="Borrar Docente"><i class="fa fa-trash"></i></a>
+               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(postulante)" data-placement="top" data-toggle="tooltip" title="Editar Postulante"><i class="fa fa-edit"></i></a>
+               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(postulante)" data-placement="top" data-toggle="tooltip" title="Borrar Postulante"><i class="fa fa-trash"></i></a>
       </center>
              </td>
            </tr>

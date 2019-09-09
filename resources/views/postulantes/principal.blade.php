@@ -120,8 +120,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.escuelaing }}</td>
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      
-               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(postulante)" data-placement="top" data-toggle="tooltip" title="Editar Modalidad de Admisión"><i class="fa fa-edit"></i></a>
-               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(postulante)" data-placement="top" data-toggle="tooltip" title="Borrar Modalidad de Admisión"><i class="fa fa-trash"></i></a>
+               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(postulante)" data-placement="top" data-toggle="tooltip" title="Editar Postulante"><i class="fa fa-edit"></i></a>
+               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(postulante)" data-placement="top" data-toggle="tooltip" title="Borrar Postulante"><i class="fa fa-trash"></i></a>
       </center>
              </td>
            </tr>

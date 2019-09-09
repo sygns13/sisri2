@@ -38,6 +38,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('datosfacultad/{id}','DatosfacultadController@index1');
     Route::get('modalidadadmision','ModalidadadmisionController@index1');
     Route::get('postulantespregrado','PostulanteController@index1');
+    Route::get('alumnospregrado','AlumnoController@index1');
+    Route::get('alumnosegresadospregrado','AlumnoController@index2');
+    Route::get('postulantespostgrado','PostulanteController@index2');
+    Route::get('alumnospostgrado','AlumnoController@index3');
+    Route::get('alumnosegresadospostgrado','AlumnoController@index4');
     Route::get('docentes','DocenteController@index1');
 
 
@@ -50,6 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('datosfacultad','DatosfacultadController');
     Route::resource('modadmision','ModalidadadmisionController');
     Route::resource('postulantes','PostulanteController');
+    Route::resource('alumnopregrado','AlumnoController');
     Route::resource('docente','DocenteController');
 
 
@@ -69,7 +75,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('persona/buscarDNI','PersonaController@buscarDNI');
     Route::get('postulantes/imprimirExcel/{var1}','PostulanteController@imprimirExcel');
 
-
+ 
     
  /*    
     Route::get('entidades','EntidadController@index1');

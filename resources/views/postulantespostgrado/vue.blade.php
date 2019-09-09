@@ -3,7 +3,7 @@
 el: '#app',
 data:{
        titulo:"Gestión Académica",
-       subtitulo: "Postulantes",
+       subtitulo: "Postulantes de Postgrado",
        subtitulo2: "Principal",
 
    subtitle2:false,
@@ -47,7 +47,7 @@ data:{
    postulantes: [],
    errors:[],
 
-   fillpostulantes:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':'','tipo':''},
+   fillpostulantes:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':'','tipo':'','grado':'','nombreGrado':'','universidadCulminoPregrado':''},
 
    pagination: {
    'total': 0,
@@ -100,7 +100,11 @@ data:{
     observaciones:'',
     escuela_id2:0,
     tipogestioncolegio:1,
-    tipo:1,
+    tipo:2,
+    grado:3,
+    nombreGrado:'',
+    universidadCulminoPregrado:'',
+
 
     contse:{{$contse}},
     semestreNombre:'{{$semestreNombre}}',
@@ -109,7 +113,7 @@ data:{
 
     persona_id:'0',  
 
-    tipoGen:'1',   
+    tipoGen:'2',   
     
       
 
@@ -245,9 +249,12 @@ methods: {
     this.observaciones='';
     this.escuela_id2=0;
     this.tipogestioncolegio=1;
+    this.grado=3;
+    this.nombreGrado='';
+    this.universidadCulminoPregrado='';
 
-    this.tipo=1;
-    this.tipoGen=1;
+    this.tipo=2;
+    this.tipoGen=2;
 
 
     this.persona_id='0';
@@ -313,6 +320,13 @@ var url='persona/buscarDNI';
 },
 
 
+/*
+    this.grado=3;
+    this.nombreGrado='';
+    this.universidadCulminoPregrado='';
+
+
+*/
 
    create:function () {
        var url='postulantes';
@@ -323,7 +337,7 @@ var url='persona/buscarDNI';
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, codigo:this.codigo, semestre_id:this.semestre_id, escuela_id:this.escuela_id, colegio:this.colegio, modalidadadmision_id:this.modalidadadmision_id, modalidadestudios:this.modalidadestudios, puntaje:this.puntaje, estado:this.estado, opcioningreso:this.opcioningreso, observaciones:this.observaciones, escuela_id2:this.escuela_id2, tipogestioncolegio:this.tipogestioncolegio, persona_id:this.persona_id, tipo:this.tipo }).then(response=>{
+       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, codigo:this.codigo, semestre_id:this.semestre_id, escuela_id:this.escuela_id, colegio:this.colegio, modalidadadmision_id:this.modalidadadmision_id, modalidadestudios:this.modalidadestudios, puntaje:this.puntaje, estado:this.estado, opcioningreso:this.opcioningreso, observaciones:this.observaciones, escuela_id2:this.escuela_id2, tipogestioncolegio:this.tipogestioncolegio, persona_id:this.persona_id, tipo:this.tipo,grado:this.grado, nombreGrado:this.nombreGrado, universidadCulminoPregrado:this.universidadCulminoPregrado,   }).then(response=>{
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -423,6 +437,18 @@ var url='persona/buscarDNI';
        this.fillpostulantes.tipogestioncolegio=postulante.tipogestioncolegio;
        this.fillpostulantes.persona_id=postulante.persona_id;
        this.fillpostulantes.tipo=postulante.tipo;
+       this.fillpostulantes.grado=postulante.grado;
+       this.fillpostulantes.nombreGrado=postulante.nombreGrado;
+       this.fillpostulantes.universidadCulminoPregrado=postulante.universidadCulminoPregrado;
+
+
+/*
+    this.grado=3;
+    this.nombreGrado='';
+    this.universidadCulminoPregrado='';
+
+
+*/
 
 
 
@@ -454,7 +480,7 @@ var url='persona/buscarDNI';
            
            if(response.data.result=='1'){   
            this.getPostulante(this.thispage);
-           this.fillpostulantes={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':'','tipo':''};
+           this.fillpostulantes={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':'','tipo':'','grado':'','nombreGrado':'','universidadCulminoPregrado':''};
            this.errors=[];
 
            this.cerrarFormE();

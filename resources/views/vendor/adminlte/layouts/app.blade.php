@@ -90,7 +90,20 @@ desired effect
 @elseif($modulo=="docentes")
 @include('docentes.vue')
 
+@elseif($modulo=="alumnospregrado")
+@include('alumnospregrado.vue')
 
+@elseif($modulo=="alumnospregradoegresados")
+@include('alumnospregradoegresados.vue')
+
+@elseif($modulo=="postulantespostgrado")
+@include('postulantespostgrado.vue')
+
+@elseif($modulo=="alumnospostgrado")
+@include('alumnospostgrado.vue')
+
+@elseif($modulo=="alumnosegresadospostgrado")
+@include('alumnosegresadospostgrado.vue')
 
 @endif
 
