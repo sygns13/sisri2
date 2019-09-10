@@ -2558,16 +2558,19 @@ CREATE TABLE `graduados` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `persona_id` int(11) NOT NULL,
   `tipo` tinyint(4) DEFAULT NULL,
+  `trabajoinvestigacion` varchar(2000) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_bachilleres_personas1_idx` (`persona_id`),
   CONSTRAINT `fk_bachilleres_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `graduados`
 --
 
 /*!40000 ALTER TABLE `graduados` DISABLE KEYS */;
+INSERT INTO `graduados` (`id`,`escuela_id`,`nombreGrado`,`programaEstudios`,`fechaEgreso`,`idioma`,`modalidadObtencion`,`numResolucion`,`fechaResol`,`numeroDiploma`,`autoridadRector`,`fechaEmision`,`observaciones`,`activo`,`borrado`,`created_at`,`updated_at`,`persona_id`,`tipo`,`trabajoinvestigacion`) VALUES 
+ (2,13,'orador','se programo esta','2019-09-03','Aleman','asdsad','asdsadasd','2019-09-05','asdsadsa','asdsad','2019-09-10','asdsad',1,0,'2019-09-10 00:09:48','2019-09-10 00:22:11',31,1,NULL);
 /*!40000 ALTER TABLE `graduados` ENABLE KEYS */;
 
 
@@ -2854,7 +2857,7 @@ CREATE TABLE `personas` (
   `email` varchar(500) DEFAULT NULL,
   `telefono` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `personas`
@@ -2862,7 +2865,7 @@ CREATE TABLE `personas` (
 
 /*!40000 ALTER TABLE `personas` DISABLE KEYS */;
 INSERT INTO `personas` (`id`,`tipodoc`,`doc`,`nombres`,`apellidopat`,`apellidomat`,`genero`,`estadocivil`,`fechanac`,`esdiscapacitado`,`discapacidad`,`pais`,`departamento`,`provincia`,`distrito`,`direccion`,`activo`,`borrado`,`created_at`,`updated_at`,`email`,`telefono`) VALUES 
- (1,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,'','Perú','Ancash','Huaraz','Huaraz','Hz',1,0,NULL,'2019-09-08 14:58:33','cristian_7_70@hotmail.com','423544'),
+ (1,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,NULL,'Perú','Ancash','Huaraz','Huaraz','Hz',1,0,NULL,'2019-09-10 00:06:45','cristian_7_70@hotmail.com','423544'),
  (2,1,'14725836','Marco','Quispe','Quiroga','M','1','1991-11-13',0,NULL,'PERÚ','ANCASH','HUARAZP','HUARAZD','Av. Luzuriaga 234',1,0,'2019-09-03 21:25:41','2019-09-03 21:30:17','asdsad@mail.com','423544'),
  (3,1,'78945613','Juana','Loli','Telma','F','2','1980-12-13',1,'Ceguera Parcial','PERÚ','ANCASH','HUARAZ','HUARAZ','Psje. Los Villos 234',1,0,'2019-09-03 21:41:35','2019-09-03 22:52:49','juanita@mail.com','426598'),
  (4,1,'25836985','dsasdas asd','asdasd','Urrutia','M','1','2019-09-18',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asdasd',1,0,'2019-09-03 21:45:08','2019-09-03 21:45:08','asdasd@asdas.com','13123'),
@@ -2891,7 +2894,8 @@ INSERT INTO `personas` (`id`,`tipodoc`,`doc`,`nombres`,`apellidopat`,`apellidoma
  (27,1,'213123123','dsadsad','asdsad','dsadsa','M','1','2000-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','sadasdd',1,0,'2019-09-08 22:14:11','2019-09-08 22:14:11','asdasd@mail.com','123221sad'),
  (28,1,'asdsadsa','asdasd','asdasdasd','dsadsa','M','1','2019-09-03',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad',1,0,'2019-09-08 22:15:49','2019-09-08 22:15:49','asdasd@mail.com','1312sad'),
  (29,1,'65478985','Cristian','Vilchez','Samaso','M','1','1985-02-05',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad1asd',1,0,'2019-09-08 22:52:39','2019-09-08 22:52:39','13123sda@mail.com','945856592'),
- (30,1,'98741258','Carmen','Quiroga','Rios','F','1','1995-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','adssad asdsa',1,0,'2019-09-08 22:53:47','2019-09-08 22:54:39','dasdsa@mail.com','123asd12s');
+ (30,1,'98741258','Carmen','Quiroga','Rios','F','1','1995-05-02',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','adssad asdsa',1,0,'2019-09-08 22:53:47','2019-09-08 22:54:39','dasdsa@mail.com','123asd12s'),
+ (31,1,'31233123','Mata','Raul','Quispe','M','2','2010-05-02',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asdsadsa',1,0,'2019-09-10 00:09:48','2019-09-10 00:22:11','dasdsad@mail.com','123123sad');
 /*!40000 ALTER TABLE `personas` ENABLE KEYS */;
 
 
@@ -2936,7 +2940,7 @@ CREATE TABLE `postulantes` (
   CONSTRAINT `fk_postulantes_modalidadadmisions1` FOREIGN KEY (`modalidadadmision_id`) REFERENCES `modalidadadmisions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_postulantes_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_postulantes_semestres1` FOREIGN KEY (`semestre_id`) REFERENCES `semestres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `postulantes`

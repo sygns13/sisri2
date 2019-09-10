@@ -105,6 +105,9 @@ desired effect
 @elseif($modulo=="alumnosegresadospostgrado")
 @include('alumnosegresadospostgrado.vue')
 
+@elseif($modulo=="bachilleres")
+@include('bachilleres.vue')
+
 @endif
 
 <script type="text/javascript">

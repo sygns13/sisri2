@@ -501,7 +501,7 @@ class AlumnoController extends Controller
 
         if($regla0>0){
             $result='0';
-            $msj='Ya se encuentra registrado un Alumno Matriculado de Pregrado con el Tipo y Documento de Identidad ingresado, del semestre seleccionado';
+            $msj='Ya se encuentra registrado un Alumno Matriculado con el Tipo y Documento de Identidad ingresado, del semestre seleccionado';
             $selector='txtDNI';
         }
         elseif($validator1->fails()){

@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('alumnospostgrado','AlumnoController@index3');
     Route::get('alumnosegresadospostgrado','AlumnoController@index4');
     Route::get('docentes','DocenteController@index1');
+    Route::get('bachilleres','GraduadoController@index1');
 
 
 
@@ -57,6 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('postulantes','PostulanteController');
     Route::resource('alumnopregrado','AlumnoController');
     Route::resource('docente','DocenteController');
+    Route::resource('graduado','GraduadoController');
 
 
 
