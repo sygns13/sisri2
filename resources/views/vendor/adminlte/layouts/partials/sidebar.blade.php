@@ -98,10 +98,10 @@
             <li class="treeview" v-bind:class="classMenu4">
                 <a href="#"><i class='fa fa-rocket'></i> <span>Investigación</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Investigadores</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Investigaciones</a></li>
-                    <li><a href="maestros"><i class='fa fa-gg'></i> Tesis</a></li>
-                    <li><a href="doctores"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
+                    <li><a href="investigadores"><i class='fa fa-gg'></i> Investigadores</a></li>
+                    <li><a href="investigaciones"><i class='fa fa-gg'></i> Investigaciones</a></li>
+                    <li><a href="tesis"><i class='fa fa-gg'></i> Tesis</a></li>
+                    <li><a href="revistas"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
                 </ul>
             </li>
             @endif

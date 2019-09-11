@@ -108,6 +108,15 @@ desired effect
 @elseif($modulo=="bachilleres")
 @include('bachilleres.vue')
 
+@elseif($modulo=="titulados")
+@include('titulados.vue')
+
+@elseif($modulo=="maestros")
+@include('maestros.vue')
+
+@elseif($modulo=="doctores")
+@include('doctores.vue')
+
 @endif
 
 <script type="text/javascript">

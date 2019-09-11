@@ -45,7 +45,7 @@
       </div>
 
       <center>
-        <h4>Datos Personales del Bachiller</h4>
+        <h4>Datos Personales del Doctor</h4>
       </center>
 
       <div class="col-md-12" style="padding-top: 15px;">
@@ -201,28 +201,24 @@
       </div>
 
       <center>
-        <h4>Datos del Grado de Bachiller</h4>
+        <h4>Datos del Registro de Doctorado</h4>
       </center>
 
 
+
       <div class="col-md-12" style="padding-top: 15px;">
-        <div class="form-group">
-
-
-            <label for="cbucarrera" class="col-sm-2 control-label">Escuela Profesional:*</label>
-            <div class="col-sm-10">
-                <select class="form-control" id="cbucarrera" name="cbucarrera" v-model="escuela_id">
-                    <option value="0" disabled>Seleccione un Programa Profesional...</option>
-                  @foreach ($escuelas as $dato)
-                  <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
-                  @endforeach                   
-                </select>
+            <div class="form-group">
+  
+                <label for="txtprogramaestudios" class="col-sm-2 control-label">Programa de Estudios:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="txtprogramaestudios" name="txtprogramaestudios" placeholder="Nombre del Programa de Estudios"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="programaEstudios">
+                </div>
+  
               </div>
+            </div>
 
-          </div>
-        </div>
-
-
+            
 
       <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
@@ -237,17 +233,20 @@
           </div>
 
 
-          <div class="col-md-12" style="padding-top: 15px;">
+          
+
+            <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
   
-                <label for="txtprogramaestudios" class="col-sm-2 control-label">Programa de Estudios:</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="txtprogramaestudios" name="txtprogramaestudios" placeholder="Nombre del Programa de Estudios"
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="programaEstudios">
+                <label for="txttrabajoinvestigacion" class="col-sm-3 control-label">Trabajo de Investigación para la Obtención del Grado:</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="txttrabajoinvestigacion" name="txttrabajoinvestigacion" placeholder="Título del Trabajo de Investigación"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="trabajoinvestigacion">
                 </div>
   
               </div>
             </div>
+            
 
 
             <div class="col-md-12" style="padding-top: 15px;">

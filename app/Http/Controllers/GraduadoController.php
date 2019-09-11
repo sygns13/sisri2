@@ -57,6 +57,70 @@ class GraduadoController extends Controller
         }
     }
 
+    public function index2()
+    {
+        if(accesoUser([1,2])){
+
+
+            $idtipouser=Auth::user()->tipouser_id;
+            $tipouser=Tipouser::find($idtipouser);
+
+            $escuelas = DB::table('escuelas')
+            ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+            ->where('escuelas.borrado','0')
+  
+            ->orderBy('facultads.nombre')
+            ->orderBy('escuelas.nombre')
+            ->select('escuelas.id','escuelas.nombre','escuelas.activo','escuelas.borrado','escuelas.facultad_id','facultads.nombre as facultad')
+            ->get();
+
+
+            $modulo="titulados";
+
+            return view('titulados.index',compact('tipouser','modulo','escuelas'));
+        }
+        else
+        {
+            return redirect('home');           
+        }
+    }
+
+    public function index3()
+    {
+        if(accesoUser([1,2])){
+
+
+            $idtipouser=Auth::user()->tipouser_id;
+            $tipouser=Tipouser::find($idtipouser);
+
+            $modulo="maestros";
+
+            return view('maestros.index',compact('tipouser','modulo'));
+        }
+        else
+        {
+            return redirect('home');           
+        }
+    }
+
+    public function index4()
+    {
+        if(accesoUser([1,2])){
+
+
+            $idtipouser=Auth::user()->tipouser_id;
+            $tipouser=Tipouser::find($idtipouser);
+
+            $modulo="doctores";
+
+            return view('doctores.index',compact('tipouser','modulo'));
+        }
+        else
+        {
+            return redirect('home');           
+        }
+    }
+
 
     public function index(Request $request)
     {   
@@ -94,9 +158,7 @@ class GraduadoController extends Controller
      {    
         $graduados = DB::table('graduados')
         ->join('personas', 'personas.id', '=', 'graduados.persona_id')
-        ->join('escuelas', 'escuelas.id', '=', 'graduados.escuela_id')
-        ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
-   
+     
         ->where('graduados.borrado','0')
         ->where('graduados.tipo',$tipo)
         ->where(function($query) use ($buscar){
@@ -110,7 +172,7 @@ class GraduadoController extends Controller
         ->orderBy('personas.nombres')
    
         ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','graduados.id',
-        'graduados.escuela_id','graduados.nombreGrado','graduados.programaEstudios','graduados.fechaEgreso','graduados.idioma','graduados.modalidadObtencion','graduados.numResolucion','graduados.fechaResol','graduados.numeroDiploma','graduados.autoridadRector','graduados.fechaEmision','graduados.observaciones','graduados.persona_id','graduados.tipo','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','graduados.trabajoinvestigacion')
+        'graduados.escuela_id','graduados.nombreGrado','graduados.programaEstudios','graduados.fechaEgreso','graduados.idioma','graduados.modalidadObtencion','graduados.numResolucion','graduados.fechaResol','graduados.numeroDiploma','graduados.autoridadRector','graduados.fechaEmision','graduados.observaciones','graduados.persona_id','graduados.tipo','graduados.trabajoinvestigacion')
         ->paginate(50);
 
     }
@@ -394,7 +456,7 @@ class GraduadoController extends Controller
 
 
 
-        elseif ($validator16->fails()) {
+        elseif ($validator16->fails() && ((intval($tipo)!=3) && (intval($tipo)!=4))) {
             $result='0';
             $msj='Seleccione la Escuela Profesional';
             $selector='cbucarrera';
@@ -461,13 +523,14 @@ class GraduadoController extends Controller
             $selector='txtfechaemision';
         }
 
-
-        elseif ($validator27->fails() && intval($tipo)!=1) {
+        elseif ($validator27->fails() && ((intval($tipo)!=1) && (intval($tipo)!=2)))
+        {
             $result='0';
             $msj='Ingrese el Trabajo de Investigación para la obtención del grado';
             $selector='txttrabajoinvestigacion';
         }
 
+        
         else{
 
 
@@ -550,23 +613,23 @@ class GraduadoController extends Controller
         if($tipo==3 || $tipo==4)
         {
             $newGraduado = new Graduado();
-            $newGraduado->escuela_id=$escuela_id;
-            $newGraduado->nombreGrado=$nombreGrado;
-            $newGraduado->programaEstudios=$programaEstudios;
-            $newGraduado->fechaEgreso=$fechaEgreso;
-            $newGraduado->idioma=$idioma;
-            $newGraduado->modalidadObtencion=$modalidadObtencion;
-            $newGraduado->numResolucion=$numResolucion;
-            $newGraduado->fechaResol=$fechaResol;
-            $newGraduado->numeroDiploma=$numeroDiploma;
-            $newGraduado->autoridadRector=$autoridadRector;
-            $newGraduado->fechaEmision=$fechaEmision;
-            $newGraduado->observaciones=$observaciones;
-            $newGraduado->persona_id=$persona_id;
-            $newGraduado->tipo=$tipo;
-            $newGraduado->trabajoinvestigacion=$trabajoinvestigacion;
-            $newGraduado->activo='1';
-            $newGraduado->borrado='0';
+
+        $newGraduado->nombreGrado=$nombreGrado;
+        $newGraduado->programaEstudios=$programaEstudios;
+        $newGraduado->fechaEgreso=$fechaEgreso;
+        $newGraduado->idioma=$idioma;
+        $newGraduado->modalidadObtencion=$modalidadObtencion;
+        $newGraduado->numResolucion=$numResolucion;
+        $newGraduado->fechaResol=$fechaResol;
+        $newGraduado->numeroDiploma=$numeroDiploma;
+        $newGraduado->autoridadRector=$autoridadRector;
+        $newGraduado->fechaEmision=$fechaEmision;
+        $newGraduado->observaciones=$observaciones;
+        $newGraduado->persona_id=$persona_id;
+        $newGraduado->tipo=$tipo;
+        $newGraduado->trabajoinvestigacion=$trabajoinvestigacion;
+        $newGraduado->activo='1';
+        $newGraduado->borrado='0';
     
             $newGraduado->save();
 
@@ -863,7 +926,7 @@ class GraduadoController extends Controller
 
 
 
-        elseif ($validator16->fails()) {
+        elseif ($validator16->fails() && ((intval($tipo)!=3) && (intval($tipo)!=4))) {
             $result='0';
             $msj='Seleccione la Escuela Profesional';
             $selector='cbucarreraE';
@@ -931,7 +994,7 @@ class GraduadoController extends Controller
         }
 
 
-        elseif ($validator27->fails() && intval($tipo)!=1) {
+        elseif ($validator27->fails() && ((intval($tipo)!=1) && (intval($tipo)!=2))) {
             $result='0';
             $msj='Ingrese el Trabajo de Investigación para la obtención del grado';
             $selector='txttrabajoinvestigacionE';
@@ -990,7 +1053,6 @@ class GraduadoController extends Controller
         {
             
             $newGraduado = Graduado::find($id);
-            $newGraduado->escuela_id=$escuela_id;
             $newGraduado->nombreGrado=$nombreGrado;
             $newGraduado->programaEstudios=$programaEstudios;
             $newGraduado->fechaEgreso=$fechaEgreso;
@@ -1003,10 +1065,9 @@ class GraduadoController extends Controller
             $newGraduado->fechaEmision=$fechaEmision;
             $newGraduado->observaciones=$observaciones;
             $newGraduado->persona_id=$persona_id;
-
             $newGraduado->trabajoinvestigacion=$trabajoinvestigacion;
 
-    
+
             $newGraduado->save();
 
         }

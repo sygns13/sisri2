@@ -45,7 +45,7 @@
       </div>
 
       <center>
-        <h4>Datos Personales del Bachiller</h4>
+        <h4>Datos Personales del Titulado</h4>
       </center>
 
       <div class="col-md-12" style="padding-top: 15px;">
@@ -201,7 +201,7 @@
       </div>
 
       <center>
-        <h4>Datos del Grado de Bachiller</h4>
+        <h4>Datos del Registro de Títulado</h4>
       </center>
 
 
@@ -248,6 +248,7 @@
   
               </div>
             </div>
+            
 
 
             <div class="col-md-12" style="padding-top: 15px;">

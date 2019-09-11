@@ -45,6 +45,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('alumnosegresadospostgrado','AlumnoController@index4');
     Route::get('docentes','DocenteController@index1');
     Route::get('bachilleres','GraduadoController@index1');
+    Route::get('titulados','GraduadoController@index2');
+    Route::get('maestros','GraduadoController@index3');
+    Route::get('doctores','GraduadoController@index4');
+    Route::get('investigadores','InvestigadorController@index1');
+    Route::get('investigaciones','InvestigacionController@index1');
+    Route::get('tesis','TesisController@index1');
+    Route::get('revistas','RevistaController@index1');
 
 
 

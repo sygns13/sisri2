@@ -1,6 +1,6 @@
 <div class="box box-primary panel-group">
         <div class="box-header with-border" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-          <h3 class="box-title">Gestión de Bachilleres</h3>
+          <h3 class="box-title">Gestión de Maestros</h3>
           <a style="float: right;" type="button" class="btn btn-default" href="{{URL::to('home')}}"><i class="fa fa-reply-all" aria-hidden="true"></i> 
           Volver</a>
         </div>
@@ -29,22 +29,22 @@
       
  <div class="box box-success" v-if="divNuevo">
   <div class="box-header with-border" style="border: 1px solid rgb(0, 166, 90); background-color: rgb(0, 166, 90); color: white;">
-    <h3 class="box-title" id="tituloAgregar">Nuevo bachiller Matriculado de Pregrado
+    <h3 class="box-title" id="tituloAgregar">Nuevo Registro de Maestro
     </h3>
   </div>
-  @include('bachilleres.formulario')  
+  @include('maestros.formulario')  
 </div>
 
 
 <div class="box box-warning" v-if="divEdit">
   <div class="box-header with-border" style="border: 1px solid #f39c12; background-color: #f39c12; color: white;">
-    <h3 class="box-title" id="tituloAgregar">Editar Bachiller: @{{ fillbachilleres.nombres }} @{{ fillbachilleres.apellidopat }} @{{ fillbachilleres.apellidomat }}
+    <h3 class="box-title" id="tituloAgregar">Editar Maestro: @{{ fillmaestros.nombres }} @{{ fillmaestros.apellidopat }} @{{ fillmaestros.apellidomat }}
 
 
     </h3>
   </div>
 
-  @include('bachilleres.editar')  
+  @include('maestros.editar')  
 
 </div>
 
@@ -54,7 +54,7 @@
       
       <div class="box box-primary" style="border: 1px solid #3c8dbc;">
         <div class="box-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-        <h3 class="box-title">Listado de Bachilleres</h3>
+        <h3 class="box-title">Listado de Maestros</h3>
       
           <div class="box-tools">
             <div class="input-group input-group-sm" style="width: 300px;">
@@ -73,29 +73,27 @@
           <table class="table table-hover table-bordered table-dark table-condensed table-striped" >
             <tbody><tr>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 4%;">#</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 16%;">Apellidos y Nombres</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 18%;">Apellidos y Nombres</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">DNI</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 15%;">Facultad</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 18%;">Escuela Profesional</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 11%;">Denominación del Grado</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 24%;">Programa de Estudio</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 18%;">Denominación del Grado</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Fecha de Egreso</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Fecha de Emisión</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Fecha de Emisión del Grado</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Gestión</th>
             </tr>
-            <tr v-for="bachiller, key in graduados">
+            <tr v-for="maestro, key in graduados">
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{key+pagination.from}}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ bachiller.apellidopat }} @{{ bachiller.apellidomat }}, @{{ bachiller.nombres }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.doc }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.facultad }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.escuela }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.nombreGrado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.fechaEgreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.fechaEmision }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ maestro.apellidopat }} @{{ maestro.apellidomat }}, @{{ maestro.nombres }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.doc }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.programaEstudios }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.nombreGrado }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.fechaEgreso }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.fechaEmision }}</td>
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      
-               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(bachiller)" data-placement="top" data-toggle="tooltip" title="Editar Bachiller"><i class="fa fa-edit"></i></a>
-               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(bachiller)" data-placement="top" data-toggle="tooltip" title="Borrar Bachiller"><i class="fa fa-trash"></i></a>
+               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(maestro)" data-placement="top" data-toggle="tooltip" title="Editar Maestro"><i class="fa fa-edit"></i></a>
+               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(maestro)" data-placement="top" data-toggle="tooltip" title="Borrar Maestro"><i class="fa fa-trash"></i></a>
       </center>
              </td>
            </tr>
