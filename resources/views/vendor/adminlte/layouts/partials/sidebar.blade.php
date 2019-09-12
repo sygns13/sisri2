@@ -111,8 +111,8 @@
             <li class="treeview" v-bind:class="classMenu5">
                 <a href="#"><i class='fa fa-users'></i> <span>Gestión y Soporte</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Administrativos</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Locación de Servicios</a></li>
+                    <li><a href="administrativos"><i class='fa fa-gg'></i> Administrativos</a></li>
+                    <li><a href="locacionservicios"><i class='fa fa-gg'></i> Locación de Servicios</a></li>
 
                 </ul>
             </li>

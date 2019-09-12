@@ -303,9 +303,9 @@
                         </select>
                       </div>
     
-                      <label for="cbumaxgradoE" class="col-sm-2 control-label">Máximo Grado Académico:*</label>
+                      <label for="cbumaxgrado" class="col-sm-2 control-label">Máximo Grado Académico:*</label>
                       <div class="col-sm-4">
-                        <select class="form-control" id="cbumaxgradoE" name="cbumaxgradoE" v-model="maximogrado">
+                        <select class="form-control" id="cbumaxgrado" name="cbumaxgrado" v-model="maximogrado">
                             <option value="0">Sin grado</option>                        
                             <option value="Primaria completa">Primaria completa</option>                        
                             <option value="Secundaria completa">Secundaria completa</option>                        

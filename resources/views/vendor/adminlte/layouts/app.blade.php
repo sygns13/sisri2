@@ -117,6 +117,12 @@ desired effect
 @elseif($modulo=="doctores")
 @include('doctores.vue')
 
+@elseif($modulo=="administrativos")
+@include('administrativos.vue')
+
+@elseif($modulo=="adminlocacion")
+@include('adminlocacion.vue')
+
 @endif
 
 <script type="text/javascript">
