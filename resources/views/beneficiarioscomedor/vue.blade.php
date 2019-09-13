@@ -2,8 +2,8 @@
     let app = new Vue({
 el: '#app',
 data:{
-       titulo:"Gestión Académica",
-       subtitulo: "Postulantes",
+       titulo:"Bienestar Universitario",
+       subtitulo: "Alumnos Beneficiarios del Comedor Universitario",
        subtitulo2: "Principal",
 
    subtitle2:false,
@@ -26,14 +26,14 @@ data:{
    divloader9:false,
    divloader10:false,
    divtitulo:true,
-   classTitle:'fa fa-graduation-cap',
+   classTitle:'fa fa-users',
    classMenu0:'',
    classMenu1:'',
-   classMenu2:'active',
+   classMenu2:'',
    classMenu3:'',
    classMenu4:'',
    classMenu5:'',
-   classMenu6:'',
+   classMenu6:'active',
    classMenu7:'',
    classMenu8:'',
    classMenu9:'',
@@ -44,10 +44,10 @@ data:{
 
    divprincipal:false,
 
-   postulantes: [],
+   alumnos: [],
    errors:[],
 
-   fillpostulantes:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':'','tipo':''},
+   fillalumnos:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','id':'','codigo':'','escuela_id':'','semestre_id':'', 'persona_id':'','observaciones':''},
 
    pagination: {
    'total': 0,
@@ -88,35 +88,24 @@ data:{
     email:'',
     telefono:'',
 
-    codigo:'',
     semestre_id:{{$semestresel}},
+    
+    codigo:'',
     escuela_id:0,
-    colegio:'',
-    modalidadadmision_id:0,
-    modalidadestudios:1,
-    puntaje:'',
-    estado:0,
-    opcioningreso:0,
     observaciones:'',
-    escuela_id2:0,
-    tipogestioncolegio:1,
-    tipo:1,
+ 
 
     contse:{{$contse}},
     semestreNombre:'{{$semestreNombre}}',
 
 
 
-    persona_id:'0',  
-
-    tipoGen:'1',   
-    
-      
+    persona_id:'0',       
 
 
 },
 created:function () {
-   this.getPostulante(this.thispage);
+   this.getAlumno(this.thispage);
 
 },
 mounted: function () {
@@ -168,17 +157,17 @@ methods: {
 
 
 
-   getPostulante: function (page) {
+   getAlumno: function (page) {
        var busca=this.buscar;
-       var url = 'postulantes?page='+page+'&busca='+busca+'&semestre_id='+this.semestre_id+'&tipo='+this.tipoGen;
+       var url = 'benefcomedor?page='+page+'&busca='+busca+'&semestre_id='+this.semestre_id;
 
        axios.get(url).then(response=>{
-           this.postulantes= response.data.postulantes.data;
+           this.alumnos= response.data.alumnos.data;
            this.pagination= response.data.pagination;
 
            
 
-           if(this.postulantes.length==0 && this.thispage!='1'){
+           if(this.alumnos.length==0 && this.thispage!='1'){
                var a = parseInt(this.thispage) ;
                a--;
                this.thispage=a.toString();
@@ -189,11 +178,11 @@ methods: {
 
    changePage:function (page) {
        this.pagination.current_page=page;
-       this.getPostulante(page);
+       this.getAlumno(page);
        this.thispage=page;
    },
    buscarBtn: function () {
-       this.getPostulante();
+       this.getAlumno();
        this.thispage='1';
    },
 
@@ -234,21 +223,10 @@ methods: {
     this.direccion='';
     this.email='';
     this.telefono='';
+
     this.codigo='';
     this.escuela_id=0;
-    this.colegio='';
-    this.modalidadadmision_id=0;
-    this.modalidadestudios=1;
-    this.puntaje='';
-    this.estado=0;
-    this.opcioningreso=0;
     this.observaciones='';
-    this.escuela_id2=0;
-    this.tipogestioncolegio=1;
-
-    this.tipo=1;
-    this.tipoGen=1;
-
 
     this.persona_id='0';
 
@@ -267,23 +245,27 @@ var url='persona/buscarDNI';
 
        if(String(response.data.result)=='1'){
 
-        this.nombres='';
-            this.apellidopat='';
-            this.apellidomat='';
-            this.genero='M';
-            this.estadocivil=1;
-            this.fechanac='';
-            this.esdiscapacitado=0;
-            this.discapacidad='';
-            this.pais='PERÚ';
-            this.departamento='ANCASH';
-            this.provincia='HUARAZ';
-            this.distrito='HUARAZ';
-            this.direccion='';
-            this.email='';
-            this.telefono='';
 
-            this.persona_id='0';
+    this.nombres='';
+    this.apellidopat='';
+    this.apellidomat='';
+    this.genero='M';
+    this.estadocivil=1;
+    this.fechanac='';
+    this.esdiscapacitado=0;
+    this.discapacidad='';
+    this.pais='PERÚ';
+    this.departamento='ANCASH';
+    this.provincia='HUARAZ';
+    this.distrito='HUARAZ';
+    this.direccion='';
+    this.email='';
+    this.telefono='';
+
+
+    this.persona_id='0';
+
+    
 
            this.formularioCrear=true;
 
@@ -320,6 +302,7 @@ var url='persona/buscarDNI';
             });
 
         }else{
+
             this.nombres='';
             this.apellidopat='';
             this.apellidomat='';
@@ -339,6 +322,8 @@ var url='persona/buscarDNI';
             this.persona_id='0';
 
             this.formularioCrear=false;
+
+            
            $('#'+response.data.selector).focus();
            $('#'+response.data.selector).css( "border", "1px solid red" );
            toastr.error(response.data.msj);
@@ -350,9 +335,18 @@ var url='persona/buscarDNI';
 },
 
 
+/*
+
+    semestre_id:{{$semestresel}},
+    
+    codigo:'',
+    escuela_id:0,
+    observaciones:'',
+
+    */
 
    create:function () {
-       var url='postulantes';
+       var url='benefcomedor';
        $("#btnGuardar").attr('disabled', true);
        $("#btnCancel").attr('disabled', true);
        $("#btnClose").attr('disabled', true);
@@ -360,7 +354,7 @@ var url='persona/buscarDNI';
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, codigo:this.codigo, semestre_id:this.semestre_id, escuela_id:this.escuela_id, colegio:this.colegio, modalidadadmision_id:this.modalidadadmision_id, modalidadestudios:this.modalidadestudios, puntaje:this.puntaje, estado:this.estado, opcioningreso:this.opcioningreso, observaciones:this.observaciones, escuela_id2:this.escuela_id2, tipogestioncolegio:this.tipogestioncolegio, persona_id:this.persona_id, tipo:this.tipo }).then(response=>{
+       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, semestre_id:this.semestre_id, codigo:this.codigo, escuela_id:this.escuela_id, persona_id:this.persona_id, observaciones:this.observaciones   }).then(response=>{
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -370,7 +364,7 @@ var url='persona/buscarDNI';
 
    
            if(String(response.data.result)=='1'){
-               this.getPostulante(this.thispage);
+               this.getAlumno(this.thispage);
                this.errors=[];
                this.cerrarFormNuevo();
                toastr.success(response.data.msj);
@@ -387,13 +381,13 @@ var url='persona/buscarDNI';
 
 
 
-   borrar:function (postulante) {
+   borrar:function (alumno) {
 
 
     
         swal.fire({
              title: '¿Estás seguro?',
-             text: "¿Desea eliminar el Postulante Seleccionado? -- Nota: este proceso no se podrá revertir.",
+             text: "¿Desea eliminar el Alumno Beneficiario del Comedor Seleccionado? -- Nota: este proceso no se podrá revertir.",
              type: 'info',
              showCancelButton: true,
              confirmButtonColor: '#3085d6',
@@ -403,11 +397,11 @@ var url='persona/buscarDNI';
 
             if (result.value) {
 
-                var url = 'postulantes/'+postulante.id;
+                var url = 'benefcomedor/'+alumno.id;
                 axios.delete(url).then(response=>{//eliminamos
 
                 if(response.data.result=='1'){
-                    app.getPostulante(app.thispage);//listamos
+                    app.getAlumno(app.thispage);//listamos
                     toastr.success(response.data.msj);//mostramos mensaje
                 }else{
                     // $('#'+response.data.selector).focus();
@@ -421,46 +415,45 @@ var url='persona/buscarDNI';
    },
 
 
+/*
 
+    semestre_id:{{$semestresel}},
+    
+    codigo:'',
+    escuela_id:0,
+    observaciones:'',
 
-   edit:function (postulante) {
+    */
+
+   edit:function (alumno) {
 
        this.cerrarFormNuevo();
 
 
-       this.fillpostulantes.id=postulante.id;
-       this.fillpostulantes.tipodoc=postulante.tipodoc;
-       this.fillpostulantes.doc=postulante.doc;
-       this.fillpostulantes.nombres=postulante.nombres;
-       this.fillpostulantes.apellidopat=postulante.apellidopat;
-       this.fillpostulantes.apellidomat=postulante.apellidomat;
-       this.fillpostulantes.genero=postulante.genero;
-       this.fillpostulantes.estadocivil=postulante.estadocivil;
-       this.fillpostulantes.fechanac=postulante.fechanac;
-       this.fillpostulantes.esdiscapacitado=postulante.esdiscapacitado;
-       this.fillpostulantes.discapacidad=postulante.discapacidad;
-       this.fillpostulantes.pais=postulante.pais;
-       this.fillpostulantes.departamento=postulante.departamento;
-       this.fillpostulantes.provincia=postulante.provincia;
-       this.fillpostulantes.distrito=postulante.distrito;
-       this.fillpostulantes.direccion=postulante.direccion;
-       this.fillpostulantes.email=postulante.email;
-       this.fillpostulantes.telefono=postulante.telefono;
-       this.fillpostulantes.codigo=postulante.codigo;
-       this.fillpostulantes.semestre_id=postulante.semestre_id;
-       this.fillpostulantes.escuela_id=postulante.escuela_id;
-       this.fillpostulantes.colegio=postulante.colegio;
-       this.fillpostulantes.modalidadadmision_id=postulante.modalidadadmision_id;
-       this.fillpostulantes.modalidadestudios=postulante.modalidadestudios;
-       this.fillpostulantes.puntaje=postulante.puntaje;
-       this.fillpostulantes.estado=postulante.estado;
-       this.fillpostulantes.opcioningreso=postulante.opcioningreso;
-       this.fillpostulantes.observaciones=postulante.observaciones;
-       this.fillpostulantes.escuela_id2=postulante.escuela_id2;
-       this.fillpostulantes.tipogestioncolegio=postulante.tipogestioncolegio;
-       this.fillpostulantes.persona_id=postulante.persona_id;
-       this.fillpostulantes.tipo=postulante.tipo;
+       this.fillalumnos.id=alumno.id;
+       this.fillalumnos.tipodoc=alumno.tipodoc;
+       this.fillalumnos.doc=alumno.doc;
+       this.fillalumnos.nombres=alumno.nombres;
+       this.fillalumnos.apellidopat=alumno.apellidopat;
+       this.fillalumnos.apellidomat=alumno.apellidomat;
+       this.fillalumnos.genero=alumno.genero;
+       this.fillalumnos.estadocivil=alumno.estadocivil;
+       this.fillalumnos.fechanac=alumno.fechanac;
+       this.fillalumnos.esdiscapacitado=alumno.esdiscapacitado;
+       this.fillalumnos.discapacidad=alumno.discapacidad;
+       this.fillalumnos.pais=alumno.pais;
+       this.fillalumnos.departamento=alumno.departamento;
+       this.fillalumnos.provincia=alumno.provincia;
+       this.fillalumnos.distrito=alumno.distrito;
+       this.fillalumnos.direccion=alumno.direccion;
+       this.fillalumnos.email=alumno.email;
+       this.fillalumnos.telefono=alumno.telefono;
 
+       this.fillalumnos.semestre_id=alumno.semestre_id;
+       this.fillalumnos.codigo=alumno.codigo;
+       this.fillalumnos.escuela_id=alumno.escuela_id;
+       this.fillalumnos.persona_id=alumno.persona_id;
+       this.fillalumnos.observaciones=alumno.observaciones;
 
 
         this.divEdit=true;
@@ -478,20 +471,20 @@ var url='persona/buscarDNI';
    },
 
    update:function (id) {
-       var url="postulantes/"+id;
+       var url="benefcomedor/"+id;
        $("#btnSaveE").attr('disabled', true);
        $("#btnCloseE").attr('disabled', true);
        this.divloaderEdit=true;
 
-       axios.put(url, this.fillpostulantes).then(response=>{
+       axios.put(url, this.fillalumnos).then(response=>{
 
            $("#btnSaveE").removeAttr("disabled");
            $("#btnCloseE").removeAttr("disabled");
            this.divloaderEdit=false;
            
            if(response.data.result=='1'){   
-           this.getPostulante(this.thispage);
-           this.fillpostulantes={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','codigo':'','semestre_id':'','escuela_id':'','colegio':'','modalidadadmision_id':'','modalidadestudios':'','puntaje':'','estado':'','opcioningreso':'','observaciones':'','escuela_id2':'','tipogestioncolegio':'','persona_id':'','id':'','tipo':''};
+           this.getAlumno(this.thispage);
+           this.fillalumnos={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','id':'','codigo':'','escuela_id':'','semestre_id':'', 'persona_id':'','observaciones':''};
            this.errors=[];
 
            this.cerrarFormE();
@@ -508,8 +501,8 @@ var url='persona/buscarDNI';
 
 
    descargarPlantilla:function(){
-    //window.location="postulantes/imprimirExcel/"+buscar+"/"+fech+"/"+fec1+"/"+fec2+"/"+tipoP+"";
-    window.location="postulantes/imprimirExcel/"+3;
+    //window.location="alumnos/imprimirExcel/"+buscar+"/"+fech+"/"+fec1+"/"+fec2+"/"+tipoP+"";
+    window.location="benefcomedor/imprimirExcel/"+3;
    },
 }
 });

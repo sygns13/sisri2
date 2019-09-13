@@ -122,11 +122,11 @@
             <li class="treeview" v-bind:class="classMenu6">
                 <a href="#"><i class='fa fa-plus-square'></i> <span>Bienestar Universitario</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Beneficiarios del Comedor</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Beneficiarios del GYM</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Beneficiarios de Talleres Deportivos</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Programas de Salud</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Campalas de DBU</a></li>
+                    <li><a href="beneficiarioscomedor"><i class='fa fa-gg'></i> Beneficiarios del Comedor</a></li>
+                    <li><a href="beneficiariosgym"><i class='fa fa-gg'></i> Beneficiarios del GYM</a></li>
+                    <li><a href="beneficiariostalleresdeportivos"><i class='fa fa-gg'></i> Benef Talleres Deportivos</a></li>
+                    <li><a href="programassalud"><i class='fa fa-gg'></i> Programas de Salud</a></li>
+                    <li><a href="campadbu"><i class='fa fa-gg'></i> Campañas de DBU</a></li>
 
                 </ul>
             </li>

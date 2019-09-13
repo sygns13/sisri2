@@ -251,6 +251,7 @@ CREATE TABLE `beneficiarioscomedors` (
   `activo` tinyint(4) DEFAULT NULL,
   `borrado` tinyint(4) DEFAULT NULL,
   `persona_id` int(11) DEFAULT NULL,
+  `observaciones` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -277,6 +278,7 @@ CREATE TABLE `beneficiariosgyms` (
   `activo` tinyint(4) DEFAULT NULL,
   `borrado` tinyint(4) DEFAULT NULL,
   `persona_id` int(11) DEFAULT NULL,
+  `observaciones` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -304,6 +306,7 @@ CREATE TABLE `beneficiariostalldeportivos` (
   `activo` tinyint(4) DEFAULT NULL,
   `borrado` tinyint(4) DEFAULT NULL,
   `persona_id` int(11) DEFAULT NULL,
+  `observaciones` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

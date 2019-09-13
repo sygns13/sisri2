@@ -45,7 +45,7 @@
       </div>
 
       <center>
-        <h4>Datos Personales del Alumno</h4>
+        <h4>Datos Personales</h4>
       </center>
 
       <div class="col-md-12" style="padding-top: 15px;">
@@ -233,175 +233,20 @@
                   maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="codigo">
               </div>
 
-              <label for="cbuEscalaPago" class="col-sm-2 control-label">Escala de Pago:*</label>
-              <div class="col-sm-3">
-                  <select class="form-control" id="cbuEscalaPago" name="cbuEscalaPago" v-model="escalaPago">
-                      <option value="0">Ninguna</option>                        
-                      <option value="1">Si Cuenta con Escala de Pago</option>                                           
-                    </select>
-                  </div>
-
-
-            </div>
+               </div>
           </div>
 
+      <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
 
-          <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(escalaPago)!=0">
-              <div class="form-group">
-  
-                  <label for="txtEsclaPago" class="col-sm-2 control-label">Describa su Escala de Pago:*</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="txtEsclaPago" name="txtEsclaPago" placeholder="Escala de Pago"
-                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="escalaPagodesc">
-                  </div>
-  
- 
-              </div>
-            </div>
-
-
-            <div class="col-md-12" style="padding-top: 15px;">
-                <div class="form-group">
-
-
-                      <label for="txtpromedioponderado" class="col-sm-2 control-label">Promedio Ponderado:*</label>
-                      <div class="col-sm-2">
-                          <input type="text" class="form-control" id="txtpromedioponderado" name="txtpromedioponderado" placeholder="" onkeypress="return soloNumeros(event);"
-                            maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="promedioPonderado">
-                        </div>
-
-                        <label for="txtpromediosemestre" class="col-sm-2 control-label">Promedio del Semestre:*</label>
-                      <div class="col-sm-2">
-                          <input type="text" class="form-control" id="txtpromediosemestre" name="txtpromediosemestre" placeholder="" onkeypress="return soloNumeros(event);"
-                            maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="promedioSemestre">
-                        </div>
-
-
-                  </div>
-                </div>
-
-
-
-                <div class="col-md-12" style="padding-top: 15px;">
-                    <div class="form-group">
-                      
-
-          <label for="cbusemestreingreso" class="col-sm-2 control-label">Semestre de Ingreso a la Universidad:*</label>
-          <div class="col-sm-3">
-              <select class="form-control" id="cbusemestreingreso" name="cbusemestreingreso" v-model="periodoIngreso">
-                <option value="0" disabled>Seleccione un Semestre...</option>
-                @foreach ($semestres as $dato)
-                <option value="{{$dato->id}}" selected>{{$dato->nombre}}</option>                        
-                @endforeach
-              </select>
-            </div>
-
-                          
-
-    
-            <label for="cbuprimersemestre" class="col-sm-2 control-label">Primer Semestre de Matrícula:*</label>
-                <div class="col-sm-3">
-                    <select class="form-control" id="cbuprimersemestre" name="cbuprimersemestre" v-model="primerPeriodoMatricula">
-                      <option value="0" disabled>Seleccione un Semestre...</option>
-                      @foreach ($semestres as $dato)
-                      <option value="{{$dato->id}}" selected>{{$dato->nombre}}</option>                        
-                      @endforeach
-                    </select>
-                  </div>
-
-
-                </div>
+              <label for="txtdisciplina" class="col-sm-2 control-label">Disciplina Deportiva:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="txtdisciplina" name="txtdisciplina" placeholder="Nombre de Disciplina Deportiva"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="disciplina">
               </div>
 
-
-
-              <div class="col-md-12" style="padding-top: 15px;">
-                  <div class="form-group">
-        
-
-                      <label for="cbumovinacional" class="col-sm-2 control-label">Realizó Movilidad Nacional:*</label>
-                      <div class="col-sm-2">
-                          <select class="form-control" id="cbumovinacional" name="cbumovinacional" v-model="ismovnacional">
-                              <option value="0">No</option>                        
-                              <option value="1">Si</option>                                           
-                            </select>
-                          </div>
-        
-        
-                    </div>
-                  </div>
-
-
-              <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(ismovnacional)!=0">
-                  <div class="form-group">
-      
-                      <label for="txtmovinac" class="col-sm-3 control-label">Movilidad Nacional (Describa):*</label>
-                      <div class="col-sm-9">
-                          <textarea name="txtmovinac" id="txtmovinac" rows="4" v-model="movinacional" style="width:100%;"></textarea>
-                      </div>
-      
-     
-                  </div>
-                </div>
-
-
-                <div class="col-md-12" style="padding-top: 15px;">
-                    <div class="form-group">
-          
-  
-                        <label for="cbumoviinternacional" class="col-sm-2 control-label">Realizó Movilidad Internacional:*</label>
-                        <div class="col-sm-2">
-                            <select class="form-control" id="cbumoviinternacional" name="cbumoviinternacional" v-model="ismovinternacional">
-                                <option value="0">No</option>                        
-                                <option value="1">Si</option>                                           
-                              </select>
-                            </div>
-          
-          
-                      </div>
-                    </div>
-
-
-
-                <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(ismovinternacional)!=0">
-                    <div class="form-group">
-        
-                        <label for="txtmovinternacional" class="col-sm-3 control-label">Movilidad Internacional (Describa):*</label>
-                        <div class="col-sm-9">
-                            <textarea name="txtmovinternacional" id="txtmovinternacional" rows="4" v-model="moviinternacional" style="width:100%;"></textarea>
-                        </div>
-        
-       
-                    </div>
-                  </div>
-
-
-
-                  <div class="col-md-12" style="padding-top: 15px;">
-                      <div class="form-group">
-            
-    
-                          <label for="cbualumnoriesgo" class="col-sm-2 control-label">Es Alumno en Riesgo:*</label>
-                          <div class="col-sm-2">
-                              <select class="form-control" id="cbualumnoriesgo" name="cbualumnoriesgo" v-model="alumnoRiesgo">
-                                  <option value="0">No</option>                        
-                                  <option value="1">Si</option>                                           
-                                </select>
-                              </div>
-
-                              <template v-if="parseInt(alumnoRiesgo)!=0">
-
-                              <label for="txtnumcursosriesgo" class="col-sm-2 control-label">N° de Cursos en Riesgo:*</label>
-                      <div class="col-sm-2">
-                          <input type="text" class="form-control" id="txtnumcursosriesgo" name="txtnumcursosriesgo" placeholder="" onkeypress="return soloNumeros(event);"
-                            maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="numCursosRiesgo">
-                        </div>
-                              </template>
-            
-            
-                        </div>
-                      </div>
-
+               </div>
+          </div>
 
 
                               <div class="col-md-12" style="padding-top: 15px;">

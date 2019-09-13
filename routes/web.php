@@ -54,6 +54,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('revistas','RevistaController@index1');
     Route::get('administrativos','AdministrativoController@index1');
     Route::get('locacionservicios','AdminlocacionController@index1');
+    Route::get('beneficiarioscomedor','BeneficiarioscomedorController@index1');
+    Route::get('beneficiariosgym','BeneficiariosgymController@index1');
+    Route::get('beneficiariostalleresdeportivos','BeneficiariostalldeportivoController@index1');
 
 
     Route::resource('semestre','SemestreController');
@@ -70,6 +73,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('administrativo','AdministrativoController');
     Route::resource('locacionservicio','AdminlocacionController');
+
+    Route::resource('benefcomedor','BeneficiarioscomedorController');
+    Route::resource('benefgym','BeneficiariosgymController');
+    Route::resource('beneftalldep','BeneficiariostalldeportivoController');
 
 
 

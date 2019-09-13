@@ -123,6 +123,15 @@ desired effect
 @elseif($modulo=="adminlocacion")
 @include('adminlocacion.vue')
 
+@elseif($modulo=="beneficiarioscomedor")
+@include('beneficiarioscomedor.vue')
+
+@elseif($modulo=="beneficiariosgym")
+@include('beneficiariosgym.vue')
+
+@elseif($modulo=="beneficiariostalldepor")
+@include('beneficiariostalldepor.vue')
+
 @endif
 
 <script type="text/javascript">

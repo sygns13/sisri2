@@ -165,6 +165,13 @@ class PersonaController extends Controller
             $selector='cbutipodoc';
 
         }
+        elseif (strlen($doc)<8)
+        {
+            $result='0';
+            $msj='Ingrese un Documento válido, mínimo de 08 dígitos';
+            $selector='txtDNI';
+
+        }
         else{
 
             $personaBuscada=Persona::where('tipodoc',$tipodoc)->where('doc',$doc)->where('borrado','0')->get();

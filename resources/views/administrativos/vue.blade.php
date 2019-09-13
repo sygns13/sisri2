@@ -256,11 +256,33 @@ methods: {
 
    pressNuevoDNI: function() {
 
+    
+
 var url='persona/buscarDNI';
 
    axios.post(url,{doc:this.doc,tipodoc:this.tipodoc}).then(response=>{
 
        if(String(response.data.result)=='1'){
+
+        this.nombres='';
+        this.apellidopat='';
+        this.apellidomat='';
+        this.genero='M';
+        this.estadocivil=1;
+        this.fechanac='';
+        this.esdiscapacitado=0;
+        this.discapacidad='';
+        this.pais='PERÚ';
+        this.departamento='ANCASH';
+        this.provincia='HUARAZ';
+        this.distrito='HUARAZ';
+        this.direccion='';
+        this.email='';
+        this.telefono='';
+
+        this.persona_id='0';
+
+        
 
            this.formularioCrear=true;
 
@@ -297,6 +319,27 @@ var url='persona/buscarDNI';
             });
 
         }else{
+
+            this.nombres='';
+            this.apellidopat='';
+            this.apellidomat='';
+            this.genero='M';
+            this.estadocivil=1;
+            this.fechanac='';
+            this.esdiscapacitado=0;
+            this.discapacidad='';
+            this.pais='PERÚ';
+            this.departamento='ANCASH';
+            this.provincia='HUARAZ';
+            this.distrito='HUARAZ';
+            this.direccion='';
+            this.email='';
+            this.telefono='';
+
+            this.persona_id='0';
+
+            this.formularioCrear=false;
+
            $('#'+response.data.selector).focus();
            $('#'+response.data.selector).css( "border", "1px solid red" );
            toastr.error(response.data.msj);
