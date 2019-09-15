@@ -132,6 +132,42 @@ desired effect
 @elseif($modulo=="beneficiariostalldepor")
 @include('beneficiariostalldepor.vue')
 
+@elseif($modulo=="pasantiaalumnos")
+@include('pasantiaalumnos.vue')
+
+@elseif($modulo=="pasantiadocentes")
+@include('pasantiadocentes.vue')
+
+@elseif($modulo=="pasantiaadministrativos")
+@include('pasantiaadministrativos.vue')
+
+@elseif($modulo=="pasantiallegaron")
+@include('pasantiallegaron.vue')
+
+@elseif($modulo=="conveniosmarco")
+@include('conveniosmarco.vue')
+
+@elseif($modulo=="conveniosespecificos")
+@include('conveniosespecificos.vue')
+
+@elseif($modulo=="convenioscolaboracion")
+@include('convenioscolaboracion.vue')
+
+@elseif($modulo=="programassalud")
+@include('programassalud.vue')
+
+@elseif($modulo=="medicos")
+@include('medicos.vue')
+
+@elseif($modulo=="beneficiarios")
+@include('beneficiarios.vue')
+
+@elseif($modulo=="atencions")
+@include('atencions.vue')
+
+@elseif($modulo=="campadbu")
+@include('campadbu.vue')
+
 @endif
 
 <script type="text/javascript">

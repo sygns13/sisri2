@@ -426,7 +426,7 @@ class DocenteController extends Controller
             $msj='Ingrese la descripción del Máximo Grado Obtenido';
             $selector='txtdescGrado';
         }
-        elseif ($validator17->fails() || intval($escuela_id)==0) {
+        elseif ($validator17->fails()) {
             $result='0';
             $msj='Ingrese la universidad del Máximo Grado Obtenido';
             $selector='txtunivmaxgrado';
@@ -972,7 +972,7 @@ class DocenteController extends Controller
             $msj='Ingrese la descripción del Máximo Grado Obtenido';
             $selector='txtdescGradoE';
         }
-        elseif ($validator17->fails() || intval($escuela_id)==0) {
+        elseif ($validator17->fails()) {
             $result='0';
             $msj='Ingrese la universidad del Máximo Grado Obtenido';
             $selector='txtunivmaxgradoE';

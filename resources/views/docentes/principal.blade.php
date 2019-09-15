@@ -113,7 +113,13 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ docente.apellidopat }} @{{ docente.apellidomat }}, @{{ docente.nombres }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.doc }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.facultad }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.escuela }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
+                @{{ docente.escuela }}
+                
+                <template v-if="parseInt(docente.escuela_id)==0">No Adscrito a una Escuela Profesional</template>
+
+              
+              </td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.maximogrado }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.personalacademico }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.condicion }}</td>

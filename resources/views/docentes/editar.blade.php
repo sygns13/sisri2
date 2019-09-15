@@ -229,7 +229,7 @@
                           <label for="cbuescuelaE" class="col-sm-2 control-label">Escuela:*</label>
                           <div class="col-sm-10">
                               <select class="form-control" id="cbuescuelaE" name="cbuescuelaE" v-model="filldocente.escuela_id">
-                                  <option value="0" disabled>No adscrito a una Escuela Profesional</option>
+                                  <option value="0">No adscrito a una Escuela Profesional</option>
         
                                 @foreach ($escuelas as $dato)
                                 <template v-if="filldocente.facultad_id=='{{$dato->facultad_id}}'">

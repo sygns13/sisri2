@@ -136,7 +136,7 @@
             <li class="treeview" v-bind:class="classMenu7">
                 <a href="#"><i class='fa fa-slideshare'></i> <span>Proyección Social</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Lista de Proyectos</a></li>
+                    <li><a href="proyectos"><i class='fa fa-gg'></i> Camp Itinerantes y Proyectos</a></li>
                     <li><a href="titulados"><i class='fa fa-gg'></i> Eventos Culturales</a></li>
                     <li><a href="titulados"><i class='fa fa-gg'></i> Talleres</a></li>
                 </ul>
@@ -147,13 +147,13 @@
             <li class="treeview" v-bind:class="classMenu8">
                 <a href="#"><i class='fa fa-suitcase'></i> <span>Convenios e Intercambio</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Convenios Marco</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Convenios Específicos</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Convenios de Colaboración</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Alumnos Pasantías</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Docentes Pasantías</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Administrativos Pasantías</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Personas Llegaron UNASAM</a></li>
+                    <li><a href="conveniosmarco"><i class='fa fa-gg'></i> Convenios Marco</a></li>
+                    <li><a href="conveniosespecificos"><i class='fa fa-gg'></i> Convenios Específicos</a></li>
+                    <li><a href="convenioscolaboracion"><i class='fa fa-gg'></i> Convenios de Colaboración</a></li>
+                    <li><a href="pasantiasalumnos"><i class='fa fa-gg'></i> Alumnos Pasantías</a></li>
+                    <li><a href="pasantiadocentes"><i class='fa fa-gg'></i> Docentes Pasantías</a></li>
+                    <li><a href="pasantiaadministrativos"><i class='fa fa-gg'></i> Administrativos Pasantías</a></li>
+                    <li><a href="pasantiallegaron"><i class='fa fa-gg'></i> Personas Llegaron UNASAM</a></li>
                 </ul>
             </li>
             @endif

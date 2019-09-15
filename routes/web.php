@@ -57,6 +57,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('beneficiarioscomedor','BeneficiarioscomedorController@index1');
     Route::get('beneficiariosgym','BeneficiariosgymController@index1');
     Route::get('beneficiariostalleresdeportivos','BeneficiariostalldeportivoController@index1');
+    Route::get('pasantiasalumnos','PasantiaController@index1');
+    Route::get('pasantiadocentes','PasantiaController@index2');
+    Route::get('pasantiaadministrativos','PasantiaController@index3');
+    Route::get('pasantiallegaron','PasantiaController@index4');
+    Route::get('conveniosmarco','ConvenioController@index1');
+    Route::get('conveniosespecificos','ConvenioController@index2');
+    Route::get('convenioscolaboracion','ConvenioController@index3');
+    Route::get('programassalud','ProgramassaludController@index1');
+    Route::get('campadbu','ProgramassaludController@index2');
+    Route::get('medicos/{idprogramasalud}','MedicoController@index1');
+    Route::get('beneficiarios/{idprogramasalud}','BeneficiarioController@index1');
+    Route::get('atencionsalud/{idprogramasalud}','AtencionController@index1');
+    Route::get('proyectos','ProyectoController@index1');
 
 
     Route::resource('semestre','SemestreController');
@@ -77,6 +90,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('benefcomedor','BeneficiarioscomedorController');
     Route::resource('benefgym','BeneficiariosgymController');
     Route::resource('beneftalldep','BeneficiariostalldeportivoController');
+
+    Route::resource('pasantia','PasantiaController');
+    Route::resource('convenio','ConvenioController');
+
+    Route::resource('programasalud','ProgramassaludController');
+    Route::resource('medico','MedicoController');
+    Route::resource('beneficiario','BeneficiarioController');
+    Route::resource('atencion','AtencionController');
+    Route::resource('proyecto','AtencionController');
 
 
 
