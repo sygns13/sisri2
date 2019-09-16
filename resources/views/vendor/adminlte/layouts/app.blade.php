@@ -168,6 +168,30 @@ desired effect
 @elseif($modulo=="campadbu")
 @include('campadbu.vue')
 
+@elseif($modulo=="proyectos")
+@include('proyectos.vue')
+
+@elseif($modulo=="eventos")
+@include('eventos.vue')
+
+@elseif($modulo=="talleresparticipantes")
+@include('talleresparticipantes.vue')
+
+@elseif($modulo=="tallers")
+@include('tallers.vue')
+
+@elseif($modulo=="participante")
+@include('participante.vue')
+
+@elseif($modulo=="presentaciones")
+@include('presentaciones.vue')
+
+@elseif($modulo=="investigadors")
+@include('investigadors.vue')
+
+@elseif($modulo=="investigacions")
+@include('investigacions.vue')
+
 @endif
 
 <script type="text/javascript">

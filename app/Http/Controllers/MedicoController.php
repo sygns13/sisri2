@@ -328,7 +328,7 @@ class MedicoController extends Controller
 
         elseif ($validator16->fails()) {
             $result='0';
-            $msj='Seleccione la Escuela Profesional';
+            $msj='Seleccione la Especialidad de Médico';
             $selector='txtespecialidad';
         }
 
@@ -688,7 +688,7 @@ class MedicoController extends Controller
 
         elseif ($validator16->fails()) {
             $result='0';
-            $msj='Seleccione la Escuela Profesional';
+            $msj='Seleccione la Especialidad de Médico';
             $selector='txtespecialidadE';
         }
 

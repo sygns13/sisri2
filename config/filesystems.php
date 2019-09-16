@@ -63,9 +63,9 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
-        'infoFile' => [
+        'investigacions' => [
             'driver' => 'local',
-            'root' => public_path('archivosExcel'), // miproyecto.com/public/defaults/
+            'root' => public_path('investigacion'), // miproyecto.com/public/defaults/
             'visibility' => 'public',
          ],
          'perfil' => [
@@ -73,9 +73,14 @@ return [
             'root' => public_path('img/perfil'), // miproyecto.com/public/defaults/
             'visibility' => 'public',
          ],
-         'documentoGestion' => [
+         'tesis' => [
             'driver' => 'local',
-            'root' => public_path('documentoGestion'), // miproyecto.com/public/defaults/
+            'root' => public_path('tesis'), // miproyecto.com/public/defaults/
+            'visibility' => 'public',
+         ],
+         'revistas' => [
+            'driver' => 'local',
+            'root' => public_path('revistas'), // miproyecto.com/public/defaults/
             'visibility' => 'public',
          ],
 

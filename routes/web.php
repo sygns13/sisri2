@@ -70,6 +70,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('beneficiarios/{idprogramasalud}','BeneficiarioController@index1');
     Route::get('atencionsalud/{idprogramasalud}','AtencionController@index1');
     Route::get('proyectos','ProyectoController@index1');
+    Route::get('eventosculturales','EventoculturalController@index1');
+    Route::get('talleresparticipantes/{idprogramasalud}','TalleresparticipanteController@index1');
+    Route::get('talleres','TallerController@index1');
+    Route::get('participantes/{idtaller}','ParticipanteController@index1');
+    Route::get('presentaciones/{idtaller}','PresentacionController@index1');
+    Route::get('investigadores','InvestigadorController@index1');
+    Route::get('investigaciones','InvestigacionController@index1');
 
 
     Route::resource('semestre','SemestreController');
@@ -98,7 +105,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('medico','MedicoController');
     Route::resource('beneficiario','BeneficiarioController');
     Route::resource('atencion','AtencionController');
-    Route::resource('proyecto','AtencionController');
+    Route::resource('proyecto','ProyectoController');
+    Route::resource('evento','EventoculturalController');
+    Route::resource('talleresparticipante','TalleresparticipanteController');
+    Route::resource('taller','TallerController');
+    Route::resource('participante','ParticipanteController');
+    Route::resource('presentacion','PresentacionController');
+
+    Route::resource('investigador','InvestigadorController');
+    Route::resource('investigacion','InvestigacionController');
 
 
 

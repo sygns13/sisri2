@@ -231,7 +231,7 @@ CREATE TABLE `beneficiarios` (
   PRIMARY KEY (`id`),
   KEY `fk_beneficiarios_programassaluds1_idx` (`programassalud_id`),
   CONSTRAINT `fk_beneficiarios_programassaluds1` FOREIGN KEY (`programassalud_id`) REFERENCES `programassaluds` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `beneficiarios`
@@ -496,28 +496,33 @@ INSERT INTO `departamentos` (`id`,`nombre`,`codigo`,`activo`,`borrado`,`created_
 
 
 --
--- Definition of table `detalleeventos`
+-- Definition of table `detalleinvestigacions`
 --
 
-DROP TABLE IF EXISTS `detalleeventos`;
-CREATE TABLE `detalleeventos` (
+DROP TABLE IF EXISTS `detalleinvestigacions`;
+CREATE TABLE `detalleinvestigacions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `detalle` varchar(500) DEFAULT NULL,
-  `entidad_id` int(11) NOT NULL,
-  `eventocultural_id` int(11) NOT NULL,
+  `investigacion_id` int(11) NOT NULL,
+  `cargo` varchar(500) DEFAULT NULL,
+  `tipoAutor` varchar(500) DEFAULT NULL,
+  `activo` tinyint(4) DEFAULT NULL,
+  `borrado` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `investigador_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_detalleeventos_entidads1_idx` (`entidad_id`),
-  KEY `fk_detalleeventos_eventoculturals1_idx` (`eventocultural_id`),
-  CONSTRAINT `fk_detalleeventos_entidads1` FOREIGN KEY (`entidad_id`) REFERENCES `entidads` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_detalleeventos_eventoculturals1` FOREIGN KEY (`eventocultural_id`) REFERENCES `eventoculturals` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_docentes_has_investigaciones_investigaciones1_idx` (`investigacion_id`),
+  KEY `fk_detalleinvestigacions_investigadors1_idx` (`investigador_id`),
+  CONSTRAINT `fk_detalleinvestigacions_investigadors1` FOREIGN KEY (`investigador_id`) REFERENCES `investigadors` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_docentes_has_investigaciones_investigaciones1` FOREIGN KEY (`investigacion_id`) REFERENCES `investigacions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `detalleeventos`
+-- Dumping data for table `detalleinvestigacions`
 --
 
-/*!40000 ALTER TABLE `detalleeventos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `detalleeventos` ENABLE KEYS */;
+/*!40000 ALTER TABLE `detalleinvestigacions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `detalleinvestigacions` ENABLE KEYS */;
 
 
 --
@@ -2461,31 +2466,6 @@ INSERT INTO `docentes` (`id`,`personalacademico`,`cargogeneral`,`descripcioncarg
 
 
 --
--- Definition of table `entidads`
---
-
-DROP TABLE IF EXISTS `entidads`;
-CREATE TABLE `entidads` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(500) DEFAULT NULL,
-  `tipo` tinyint(4) DEFAULT NULL,
-  `ubicacion` varchar(500) DEFAULT NULL,
-  `activo` tinyint(4) DEFAULT NULL,
-  `borrado` tinyint(4) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `entidads`
---
-
-/*!40000 ALTER TABLE `entidads` DISABLE KEYS */;
-/*!40000 ALTER TABLE `entidads` ENABLE KEYS */;
-
-
---
 -- Definition of table `escuelas`
 --
 
@@ -2555,14 +2535,19 @@ CREATE TABLE `eventoculturals` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `activo` tinyint(4) DEFAULT NULL,
   `borrado` tinyint(4) DEFAULT NULL,
+  `entidad` varchar(500) DEFAULT NULL,
+  `observaciones` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `eventoculturals`
 --
 
 /*!40000 ALTER TABLE `eventoculturals` DISABLE KEYS */;
+INSERT INTO `eventoculturals` (`id`,`nombre`,`descripcion`,`lugarpresentacion`,`fechainicio`,`fechafinal`,`semestre_id`,`created_at`,`updated_at`,`activo`,`borrado`,`entidad`,`observaciones`) VALUES 
+ (1,'event','desc','lugar','2010-02-01','2011-02-02',1,'2019-09-15 13:01:39','2019-09-15 13:01:44',1,1,'entidad','obs'),
+ (2,'nombre evento','desc evento','lugar','2010-01-08','2011-01-13',1,'2019-09-15 13:01:57','2019-09-15 13:03:35',1,0,'entidad','obs');
 /*!40000 ALTER TABLE `eventoculturals` ENABLE KEYS */;
 
 
@@ -2673,6 +2658,10 @@ CREATE TABLE `investigacions` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `avance` double DEFAULT NULL,
   `descripcionAvance` varchar(2000) DEFAULT NULL,
+  `escuela_id` int(11) DEFAULT NULL,
+  `lineainvestigacion` varchar(500) DEFAULT NULL,
+  `financiamiento` varchar(500) DEFAULT NULL,
+  `patentado` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2682,6 +2671,35 @@ CREATE TABLE `investigacions` (
 
 /*!40000 ALTER TABLE `investigacions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `investigacions` ENABLE KEYS */;
+
+
+--
+-- Definition of table `investigadors`
+--
+
+DROP TABLE IF EXISTS `investigadors`;
+CREATE TABLE `investigadors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `persona_id` int(11) DEFAULT NULL,
+  `escuela_id` int(11) DEFAULT NULL,
+  `facultad_id` int(11) DEFAULT NULL,
+  `observaciones` text,
+  `clasificacion` varchar(500) DEFAULT NULL,
+  `activo` tinyint(4) DEFAULT NULL,
+  `borrado` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `investigadors`
+--
+
+/*!40000 ALTER TABLE `investigadors` DISABLE KEYS */;
+INSERT INTO `investigadors` (`id`,`persona_id`,`escuela_id`,`facultad_id`,`observaciones`,`clasificacion`,`activo`,`borrado`,`created_at`,`updated_at`) VALUES 
+ (2,49,1,1,'asdas','DINA',1,0,'2019-09-15 17:50:36','2019-09-15 17:51:56');
+/*!40000 ALTER TABLE `investigadors` ENABLE KEYS */;
 
 
 --
@@ -2857,24 +2875,26 @@ INSERT INTO `paises` (`id`,`nombre`,`abreviatura`,`codigo`,`activo`,`borrado`,`c
 
 DROP TABLE IF EXISTS `participantes`;
 CREATE TABLE `participantes` (
-  `id` varchar(45) NOT NULL,
-  `presentacion_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `persona_id` int(11) DEFAULT NULL,
-  `tipo` tinyint(4) DEFAULT NULL,
+  `escuela_id` int(11) DEFAULT NULL,
   `activo` tinyint(4) DEFAULT NULL,
   `borrado` tinyint(4) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `taller_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_table1_presentacions1_idx` (`presentacion_id`),
-  CONSTRAINT `fk_table1_presentacions1` FOREIGN KEY (`presentacion_id`) REFERENCES `presentacions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `fk_participantes_tallers1_idx` (`taller_id`),
+  CONSTRAINT `fk_participantes_tallers1` FOREIGN KEY (`taller_id`) REFERENCES `tallers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `participantes`
 --
 
 /*!40000 ALTER TABLE `participantes` DISABLE KEYS */;
+INSERT INTO `participantes` (`id`,`persona_id`,`escuela_id`,`activo`,`borrado`,`created_at`,`updated_at`,`taller_id`) VALUES 
+ (2,48,21,1,0,'2019-09-15 15:25:01','2019-09-15 15:25:36',2);
 /*!40000 ALTER TABLE `participantes` ENABLE KEYS */;
 
 
@@ -2950,7 +2970,7 @@ CREATE TABLE `personas` (
   `email` varchar(500) DEFAULT NULL,
   `telefono` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `personas`
@@ -3002,8 +3022,11 @@ INSERT INTO `personas` (`id`,`tipodoc`,`doc`,`nombres`,`apellidopat`,`apellidoma
  (42,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,NULL,'Perú','Ancash','Huaraz','Huaraz','Hz',1,0,'2019-09-14 15:27:12','2019-09-14 22:08:55','cristian_7_70@hotmail.com','423544'),
  (43,1,'14725836','Marco','Quispe','Quiroga','M','1','1991-11-13',0,'','PERÚ','ANCASH','HUARAZP','HUARAZD','Av. Luzuriaga 234',1,0,'2019-09-14 15:28:21','2019-09-14 15:28:21','asdsad@mail.com','423544'),
  (44,1,'14785233','dasda','asdasd','dasda','M','1','2000-02-01',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asdas',1,0,'2019-09-14 22:09:27','2019-09-14 22:09:27','dasdas@mail.com','13123'),
- (45,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,NULL,'Perú','Ancash','Huaraz','Huaraz','Hz',1,0,'2019-09-14 23:50:34','2019-09-14 23:50:34','cristian_7_70@hotmail.com','423544'),
- (46,1,'12355584','dsadsad','adasd','dasda','M','2','1999-11-13',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asasd',1,0,'2019-09-14 23:51:08','2019-09-14 23:51:08','dasdsa@mail.com','1321312');
+ (45,1,'47331640','Cristian Fernando','Chavez','Torres','M','1','1991-11-13',0,'','Perú','Ancash','Huaraz','Huaraz','Hz',1,0,'2019-09-14 23:50:34','2019-09-15 17:50:03','cristian_7_70@hotmail.com','423544'),
+ (46,1,'12355584','dsadsad','adasd','dasda','M','2','1999-11-13',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asasd',1,0,'2019-09-14 23:51:08','2019-09-14 23:51:08','dasdsa@mail.com','1321312'),
+ (47,1,'14725845','sdadasd','asddsa','dsad','M','2','2019-08-27',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','assad',1,0,'2019-09-15 15:21:29','2019-09-15 15:21:29','sad@mail.com','sadasd'),
+ (48,1,'47331633','dasdsad','Juan','dsada','M','3','2019-09-11',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsa',1,0,'2019-09-15 15:25:01','2019-09-15 15:25:15','dsadas@mail.com','123122'),
+ (49,1,'147258312','Miguel','Pancho','Fierro','M','1','2019-09-17',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','adasdasd',1,0,'2019-09-15 17:50:36','2019-09-15 17:51:14','asdsad6@mail.com','3123213');
 /*!40000 ALTER TABLE `personas` ENABLE KEYS */;
 
 
@@ -3081,18 +3104,20 @@ CREATE TABLE `presentacions` (
   `borrado` tinyint(4) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `taller_id` int(11) DEFAULT NULL,
-  `eventocultural_id` int(11) DEFAULT NULL,
+  `taller_id` int(11) NOT NULL,
+  `observaciones` text,
   PRIMARY KEY (`id`),
   KEY `fk_presentacions_talleres1_idx` (`taller_id`),
   CONSTRAINT `fk_presentacions_talleres1` FOREIGN KEY (`taller_id`) REFERENCES `tallers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `presentacions`
 --
 
 /*!40000 ALTER TABLE `presentacions` DISABLE KEYS */;
+INSERT INTO `presentacions` (`id`,`fecha`,`asistentes`,`detalle`,`activo`,`borrado`,`created_at`,`updated_at`,`taller_id`,`observaciones`) VALUES 
+ (2,'2019-09-03',233,'detalles e',1,0,'2019-09-15 15:49:33','2019-09-15 15:49:47',2,'obs e');
 /*!40000 ALTER TABLE `presentacions` ENABLE KEYS */;
 
 
@@ -3376,15 +3401,47 @@ CREATE TABLE `proyectos` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `persona_id` int(11) DEFAULT NULL,
+  `presupuesto` double DEFAULT NULL,
+  `observaciones` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `proyectos`
 --
 
 /*!40000 ALTER TABLE `proyectos` DISABLE KEYS */;
+INSERT INTO `proyectos` (`id`,`nombre`,`descripcion`,`fechainicio`,`fechafinal`,`lugar`,`jefeproyecto`,`fuentefinanciamiento`,`cantidadbeneficiarios`,`semestre_id`,`activo`,`borrado`,`tipo`,`created_at`,`updated_at`,`persona_id`,`presupuesto`,`observaciones`) VALUES 
+ (2,'Proy','desc ed','2019-09-12','2019-10-01','lug','Cristian Fernando Chavez Torres','fuente',123,1,1,0,2,'2019-09-15 12:17:50','2019-09-15 12:18:17',45,456,'obs');
 /*!40000 ALTER TABLE `proyectos` ENABLE KEYS */;
+
+
+--
+-- Definition of table `publicaciones`
+--
+
+DROP TABLE IF EXISTS `publicaciones`;
+CREATE TABLE `publicaciones` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(500) DEFAULT NULL,
+  `detalles` text,
+  `fecha` date DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `activo` tinyint(4) DEFAULT NULL,
+  `borrado` tinyint(4) DEFAULT NULL,
+  `investigacion_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_publicaciones_investigacions1_idx` (`investigacion_id`),
+  CONSTRAINT `fk_publicaciones_investigacions1` FOREIGN KEY (`investigacion_id`) REFERENCES `investigacions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `publicaciones`
+--
+
+/*!40000 ALTER TABLE `publicaciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `publicaciones` ENABLE KEYS */;
 
 
 --
@@ -3454,6 +3511,37 @@ INSERT INTO `semestres` (`id`,`nombre`,`fechainicio`,`fechafin`,`estado`,`activo
 
 
 --
+-- Definition of table `talleresparticipantes`
+--
+
+DROP TABLE IF EXISTS `talleresparticipantes`;
+CREATE TABLE `talleresparticipantes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(500) DEFAULT NULL,
+  `fecha` date DEFAULT NULL,
+  `participantes` int(11) DEFAULT NULL,
+  `activo` tinyint(4) DEFAULT NULL,
+  `borrado` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `eventocultural_id` int(11) NOT NULL,
+  `observaciones` text,
+  PRIMARY KEY (`id`),
+  KEY `fk_talleresparticipantes_eventoculturals1_idx` (`eventocultural_id`),
+  CONSTRAINT `fk_talleresparticipantes_eventoculturals1` FOREIGN KEY (`eventocultural_id`) REFERENCES `eventoculturals` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `talleresparticipantes`
+--
+
+/*!40000 ALTER TABLE `talleresparticipantes` DISABLE KEYS */;
+INSERT INTO `talleresparticipantes` (`id`,`nombre`,`fecha`,`participantes`,`activo`,`borrado`,`created_at`,`updated_at`,`eventocultural_id`,`observaciones`) VALUES 
+ (1,'taller','2019-05-01',15,1,0,'2019-09-15 13:41:58','2019-09-15 13:42:33',2,'obs');
+/*!40000 ALTER TABLE `talleresparticipantes` ENABLE KEYS */;
+
+
+--
 -- Definition of table `tallers`
 --
 
@@ -3462,21 +3550,25 @@ CREATE TABLE `tallers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(500) DEFAULT NULL,
   `descripcion` text,
-  `eventocultiral_id` int(11) DEFAULT NULL,
   `docentecargo` varchar(500) DEFAULT NULL,
+  `dnidocente` varchar(20) DEFAULT NULL,
   `docente_id` int(11) DEFAULT NULL,
   `activo` tinyint(4) DEFAULT NULL,
   `borrado` tinyint(4) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `semestre_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tallers`
 --
 
 /*!40000 ALTER TABLE `tallers` DISABLE KEYS */;
+INSERT INTO `tallers` (`id`,`nombre`,`descripcion`,`docentecargo`,`dnidocente`,`docente_id`,`activo`,`borrado`,`created_at`,`updated_at`,`semestre_id`) VALUES 
+ (1,'asda','asd','Cristian Fernando Chavez Torres','47331640',4,1,1,'2019-09-15 14:41:13','2019-09-15 14:42:48',1),
+ (2,'danza','dnazas p','Diana Quiroz Ortega','14785236',3,1,0,'2019-09-15 14:41:18','2019-09-15 14:44:10',1);
 /*!40000 ALTER TABLE `tallers` ENABLE KEYS */;
 
 

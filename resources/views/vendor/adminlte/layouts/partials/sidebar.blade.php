@@ -68,13 +68,13 @@
             <li class="treeview" v-bind:class="classMenu2">
                 <a href="#"><i class='fa fa-laptop'></i> <span>Gestión Académica</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="postulantespregrado"><i class='fa fa-gg'></i> Postulantes de Pregrado</a></li>
-                    <li><a href="alumnospregrado"><i class='fa fa-gg'></i> Matriculados Pregrado</a></li>
-                    <li><a href="alumnosegresadospregrado"><i class='fa fa-gg'></i> Egresados Pregrado</a></li>
-                    <li><a href="postulantespostgrado"><i class='fa fa-gg'></i> Postulantes de Postgrado</a></li>
-                    <li><a href="alumnospostgrado"><i class='fa fa-gg'></i> Matriculados Postgrado</a></li>
-                    <li><a href="alumnosegresadospostgrado"><i class='fa fa-gg'></i> Egresados Posrgrado</a></li>
-                    <li><a href="docentes"><i class='fa fa-gg'></i> Docentes</a></li>
+                    <li><a href="{{URL::to('postulantespregrado')}}"><i class='fa fa-gg'></i> Postulantes de Pregrado</a></li>
+                    <li><a href="{{URL::to('alumnospregrado')}}"><i class='fa fa-gg'></i> Matriculados Pregrado</a></li>
+                    <li><a href="{{URL::to('alumnosegresadospregrado')}}"><i class='fa fa-gg'></i> Egresados Pregrado</a></li>
+                    <li><a href="{{URL::to('postulantespostgrado')}}"><i class='fa fa-gg'></i> Postulantes de Postgrado</a></li>
+                    <li><a href="{{URL::to('alumnospostgrado')}}"><i class='fa fa-gg'></i> Matriculados Postgrado</a></li>
+                    <li><a href="{{URL::to('alumnosegresadospostgrado')}}"><i class='fa fa-gg'></i> Egresados Posrgrado</a></li>
+                    <li><a href="{{URL::to('docentes')}}"><i class='fa fa-gg'></i> Docentes</a></li>
                 </ul>
             </li>
             @endif
@@ -83,12 +83,12 @@
 
             @if(accesoUser([1,2]))
             <li class="treeview" v-bind:class="classMenu3">
-                <a href="#"><i class='fa fa-graduation-cap'></i> <span>Grados y Títulos</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="'#"><i class='fa fa-graduation-cap'></i> <span>Grados y Títulos</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="bachilleres"><i class='fa fa-gg'></i> Bachilleres</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Titulados</a></li>
-                    <li><a href="maestros"><i class='fa fa-gg'></i> Maestros</a></li>
-                    <li><a href="doctores"><i class='fa fa-gg'></i> Doctores</a></li>
+                    <li><a href="{{URL::to('bachilleres')}}"><i class='fa fa-gg'></i> Bachilleres</a></li>
+                    <li><a href="{{URL::to('titulados')}}"><i class='fa fa-gg'></i> Titulados</a></li>
+                    <li><a href="{{URL::to('maestros')}}"><i class='fa fa-gg'></i> Maestros</a></li>
+                    <li><a href="{{URL::to('doctores')}}"><i class='fa fa-gg'></i> Doctores</a></li>
                 </ul>
             </li>
             @endif
@@ -98,10 +98,10 @@
             <li class="treeview" v-bind:class="classMenu4">
                 <a href="#"><i class='fa fa-rocket'></i> <span>Investigación</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="investigadores"><i class='fa fa-gg'></i> Investigadores</a></li>
-                    <li><a href="investigaciones"><i class='fa fa-gg'></i> Investigaciones</a></li>
-                    <li><a href="tesis"><i class='fa fa-gg'></i> Tesis</a></li>
-                    <li><a href="revistas"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
+                    <li><a href="{{URL::to('investigadores')}}"><i class='fa fa-gg'></i> Investigadores</a></li>
+                    <li><a href="{{URL::to('investigaciones')}}"><i class='fa fa-gg'></i> Investigaciones</a></li>
+                    <li><a href="{{URL::to('tesis')}}"><i class='fa fa-gg'></i> Tesis</a></li>
+                    <li><a href="{{URL::to('revistas')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
                 </ul>
             </li>
             @endif
@@ -109,10 +109,10 @@
 
             @if(accesoUser([1,2]))
             <li class="treeview" v-bind:class="classMenu5">
-                <a href="#"><i class='fa fa-users'></i> <span>Gestión y Soporte</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="'#"><i class='fa fa-users'></i> <span>Gestión y Soporte</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="administrativos"><i class='fa fa-gg'></i> Administrativos</a></li>
-                    <li><a href="locacionservicios"><i class='fa fa-gg'></i> Locación de Servicios</a></li>
+                    <li><a href="{{URL::to('administrativos')}}"><i class='fa fa-gg'></i> Administrativos</a></li>
+                    <li><a href="{{URL::to('locacionservicios')}}"><i class='fa fa-gg'></i> Locación de Servicios</a></li>
 
                 </ul>
             </li>
@@ -122,11 +122,11 @@
             <li class="treeview" v-bind:class="classMenu6">
                 <a href="#"><i class='fa fa-plus-square'></i> <span>Bienestar Universitario</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="beneficiarioscomedor"><i class='fa fa-gg'></i> Beneficiarios del Comedor</a></li>
-                    <li><a href="beneficiariosgym"><i class='fa fa-gg'></i> Beneficiarios del GYM</a></li>
-                    <li><a href="beneficiariostalleresdeportivos"><i class='fa fa-gg'></i> Benef Talleres Deportivos</a></li>
-                    <li><a href="programassalud"><i class='fa fa-gg'></i> Programas de Salud</a></li>
-                    <li><a href="campadbu"><i class='fa fa-gg'></i> Campañas de DBU</a></li>
+                    <li><a href="{{URL::to('beneficiarioscomedor')}}"><i class='fa fa-gg'></i> Beneficiarios del Comedor</a></li>
+                    <li><a href="{{URL::to('beneficiariosgym')}}"><i class='fa fa-gg'></i> Beneficiarios del GYM</a></li>
+                    <li><a href="{{URL::to('beneficiariostalleresdeportivos')}}"><i class='fa fa-gg'></i> Benef Talleres Deportivos</a></li>
+                    <li><a href="{{URL::to('programassalud')}}"><i class='fa fa-gg'></i> Programas de Salud</a></li>
+                    <li><a href="{{URL::to('campadbu')}}"><i class='fa fa-gg'></i> Campañas de DBU</a></li>
 
                 </ul>
             </li>
@@ -136,9 +136,9 @@
             <li class="treeview" v-bind:class="classMenu7">
                 <a href="#"><i class='fa fa-slideshare'></i> <span>Proyección Social</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="proyectos"><i class='fa fa-gg'></i> Camp Itinerantes y Proyectos</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Eventos Culturales</a></li>
-                    <li><a href="titulados"><i class='fa fa-gg'></i> Talleres</a></li>
+                    <li><a href="{{URL::to('proyectos')}}"><i class='fa fa-gg'></i> Camp Itinerantes y Proyectos</a></li>
+                    <li><a href="{{URL::to('eventosculturales')}}"><i class='fa fa-gg'></i> Eventos Culturales</a></li>
+                    <li><a href="{{URL::to('talleres')}}"><i class='fa fa-gg'></i> Talleres</a></li>
                 </ul>
             </li>
             @endif
@@ -147,13 +147,13 @@
             <li class="treeview" v-bind:class="classMenu8">
                 <a href="#"><i class='fa fa-suitcase'></i> <span>Convenios e Intercambio</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="conveniosmarco"><i class='fa fa-gg'></i> Convenios Marco</a></li>
-                    <li><a href="conveniosespecificos"><i class='fa fa-gg'></i> Convenios Específicos</a></li>
-                    <li><a href="convenioscolaboracion"><i class='fa fa-gg'></i> Convenios de Colaboración</a></li>
-                    <li><a href="pasantiasalumnos"><i class='fa fa-gg'></i> Alumnos Pasantías</a></li>
-                    <li><a href="pasantiadocentes"><i class='fa fa-gg'></i> Docentes Pasantías</a></li>
-                    <li><a href="pasantiaadministrativos"><i class='fa fa-gg'></i> Administrativos Pasantías</a></li>
-                    <li><a href="pasantiallegaron"><i class='fa fa-gg'></i> Personas Llegaron UNASAM</a></li>
+                    <li><a href="{{URL::to('conveniosmarco')}}"><i class='fa fa-gg'></i> Convenios Marco</a></li>
+                    <li><a href="{{URL::to('conveniosespecificos')}}"><i class='fa fa-gg'></i> Convenios Específicos</a></li>
+                    <li><a href="{{URL::to('convenioscolaboracion')}}"><i class='fa fa-gg'></i> Convenios de Colaboración</a></li>
+                    <li><a href="{{URL::to('pasantiasalumnos')}}"><i class='fa fa-gg'></i> Alumnos Pasantías</a></li>
+                    <li><a href="{{URL::to('pasantiadocentes')}}"><i class='fa fa-gg'></i> Docentes Pasantías</a></li>
+                    <li><a href="{{URL::to('pasantiaadministrativos')}}"><i class='fa fa-gg'></i> Administrativos Pasantías</a></li>
+                    <li><a href="{{URL::to('pasantiallegaron')}}"><i class='fa fa-gg'></i> Personas Llegaron UNASAM</a></li>
                 </ul>
             </li>
             @endif
