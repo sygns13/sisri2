@@ -1,6 +1,6 @@
 <div class="box box-primary panel-group">
         <div class="box-header with-border" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-          <h3 class="box-title">Gestión de Personal Administrativo</h3>
+          <h3 class="box-title">Gestión de Investigaciones</h3>
           <a style="float: right;" type="button" class="btn btn-default" href="{{URL::to('home')}}"><i class="fa fa-reply-all" aria-hidden="true"></i> 
           Volver</a>
         </div>
@@ -21,22 +21,22 @@
       
  <div class="box box-success" v-if="divNuevo">
   <div class="box-header with-border" style="border: 1px solid rgb(0, 166, 90); background-color: rgb(0, 166, 90); color: white;">
-    <h3 class="box-title" id="tituloAgregar">Nuevo Registro de Personal Administrativo
+    <h3 class="box-title" id="tituloAgregar">Nuevo Registro de Investigación
     </h3>
   </div>
-  @include('administrativos.formulario')  
+  @include('investigacions.formulario')  
 </div>
 
 
 <div class="box box-warning" v-if="divEdit">
   <div class="box-header with-border" style="border: 1px solid #f39c12; background-color: #f39c12; color: white;">
-    <h3 class="box-title" id="tituloAgregar">Editar Personal Administrativo: @{{ filladministrativos.nombres }} @{{ filladministrativos.apellidopat }} @{{ filladministrativos.apellidomat }}
+    <h3 class="box-title" id="tituloAgregar">Editar Registro de Investigación: @{{ fillinvestigacion.titulo }}
 
 
     </h3>
   </div>
 
-  @include('administrativos.editar')  
+  @include('investigacions.editar')  
 
 </div>
 
@@ -46,7 +46,7 @@
       
       <div class="box box-primary" style="border: 1px solid #3c8dbc;">
         <div class="box-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-        <h3 class="box-title">Listado de administrativos</h3>
+        <h3 class="box-title">Listado de Investigaciones</h3>
       
           <div class="box-tools">
             <div class="input-group input-group-sm" style="width: 300px;">
@@ -60,44 +60,70 @@
             </div>
           </div>
         </div>
-        <!-- /.box-header -->
+        <!-- /.box-header  table-bordered table-dark table-condensed table-striped -->
         <div class="box-body table-responsive">
-          <table class="table table-hover table-bordered table-dark table-condensed table-striped" >
+          <table class="table table-hover " >
             <tbody><tr>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 4%;">#</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 14%;">Apellidos y Nombres</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">DNI</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Local</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 14%;">Dependencia</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Cargo</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Fecha de Ingreso</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Fecha de Salida</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Estado de Contrato</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 8%;">Gestión</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 4%;">#</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Facultad</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Escuela</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 250px;">Título de Investigación</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 250px;">Autores</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 300px;">Descripción</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Publicaciones</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Archivo</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Resolución de Aprobación</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Clasificación</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 150px;">Línea de Investigación</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Tipo de Financiamiento</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Presupuesto Asignado</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Presupuesto Ejecutado</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Fecha de Inicio</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Fecha de Término</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Horas Dedicadas</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Patentado</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Estado</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Avance</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 300px;">Gestión de Investigacines</th>
             </tr>
-            <tr v-for="administrativo, key in administrativos">
+            <tr v-for="investigación, key in investigacions">
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{key+pagination.from}}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ administrativo.apellidopat }} @{{ administrativo.apellidomat }}, @{{ administrativo.nombres }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.doc }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.local }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.dependencia }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.cargo }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.fechaIngreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.fechaSalida }}
-                <center><span v-if="administrativo.estado=='1'">---------</span></center>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ investigación.facultad }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.escuela }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.titulo }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">Autores</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.descripcion }} </td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">Publicaciones</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"><a v-bind:href="'investigacion/'+investigación.rutadocumento" v-bind:download="investigación.archivonombre">@{{ investigación.archivonombre }}</a>
               </td>
-              
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.resolucionAprobacion }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.clasificacion }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.lineainvestigacion }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.financiamiento }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.presupuestoAsignado }} </td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.presupuestoEjecutado }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.fechaInicio }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.fechaTermino }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.horas }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.patentado }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigación.estado }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;width: 300px;">@{{ investigación.avance }}</td>
+  
+                
+      
+          {{--     
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
+                <center><span v-if="investigación.estado=='1'">---------</span></center>
               <center>
-               <span class="label label-success" v-if="administrativo.estado=='1'">Activo</span>
-               <span class="label label-warning" v-if="administrativo.estado=='0'">Finalizado</span>
+               <span class="label label-success" v-if="investigación.estado=='1'">Activo</span>
+               <span class="label label-warning" v-if="investigación.estado=='0'">Finalizado</span>
               </center>
-              </td>
+              </td> --}}
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      
-               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(administrativo)" data-placement="top" data-toggle="tooltip" title="Editar Administrativo"><i class="fa fa-edit"></i></a>
-               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(administrativo)" data-placement="top" data-toggle="tooltip" title="Borrar Administrativo"><i class="fa fa-trash"></i></a>
+               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(investigación)" data-placement="top" data-toggle="tooltip" title="Editar Investigación"><i class="fa fa-edit"></i></a>
+               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(investigación)" data-placement="top" data-toggle="tooltip" title="Borrar Investigación"><i class="fa fa-trash"></i></a>
       </center>
              </td>
            </tr>

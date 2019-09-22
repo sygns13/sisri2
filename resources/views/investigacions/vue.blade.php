@@ -47,7 +47,7 @@ data:{
    investigacions: [],
    errors:[],
 
-   fillinvestigacion:{'titulo':'', 'descripcion':'', 'resolucionAprobacion':'','presupuestoAsignado':'','presupuestoEjecutado':'','horas':'','fechaInicio':'','fechaTermino':'','clasificacion':'','rutadocumento':'','estado':'','avance':'','descripcionAvance':'','escuela_id':'','lineainvestigacion':'','financiamiento':'','patentado':'','id':''},
+   fillinvestigacion:{'titulo':'', 'descripcion':'', 'resolucionAprobacion':'','presupuestoAsignado':'','presupuestoEjecutado':'','horas':'','fechaInicio':'','fechaTermino':'','clasificacion':'','rutadocumento':'','estado':'','avance':'','descripcionAvance':'','escuela_id':'','lineainvestigacion':'','financiamiento':'','patentado':'','id':'','observaciones':'','archivonombre':''},
 
 
    pagination: {
@@ -68,10 +68,10 @@ data:{
    thispage:'1',
 
    validated:'0',
-   formularioCrear:false,
+   formularioCrear:true,
 
 
-   titulo:'',
+   tituloI:'',
    descripcion:'',
    resolucionAprobacion:'',
    presupuestoAsignado:'',
@@ -87,7 +87,28 @@ data:{
    escuela_id:0,
    lineainvestigacion:'',
    financiamiento:'',
-   patentado:'',
+   patentado:1,
+   observaciones:'',
+   newNombreArchivo:'',
+
+        imagen : null,
+        archivo : null,
+        newNombreArchivo : '',
+        uploadReady: true,
+
+        imagenE : null,
+        archivoE : null,
+        uploadReadyE: false,
+
+        oldImg:'',
+        oldFile:'',
+
+        file:'',
+        image:'',
+        nameAdjunto:'',
+        urlAdjunto:'',
+        iflink:false,
+        nameAdjuntoE:'',
 
      
 
@@ -136,10 +157,33 @@ computed:{
 methods: {
 
 
+    getArchivo(event){
+                //Asignamos la imagen a  nuestra data
+
+                if (!event.target.files.length)
+                {
+                  this.archivo=null;
+                }
+                else{
+                this.archivo = event.target.files[0];
+                }
+            },
+
+            getArchivoE(event){
+                //Asignamos la imagen a  nuestra data
+
+                if (!event.target.files.length)
+                {
+                  this.archivoE=null;
+                }
+                else{
+                this.archivoE = event.target.files[0];
+                }
+            },
 
    getinvestigacions: function (page) {
        var busca=this.buscar;
-       var url = 'investigacion?page='+page+'&busca='+busca;
+       var url = 'investigacions?page='+page+'&busca='+busca;
 
        axios.get(url).then(response=>{
            this.investigacions= response.data.investigacions.data;
@@ -186,7 +230,7 @@ methods: {
    cancelFormNuevo: function () {
 
 
-   this.titulo='';
+   this.tituloI='';
    this.descripcion='';
    this.resolucionAprobacion='';
    this.presupuestoAsignado='';
@@ -202,19 +246,29 @@ methods: {
    this.escuela_id=0;
    this.lineainvestigacion='';
    this.financiamiento='';
-   this.patentado='';
+   this.patentado=1;
+   this.observaciones='';
+   this.newNombreArchivo='';
 
-    this.formularioCrear=false;
+   this.imagen=null;
+        this.archivo=null;
+        this.uploadReady = false
+        this.$nextTick(() => {
+          this.uploadReady = true;
+
+    this.formularioCrear=true;
 
        $(".form-control").css("border","1px solid #d2d6de");
 
        $('#txttitulo').focus();
+
+    })
    },
 
 
 
    create:function () {
-       var url='investigacion';
+       var url='investigacions';
        $("#btnGuardar").attr('disabled', true);
        $("#btnCancel").attr('disabled', true);
        $("#btnClose").attr('disabled', true);
@@ -222,7 +276,36 @@ methods: {
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       axios.post(url,{titulo:this.titulo, descripcion:this.descripcion, resolucionAprobacion:this.resolucionAprobacion, presupuestoAsignado:this.presupuestoAsignado, presupuestoEjecutado:this.presupuestoEjecutado, horas:this.horas, fechaInicio:this.fechaInicio, fechaTermino:this.fechaTermino,clasificacion:this.clasificacion, rutadocumento:this.rutadocumento, estado:this.estado, avance:this.avance, descripcionAvance:this.descripcionAvance, escuela_id:this.escuela_id, lineainvestigacion:this.lineainvestigacion, financiamiento:this.financiamiento, patentado:this.patentado}).then(response=>{
+       var data = new  FormData();
+
+data.append('titulo', this.tituloI);
+data.append('descripcion', this.descripcion);
+data.append('resolucionAprobacion', this.resolucionAprobacion);
+data.append('presupuestoAsignado', this.presupuestoAsignado);
+data.append('presupuestoEjecutado', this.presupuestoEjecutado);
+data.append('archivo', this.archivo);
+data.append('horas', this.horas);
+data.append('fechaInicio', this.fechaInicio);
+data.append('fechaTermino', this.fechaTermino);
+data.append('clasificacion', this.clasificacion);
+data.append('rutadocumento', this.rutadocumento);
+data.append('estado', this.estado);
+data.append('avance', this.avance);
+data.append('descripcionAvance', this.descripcionAvance);
+data.append('escuela_id', this.escuela_id);
+data.append('lineainvestigacion', this.lineainvestigacion);
+data.append('financiamiento', this.financiamiento);
+data.append('patentado', this.patentado);
+data.append('observaciones', this.observaciones);
+data.append('nombreArchivo', this.newNombreArchivo);
+
+const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+/*var formData = new FormData($("#formulario")[0]);
+console.log(formData);*/
+
+axios.post(url,data, config).then(response=>{
+
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -265,7 +348,7 @@ methods: {
 
             if (result.value) {
 
-                var url = 'investigacion/'+investigacion.id;
+                var url = 'investigacions/'+investigacion.id;
                 axios.delete(url).then(response=>{//eliminamos
 
                 if(response.data.result=='1'){
@@ -286,6 +369,17 @@ methods: {
 
 
    edit:function (investigacion) {
+
+    this.uploadReadyE=false;
+          this.$nextTick(() => {
+            this.imagenE=null;
+            this.archivoE=null;
+            this.uploadReadyE=true;
+            this.$nextTick(() => {
+                
+
+             });
+          });
 
        this.cerrarFormNuevo();
 
@@ -308,8 +402,12 @@ methods: {
        this.fillinvestigacion.lineainvestigacion=investigacion.lineainvestigacion;
        this.fillinvestigacion.financiamiento=investigacion.financiamiento;
        this.fillinvestigacion.patentado=investigacion.patentado;
+       this.fillinvestigacion.observaciones=investigacion.observaciones;
+       this.fillinvestigacion.archivonombre=investigacion.archivonombre;
 
- 
+
+       this.oldFile=investigacion.rutadocumento;
+
       
 
         this.divEdit=true;
@@ -327,12 +425,44 @@ methods: {
    },
 
    update:function (id) {
-       var url="investigacion/"+id;
+       var url="investigacions/"+id;
        $("#btnSaveE").attr('disabled', true);
        $("#btnCloseE").attr('disabled', true);
        this.divloaderEdit=true;
 
-       axios.put(url, this.fillinvestigacion).then(response=>{
+
+       var data = new  FormData();
+
+data.append('id', this.fillinvestigacion.id);
+data.append('titulo', this.fillinvestigacion.titulo);
+data.append('descripcion', this.fillinvestigacion.descripcion);
+data.append('resolucionAprobacion', this.fillinvestigacion.resolucionAprobacion);
+data.append('presupuestoAsignado', this.fillinvestigacion.presupuestoAsignado);
+data.append('presupuestoEjecutado', this.fillinvestigacion.presupuestoEjecutado);
+data.append('archivo', this.archivoE);
+data.append('horas', this.fillinvestigacion.horas);
+data.append('fechaInicio', this.fillinvestigacion.fechaInicio);
+data.append('fechaTermino', this.fillinvestigacion.fechaTermino);
+data.append('clasificacion', this.fillinvestigacion.clasificacion);
+data.append('rutadocumento', this.fillinvestigacion.rutadocumento);
+data.append('estado', this.fillinvestigacion.estado);
+data.append('avance', this.fillinvestigacion.avance);
+data.append('descripcionAvance', this.fillinvestigacion.descripcionAvance);
+data.append('escuela_id', this.fillinvestigacion.escuela_id);
+data.append('lineainvestigacion', this.fillinvestigacion.lineainvestigacion);
+data.append('financiamiento', this.fillinvestigacion.financiamiento);
+data.append('patentado', this.fillinvestigacion.patentado);
+data.append('observaciones', this.fillinvestigacion.observaciones);
+data.append('nombreArchivo', this.fillinvestigacion.archivonombre);
+
+data.append('oldfile', this.oldFile);
+
+data.append('_method', 'PUT');
+         
+
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+            axios.post(url, data, config).then(response=>{
 
            $("#btnSaveE").removeAttr("disabled");
            $("#btnCloseE").removeAttr("disabled");
@@ -340,7 +470,7 @@ methods: {
            
            if(response.data.result=='1'){   
            this.getinvestigacions(this.thispage);
-           this.fillinvestigacion={'titulo':'', 'descripcion':'', 'resolucionAprobacion':'','presupuestoAsignado':'','presupuestoEjecutado':'','horas':'','fechaInicio':'','fechaTermino':'','clasificacion':'','rutadocumento':'','estado':'','avance':'','descripcionAvance':'','escuela_id':'','lineainvestigacion':'','financiamiento':'','patentado':'','id':''};
+           this.fillinvestigacion={'titulo':'', 'descripcion':'', 'resolucionAprobacion':'','presupuestoAsignado':'','presupuestoEjecutado':'','horas':'','fechaInicio':'','fechaTermino':'','clasificacion':'','rutadocumento':'','estado':'','avance':'','descripcionAvance':'','escuela_id':'','lineainvestigacion':'','financiamiento':'','patentado':'','id':'','observaciones':'','archivonombre':''};
            this.errors=[];
 
            this.cerrarFormE();

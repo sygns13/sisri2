@@ -49,9 +49,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('maestros','GraduadoController@index3');
     Route::get('doctores','GraduadoController@index4');
     Route::get('investigadores','InvestigadorController@index1');
-    Route::get('investigaciones','InvestigacionController@index1');
     Route::get('tesis','TesisController@index1');
-    Route::get('revistas','RevistaController@index1');
+    Route::get('revistas','RevistapublicacionController@index1');
     Route::get('administrativos','AdministrativoController@index1');
     Route::get('locacionservicios','AdminlocacionController@index1');
     Route::get('beneficiarioscomedor','BeneficiarioscomedorController@index1');
@@ -113,7 +112,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('presentacion','PresentacionController');
 
     Route::resource('investigador','InvestigadorController');
-    Route::resource('investigacion','InvestigacionController');
+    Route::resource('investigacions','InvestigacionController');
 
 
 

@@ -19,6 +19,7 @@ use App\Tipouser;
 use App\User;
 
 use Storage;
+use stdClass;
 
 class InvestigacionController extends Controller
 {
@@ -77,12 +78,36 @@ class InvestigacionController extends Controller
         $query->orWhere('escuelas.nombre','like','%'.$buscar.'%');
         $query->orWhere('facultads.nombre','like','%'.$buscar.'%');
         })
-     ->orderBy('personas.apellidopat')
-     ->orderBy('personas.apellidomat')
-     ->orderBy('personas.nombres')
      ->select('investigacions.id',
-    'investigacions.titulo','investigacions.descripcion','investigacions.resolucionAprobacion','investigacions.presupuestoAsignado','investigacions.presupuestoEjecutado','investigacions.horas','investigacions.fechaInicio','investigacions.fechaTermino','investigacions.clasificacion','investigacions.rutadocumento','investigacions.estado','investigacions.avance','investigacions.descripcionAvance','investigacions.escuela_id','investigacions.lineainvestigacion','investigacions.financiamiento','investigacions.patentado',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"))->paginate(50);
+    'investigacions.titulo','investigacions.descripcion','investigacions.resolucionAprobacion','investigacions.presupuestoAsignado','investigacions.presupuestoEjecutado','investigacions.horas','investigacions.fechaInicio','investigacions.fechaTermino','investigacions.clasificacion','investigacions.rutadocumento','investigacions.estado','investigacions.avance','investigacions.descripcionAvance','investigacions.escuela_id','investigacions.lineainvestigacion','investigacions.financiamiento','investigacions.patentado',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"), 'investigacions.observaciones','investigacions.archivonombre')->paginate(50); 
 
+/* 
+    $investigacions=Investigacion::paginate(50);
+ */
+
+ $invest=$investigacions->items();
+
+ $autores = array();
+
+ foreach ($invest as $key => $dato) {
+     
+    $autors=DB::table('investigadors')
+    ->join('personas', 'personas.id', '=', 'investigadors.persona_id')
+    ->join('detalleinvestigacions', 'investigadors.id', '=', 'detalleinvestigacions.investigador_id')
+    ->join('investigacions', 'investigacions.id', '=', 'detalleinvestigacions.investigacion_id')
+    ->where('investigadors.borrado','0')
+    ->where('investigacions.borrado','0')
+    ->where('detalleinvestigacions.borrado','0')
+    ->where('investigacions.id',$dato->id)
+
+    ->select('investigacions.id',
+    'detalleinvestigacions.id','detalleinvestigacions.investigacion_id','detalleinvestigacions.cargo','detalleinvestigacions.tipoAutor','detalleinvestigacions.investigador_id','personas.nombres','personas.apellidopat','personas.apellidomat','personas.tipodoc','personas.doc')->get(); 
+
+    foreach ($autors as $key2 => $value) {
+        # code...
+    }
+
+ }
 
      return [
         'pagination'=>[
@@ -93,7 +118,8 @@ class InvestigacionController extends Controller
             'from'=> $investigacions->firstItem(),
             'to'=> $investigacions->lastItem(),
         ],
-        'investigacions'=>$investigacions
+        'investigacions'=>$investigacions,
+        'invest'=>$invest
     ];
     }
 
@@ -115,6 +141,8 @@ class InvestigacionController extends Controller
      */
     public function store(Request $request)
     {
+        ini_set('memory_limit','256M');
+
         $result='1';
         $msj='';
         $selector='';
@@ -129,72 +157,91 @@ class InvestigacionController extends Controller
         $fechaTermino=$request->fechaTermino;
         $clasificacion=$request->clasificacion;
         $estado=$request->estado;
-        $descripcionAvance=$request->descripcionAvance;
+        $avance=$request->avance;
         $escuela_id=$request->escuela_id;
         $lineainvestigacion=$request->lineainvestigacion;
         $financiamiento=$request->financiamiento;
         $patentado=$request->patentado;
+        $observaciones=$request->observaciones;
+
+        $nombreArchivo="";
         
-        $img=$request->imagen;
-        $imagen="";
-        $segureImg=0;
+        $archivo="";
+        $file = $request->archivo;
+        $segureFile=0;
 
 
-        $oldImagen=$request->oldImagen;
-
-        if(intval($estado)<3)
+        if(intval($estado)==1)
         {
             $fechaTermino=null;
         }
 
 
 
-        if ($request->hasFile('imagen')) { 
+        if ($request->hasFile('archivo')) { 
 
-          
-            $input  = array('image' => $img) ;
-            $reglas = array('image' => 'required|mimes:png,jpg,jpeg,gif,jpe,PNG,JPG,JPEG,GIF,JPE,doc,xls,ppt,pptx,pdf,txt,DOC,XLS,PPT,PPTX,PDF,TXT');
+            $nombreArchivo=$request->nombreArchivo;
+
+            $input  = array('archivo' => $file) ;
+            $reglas = array('archivo' => 'required|mimes:.pdf, .doc, .docx, .xls, .xlsx, ppt, .pptx, .PDF, .DOC, .DOCX, .XLS, .XLSX, .PPT, .PTTX');
             $validator = Validator::make($input, $reglas);
 
-            if ($validator->fails())
+            $inputNA  = array('archivonombre' => $nombreArchivo);
+            $reglasNA = array('archivonombre' => 'required');
+            $validatorNA = Validator::make($inputNA, $reglasNA);
+
+            if (1==2)
             {
 
-                $segureImg=1;
-                $msj="El archivo ingresado no es válido, ingrese otro archivo o limpie el formulario";
+                $segureFile=1;
+                $msj="El archivo adjunto ingresado tiene una extensión no válida, ingrese otro archivo o limpie el formulario";
                 $result='0';
-                $selector='archivo';
+                $selector='archivo2';
             }
+            elseif($validatorNA->fails()){
+                $segureFile=1;
+                $msj="Si va a registrar un archivo adjunto, debe de ingresar un nombre válido con el que se verá en el sistema";
+                $result='0';
+                $selector='txtArchivoAdjunto';
+            }   
 
             else
-            {
-
-                if(strlen($oldImagen)>0){
-                    Storage::disk('investigacion')->delete($oldImagen);
-                }
-
+            {   
                 $fecha=Date('Y-m-d');
                 $hora=Date('H-i-s');
 
-                $nombre=$img->getClientOriginalName();
-                $extension=$img->getClientOriginalExtension();
+                $nombre=$file->getClientOriginalName();
+                $extension=$file->getClientOriginalExtension();
                 $nuevoNombre=$nombre.$fecha.$hora.".".$extension;
-                $subir=Storage::disk('investigacion')->put($nuevoNombre, \File::get($img));
+                $subir=Storage::disk('investigacion')->put($nuevoNombre, \File::get($file));
+
+                if($extension=="pdf" || $extension=="doc" || $extension=="docx" || $extension=="xls" || $extension=="xlsx" || $extension=="ppt" || $extension=="pptx" || $extension=="PDF" || $extension=="DOC" || $extension=="DOCX" || $extension=="XLS" || $extension=="XLSX" || $extension=="PPT" || $extension=="PTTX")
+                {
+
 
                 if($subir){
-                    $imagen=$nuevoNombre;
+                    $archivo=$nuevoNombre;
+                    $nombreArchivo=$nombreArchivo;
                 }
                 else{
-                    $msj="Error al subir la imagen, intentelo nuevamente luego";
-                    $segureImg=1;
+                    $msj="Error al subir el archivo adjunto, intentelo nuevamente luego";
+                    $segureFile=1;
                     $result='0';
-                    $selector='archivo';
+                    $selector='archivo2';
                 }
+            }
+            else {
+                $segureFile=1;
+                $msj="El archivo adjunto ingresado tiene una extensión no válida, ingrese otro archivo o limpie el formulario";
+                $result='0';
+                $selector='archivo2';
+            }
             }
 
         }
 
-        if($segureImg==1){ 
-            Storage::disk('investigacion')->delete($imagen);
+        if($segureFile==1){ 
+            Storage::disk('investigacion')->delete($archivo);
         }
         else{
 
@@ -225,8 +272,6 @@ class InvestigacionController extends Controller
             $input9  = array('avance' => $avance);
             $reglas9 = array('avance' => 'required');
 
-            $input10  = array('descripcionAvance' => $descripcionAvance);
-            $reglas10 = array('descripcionAvance' => 'required');
 
             $input11  = array('escuela_id' => $escuela_id);
             $reglas11 = array('escuela_id' => 'required');
@@ -257,7 +302,7 @@ class InvestigacionController extends Controller
             $validator7 = Validator::make($input7, $reglas7);
             $validator8 = Validator::make($input8, $reglas8);
             $validator9 = Validator::make($input9, $reglas9);
-            $validator10 = Validator::make($input10, $reglas10);
+
             $validator11 = Validator::make($input11, $reglas11);
             $validator12 = Validator::make($input12, $reglas12);
             $validator13 = Validator::make($input13, $reglas13);
@@ -311,11 +356,7 @@ class InvestigacionController extends Controller
                 $msj='Ingrese el avance de la investigación';
                 $selector='txtavance';
             }
-            elseif ($validator10->fails()) {
-                $result='0';
-                $msj='Ingrese la descripción del avance de la investigación';
-                $selector='txtdescripcionAvance';
-            }
+
 
             elseif ($validator11->fails()) {
                 $result='0';
@@ -356,14 +397,15 @@ class InvestigacionController extends Controller
                     $newInvestigacion->fechaInicio=$fechaInicio;
                     $newInvestigacion->fechaTermino=$fechaTermino;
                     $newInvestigacion->clasificacion=$clasificacion;
-                    $newInvestigacion->rutadocumento=$imagen;
+                    $newInvestigacion->rutadocumento=$archivo;
                     $newInvestigacion->estado=$estado;
                     $newInvestigacion->avance=$avance;
-                    $newInvestigacion->descripcionAvance=$descripcionAvance;
                     $newInvestigacion->escuela_id=$escuela_id;
                     $newInvestigacion->lineainvestigacion=$lineainvestigacion;
                     $newInvestigacion->financiamiento=$financiamiento;
                     $newInvestigacion->patentado=$patentado;
+                    $newInvestigacion->observaciones=$observaciones;
+                    $newInvestigacion->archivonombre=$nombreArchivo;
       
                     $newInvestigacion->activo='1';
                     $newInvestigacion->borrado='0';                   
@@ -423,66 +465,94 @@ class InvestigacionController extends Controller
         $fechaTermino=$request->fechaTermino;
         $clasificacion=$request->clasificacion;
         $estado=$request->estado;
-        $descripcionAvance=$request->descripcionAvance;
+        $avance=$request->avance;
         $escuela_id=$request->escuela_id;
         $lineainvestigacion=$request->lineainvestigacion;
         $financiamiento=$request->financiamiento;
         $patentado=$request->patentado;
+        $observaciones=$request->observaciones;
 
-       $img=$request->imagen;
-       $imagen="";
-       $segureImg=0;
+        $archivo="";
+        $file = $request->archivo;
+        $segureFile=0;
 
-       $oldImagen=$request->oldImagen;
+        $nombreArchivo="";
 
-       if(intval($estado)<3)
+        $oldFile=$request->oldfile;
+
+       if(intval($estado)==1)
         {
             $fechaTermino=null;
         }
 
-       if ($request->hasFile('imagen')) { 
+       if ($request->hasFile('archivo')) { 
 
- 
-        $input  = array('image' => $img) ;
-        $reglas = array('image' => 'required|mimes:png,jpg,jpeg,gif,jpe,PNG,JPG,JPEG,GIF,JPE,doc,xls,ppt,pptx,pdf,txt,DOC,XLS,PPT,PPTX,PDF,TXT');
+        $nombreArchivo=$request->nombreArchivo;
+
+        $input  = array('file' => $file) ;
+        $reglas = array('file' => 'required|mimes:png,jpg,jpeg,gif,jpe,PNG,JPG,JPEG,GIF,JPE,doc,xls,ppt,pptx,pdf,txt,DOC,XLS,PPT,PPTX,PDF,TXT');
         $validator = Validator::make($input, $reglas);
 
-        if ($validator->fails())
+        $inputNA  = array('archivonombre' => $nombreArchivo);
+        $reglasNA = array('archivonombre' => 'required');
+        $validatorNA = Validator::make($inputNA, $reglasNA);
+
+        if (1==2)
         {
 
-            $segureImg=1;
+            $segureFile=1;
             $msj="El archivo ingresado no es válido, ingrese otro archivo o limpie el formulario";
             $result='0';
-            $selector='archivo';
+            $selector='archivo2E';
+        }
+
+        elseif($validatorNA->fails()){
+            $segureFile=1;
+            $msj="Si va a registrar un archivo adjunto, debe de ingresar un nombre válido con el que se verá en el sistema";
+            $result='0';
+            $selector='txtArchivoAdjuntoE';
         }
 
         else
-        {
+        {   
+                $fecha=Date('Y-m-d');
+                $hora=Date('H-i-s');
 
-            if(strlen($oldImagen)>0){
-                Storage::disk('investigacion')->delete($oldImagen);
-            }
-
-            $nombre=$img->getClientOriginalName();
-            $extension=$img->getClientOriginalExtension();
+            $nombre=$file->getClientOriginalName();
+            $extension=$file->getClientOriginalExtension();
             $nuevoNombre=$nombre.$fecha.$hora.".".$extension;
-            $subir=Storage::disk('investigacion')->put($nuevoNombre, \File::get($img));
+            $subir=Storage::disk('investigacion')->put($nuevoNombre, \File::get($file));
+
+            if($extension=="pdf" || $extension=="doc" || $extension=="docx" || $extension=="xls" || $extension=="xlsx" || $extension=="ppt" || $extension=="pptx" || $extension=="PDF" || $extension=="DOC" || $extension=="DOCX" || $extension=="XLS" || $extension=="XLSX" || $extension=="PPT" || $extension=="PTTX")
+            {
 
             if($subir){
-                $imagen=$nuevoNombre;
+                $archivo=$nuevoNombre;
+
+                if(strlen($oldFile)>0){
+                    Storage::disk('investigacion')->delete($oldFile);
+                }
             }
             else{
-                $msj="Error al subir la imagen, intentelo nuevamente luego";
-                $segureImg=1;
-                $result='0';
-                $selector='archivo';
+                $msj="Error al subir el archivo adjunto, intentelo nuevamente luego";
+                    $segureFile=1;
+                    $result='0';
+                    $selector='archivo2E';
             }
         }
+            else {
+                $segureFile=1;
+                $msj="El archivo adjunto ingresado tiene una extensión no válida, ingrese otro archivo o limpie el formulario";
+                $result='0';
+                $selector='archivo2E';
+            }
+        
 
+        }
     }
 
-    if($segureImg==1){ 
-        Storage::disk('investigacion')->delete($imagen);
+    if($segureFile==1){ 
+        Storage::disk('investigacion')->delete($archivo);
     }
     else
     {
@@ -514,8 +584,6 @@ class InvestigacionController extends Controller
         $input9  = array('avance' => $avance);
         $reglas9 = array('avance' => 'required');
 
-        $input10  = array('descripcionAvance' => $descripcionAvance);
-        $reglas10 = array('descripcionAvance' => 'required');
 
         $input11  = array('escuela_id' => $escuela_id);
         $reglas11 = array('escuela_id' => 'required');
@@ -533,10 +601,6 @@ class InvestigacionController extends Controller
         $reglas15 = array('fechaTermino' => 'required');
 
 
-
-
-
-           
         $validator1 = Validator::make($input1, $reglas1);
         $validator2 = Validator::make($input2, $reglas2);
         $validator3 = Validator::make($input3, $reglas3);
@@ -546,7 +610,7 @@ class InvestigacionController extends Controller
         $validator7 = Validator::make($input7, $reglas7);
         $validator8 = Validator::make($input8, $reglas8);
         $validator9 = Validator::make($input9, $reglas9);
-        $validator10 = Validator::make($input10, $reglas10);
+
         $validator11 = Validator::make($input11, $reglas11);
         $validator12 = Validator::make($input12, $reglas12);
         $validator13 = Validator::make($input13, $reglas13);
@@ -600,11 +664,7 @@ class InvestigacionController extends Controller
             $msj='Ingrese el avance de la investigación';
             $selector='txtavanceE';
         }
-        elseif ($validator10->fails()) {
-            $result='0';
-            $msj='Ingrese la descripción del avance de la investigación';
-            $selector='txtdescripcionAvanceE';
-        }
+
 
         elseif ($validator11->fails()) {
             $result='0';
@@ -645,21 +705,20 @@ class InvestigacionController extends Controller
                 $newInvestigacion->fechaInicio=$fechaInicio;
                 $newInvestigacion->fechaTermino=$fechaTermino;
                 $newInvestigacion->clasificacion=$clasificacion;
-                $newInvestigacion->rutadocumento=$imagen;
+                $newInvestigacion->rutadocumento=$archivo;
                 $newInvestigacion->estado=$estado;
                 $newInvestigacion->avance=$avance;
-                $newInvestigacion->descripcionAvance=$descripcionAvance;
                 $newInvestigacion->escuela_id=$escuela_id;
                 $newInvestigacion->lineainvestigacion=$lineainvestigacion;
                 $newInvestigacion->financiamiento=$financiamiento;
                 $newInvestigacion->patentado=$patentado;
-  
-                $newInvestigacion->activo='1';
-                $newInvestigacion->borrado='0';                   
+                $newInvestigacion->observaciones=$observaciones;
+                $newInvestigacion->archivonombre=$nombreArchivo;
+                 
 
                 $newInvestigacion->save();
 
-          $msj='Registro de Investigación modificada con éxito';
+          $msj='Registro de Investigación modificado con éxito';
 
       }
 

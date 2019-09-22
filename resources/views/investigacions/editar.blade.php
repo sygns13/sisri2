@@ -1,294 +1,22 @@
-<form method="post" v-on:submit.prevent="update(filladministrativos.id)">
+<form method="post" v-on:submit.prevent="update(fillinvestigacion.id)">
   <div class="box-body" style="font-size: 14px;">
 
    
-    <div class="col-md-12">
-
-      <div class="form-group">
-
-          <label for="cbutipodocE" class="col-sm-1 control-label">Tipo de Doc:*</label>
-
-          <div class="col-sm-2">
-              <select class="form-control" id="cbutipodocE" name="cbutipodocE" v-model="filladministrativos.tipodoc">
-                <option value="1">DNI</option>
-                <option value="2">RUC</option>
-                <option value="3">Carnet de Extranjería</option>
-                <option value="4">Pasaporte</option>
-                <option value="5">Partida de Nacimiento</option>
-              </select>
-            </div>
-
-
-
-        <label for="txtDNIE" class="col-sm-1 control-label">Documento:*</label>
-
-        <div class="col-sm-2">
-          <input type="text" class="form-control" id="txtDNIE" name="txtDNIE" placeholder="N° de Doc" maxlength="20"
-            autofocus v-model="filladministrativos.doc" required
-            @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" :disabled="validated == 1"
-           >
-        </div>
-
-      </div>
-
-
-
-    </div>
+   
 
     <template v-if="1==1">
 
 
-      <div class="col-md-12">
-        <hr style="border-top: 3px solid rgb(208, 211, 51);">
-      </div>
-
-      <center>
-      <h4>Datos Personales del Personal Administrativo</h4>
-      </center>
-
       <div class="col-md-12" style="padding-top: 15px;">
         <div class="form-group">
-          <label for="txtapepatE" class="col-sm-2 control-label">Apellido Paterno:*</label>
-          <div class="col-sm-4">
-            <input type="text" class="form-control" id="txtapepatE" name="txtapepatE" placeholder="Apellido Paterno"
-              maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.apellidopat">
-          </div>
-
-          <label for="txtapematE" class="col-sm-2 control-label">Apellido Materno:*</label>
-          <div class="col-sm-4">
-              <input type="text" class="form-control" id="txtapematE" name="txtapematE" placeholder="Apellido Materno"
-                maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.apellidomat">
-            </div>
-        </div>
-      </div>
-
-      <div class="col-md-12" style="padding-top: 15px;">
-        <div class="form-group">
-          <label for="txtnombresE" class="col-sm-2 control-label">Nombres:*</label>
-          <div class="col-sm-8">
-            <input type="text" class="form-control" id="txtnombresE" name="txtnombresE" placeholder="Nombres"
-              maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.nombres">
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-12" style="padding-top: 15px;">
-          <div class="form-group">
-            <label for="cbugeneroE" class="col-sm-2 control-label">Género:*</label>
-            <div class="col-sm-2">
-              <select class="form-control" id="cbugeneroE" name="cbugeneroE" v-model="filladministrativos.genero">
-                <option value="M">Masculino</option>
-                <option value="F">Femenino</option>
-              </select>
-            </div>
-
-            <label for="txtfechanacE" class="col-sm-2 control-label">Fecha de Nacimiento:*</label>
-            <div class="col-sm-2">
-                <input type="date" class="form-control" id="txtfechanacE" name="txtfechanacE" placeholder="dd/mm/aaaa"
-                maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.fechanac">
-            </div>
-
-            <label for="cbuestadocivilE" class="col-sm-2 control-label">Estado Civil:*</label>
-            <div class="col-sm-2">
-                <select class="form-control" id="cbuestadocivilE" name="cbuestadocivilE" v-model="filladministrativos.estadocivil">
-                  <option value="1">Soltero (a)</option>
-                  <option value="2">Casado (a)</option>
-                  <option value="3">Viudo (a)</option>
-                  <option value="4">Divorsiado (a)</option>
-                </select>
-              </div>
-
-          </div>
-        </div>
-
-        <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
-
-                <label for="cbugeneroE" class="col-sm-2 control-label">Sufre Discapacidad:*</label>
-                <div class="col-sm-2">
-                  <select class="form-control" id="cbugeneroE" name="cbugeneroE" v-model="filladministrativos.esdiscapacitado">
-                    <option value="0">No</option>
-                    <option value="1">Si</option>
-                  </select>
-                </div>
-
-                <template v-if="filladministrativos.esdiscapacitado=='1'">
-                <label for="txtdiscapacidadE" class="col-sm-2 control-label">Discapacidad que Padece:*</label>
-          <div class="col-sm-6">
-              <input type="text" class="form-control" id="txtdiscapacidadE" name="txtdiscapacidadE" placeholder="Discapacidad"
-                maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.discapacidad">
-            </div>
-          </template>
-            </div>
-          </div>
-
-    
-        <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
-
-                <label for="txtpaisE" class="col-sm-2 control-label">Pais de Procedencia:*</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="txtpaisE" name="txtpaisE" placeholder="Pais"
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.pais">
-                </div>
-
-                <label for="txtdepE" class="col-sm-2 control-label">Departamento:*</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="txtdepE" name="txtdepE" placeholder="Departamento"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.departamento">
-              </div>
-
-            </div>
-          </div>
-
-        <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
-
-                <label for="txtprovE" class="col-sm-2 control-label">Provincia:*</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="txtprovE" name="txtprovE" placeholder="Provincia"
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.provincia">
-                </div>
-
-                <label for="txtdistE" class="col-sm-2 control-label">Distrito:*</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="txtdistE" name="txtdistE" placeholder="Distrito"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.distrito">
-              </div>
-
-            </div>
-          </div>
 
 
-        <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
-
-                <label for="txtDirE" class="col-sm-2 control-label">Dirección:</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="txtDirE" name="txtDirE" placeholder="Av. Jr. Psje."
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.direccion">
-                </div>
-  
-                <label for="txtemailE" class="col-sm-2 control-label">Email:</label>
-                <div class="col-sm-4">
-                  <input type="email" class="form-control" id="txtemailE" name="txtemailE" placeholder="example@domain.com"
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.email">
-                </div>
-
-            </div>
-          </div>
-
-
-          <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-  
-                  <label for="txtfonoE" class="col-sm-2 control-label">Teléfono:*</label>
-                  <div class="col-sm-2">
-                    <input type="text" class="form-control" id="txtfonoE" name="txtfonoE" placeholder="Telef / Cell"
-                      maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.telefono">
-                  </div>
-  
- 
-              </div>
-            </div>
-
-
-
-
-      <div class="col-md-12">
-        <hr>
-      </div>
-
-      <center>
-        <h4>Datos Laborales del Personal Administrativo</h4>
-      </center>
-
-
-      <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-    
-                <label for="cbulocalE" class="col-sm-2 control-label">Local:*</label>
-                <div class="col-sm-10">
-                    <select class="form-control" id="cbulocalE" name="cbulocalE" v-model="filladministrativos.local_id">
-                      <option value="0" disabled>Seleccione Local...</option>
-                      @foreach ($locals as $dato)
-                        <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
-                      @endforeach 
-                    </select>
-                  </div>
-    
-              </div>
-            </div>
-
-        <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-               
-                <label for="cbutipodependenciaE" class="col-sm-2 control-label">Tipo de Dependencia:*</label>
-                <div class="col-sm-10">
-                    <select class="form-control" id="cbutipodependenciaE" name="cbutipodependenciaE" v-model="filladministrativos.tipoDependencia">
-                    <option value="0" disabled>Seleccione Tipo de Dependencia...</option>
-
-                      <option value="0">Unidad orgánica</option>
-                      <option value="1">Dirección general</option>
-                      <option value="2">Consejo asesor</option>
-                      <option value="3">Unidad académica</option>
-                      <option value="4">Unidad de investigación</option>
-                      <option value="5">Unidad de formación continua</option>
-                      <option value="6">Área de administración</option>
-                      <option value="7">Área de calidad o secretaria académica</option>
-                      <option value="8">Unidad de bienestar y empleabilidad</option>
-                      <option value="9">Facultad</option>
-                      <option value="10">Escuela profesional</option>
-                    </select>
-                  </div>
-    
-              </div>
-            </div>
-
-
-            <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(filladministrativos.tipoDependencia)<9">
-          <div class="form-group">
-
-              <label for="txtdependenciaE" class="col-sm-2 control-label">Dependencia:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="txtdependenciaE" name="txtdependenciaE" placeholder="Nombre de la Dependencia"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.dependencia">
-              </div>
-
-            </div>
-          </div>
-
-
-          <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(filladministrativos.tipoDependencia)==9">
-        <div class="form-group">
-
-            <label for="cbufacultadE" class="col-sm-2 control-label">Facultad:*</label>
+            <label for="cbuescuela_idE" class="col-sm-2 control-label">Escuela Profesional:*</label>
             <div class="col-sm-10">
-                <select class="form-control" id="cbufacultadE" name="cbufacultadE" v-model="filladministrativos.facultad">
-                    <option value="0" disabled>Seleccione una Facultad..</option>
-                  @foreach ($facultads as $dato)
-                  <option value="{{$dato->nombre}}">{{$dato->nombre}}</option>     
-                  @endforeach                   
-                </select>
-              </div>
-
-          </div>
-        </div>
-
-
-
-
-
-      <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(filladministrativos.tipoDependencia)==10">
-        <div class="form-group">
-
-
-            <label for="cbucarreraE" class="col-sm-2 control-label">Escuela Profesional:*</label>
-            <div class="col-sm-10">
-                <select class="form-control" id="cbucarreraE" name="cbucarreraE" v-model="filladministrativos.escuela">
-                    <option value="0" disabled>Seleccione una Escuela Profesional...</option>
+                <select class="form-control" id="cbuescuela_idE" name="cbuescuela_idE" v-model="fillinvestigacion.escuela_id">
+                    <option value="0" disabled>Seleccione un Programa Profesional...</option>
                   @foreach ($escuelas as $dato)
-                  <option value="{{$dato->nombre}}">{{$dato->nombre}}</option>     
+                  <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
                   @endforeach                   
                 </select>
               </div>
@@ -296,191 +24,205 @@
           </div>
         </div>
 
-
-        <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-  
-                <label for="cbucargoE" class="col-sm-2 control-label">Cargo:*</label>
-  
-                <div class="col-sm-4">
-                  <select class="form-control" id="cbucargoE" name="cbucargoE" v-model="filladministrativos.cargo">
-                  <option value="0" disabled>Seleccione un Cargo...</option>                       
-                      <option value="Rector">Rector</option>                        
-                      <option value="Vicerrector Académico">Vicerrector Académico</option>       
-                      <option value="Vicerrector de Investigación">Vicerrector de Investigación</option>     
-                      <option value="Vicerrector Administrativo">Vicerrector Administrativo</option>          
-                      <option value="Decano">Decano</option>                        
-                      <option value="Director de Escuela">Director de Escuela</option>                        
-                      <option value="Director de Oficina">Director de Oficina</option>                        
-                      <option value="Jefe de Oficina">Jefe de Oficina</option>                        
-                      <option value="Jefe de Departamento Académico">Jefe de Departamento Académico</option>
-                      <option value="Coordinador">Coordinador</option>                        
-                      <option value="Asesor">Asesor</option>                        
-                      <option value="Asistente Administrativo">Asistente Administrativo</option>              
-                      <option value="Especialista">Especialista</option>                        
-                      <option value="Analista">Analista</option>                        
-                      <option value="Otro">Otro</option>                        
-                    </select>
-                  </div>
-              
-     
-                  </div>
-                </div>
-
-
-      <div class="col-md-12" style="padding-top: 15px;">
+            <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
 
-              <label for="txtdesccargoE" class="col-sm-2 control-label">Descripción del Cargo:</label>
+              <label for="txttituloE" class="col-sm-2 control-label">Título:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="txtdesccargoE" name="txtdesccargoE" placeholder="Nombre del Cargo"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.descripcionCargo">
+                <input type="text" class="form-control" id="txttituloE" name="txttituloE" placeholder="Título de la Investigación"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.titulo">
               </div>
 
             </div>
-        </div>
-           
+          </div>
+
+
 
 
           <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-               
-                <label for="cbucondicionE" class="col-sm-2 control-label">Condición Laboral:*</label>
-                <div class="col-sm-2">
-                    <select class="form-control" id="cbucondicionE" name="cbucondicionE" v-model="filladministrativos.condicion">
-                      <option value="Nombrado">Nombrado</option>
-                      <option value="Contratado">Contratado</option>
-                      <option value="CAS">CAS</option>
-   
-                    </select>
-                  </div>
+            <div class="form-group">
 
-                </div>
+                <label for="txtdescripcionE" class="col-sm-2 control-label">Descripción:</label>
+                <div class="col-sm-10">
+<textarea name="txtdescripcionE" id="txtdescripcionE" rows="4" v-model="fillinvestigacion.descripcion" style="width:100%;" placeholder="Descripción de la Investigación"></textarea>
+
+
+              </div>
+            </div>
           </div>
 
           <div class="col-md-12" style="padding-top: 15px;">
+
+            <div class="form-group">
+              <label for="txtArchivoAdjuntoE" class="col-sm-2 control-label">Archivo Adjunto: (Opcional: pdf, docx, xlsx, pptx)</label>
+
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="txtArchivoAdjuntoE" name="txtArchivoAdjuntoE" placeholder="Nombre del Archivo" maxlength="500"  v-model="fillinvestigacion.archivonombre">
+              </div>
+
+              <div class="col-sm-8" v-if="uploadReadyE">
+                 <input  name="archivo2E" type="file" id="archivo2E" class="archivo form-control" @change="getArchivoE" 
+      accept=".pdf, .doc, .docx, .xls, .xlsx, ppt, .pptx, .PDF, .DOC, .DOCX, .XLS, .XLSX, .PPT, .PTTX"/>
+
+     
+
+  
+               </div>
+            </div>
+
+        </div>  
+
+
+
+
+          <div class="col-md-12" style="padding-top: 15px;">
+            <div class="form-group">
+  
+                <label for="txtresolucionAprobacionE" class="col-sm-2 control-label">Resolución:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="txtresolucionAprobacionE" name="txtresolucionAprobacionE" placeholder="Resolución de Aprobación"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.resolucionAprobacion">
+                </div>
+  
+              </div>
+            </div>
+
+
+
+            <div class="col-md-12" style="padding-top: 15px;">
+              <div class="form-group">
+    
+                  <label for="txtclasificacionE" class="col-sm-2 control-label">Clasificación:</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="txtclasificacionE" name="txtclasificacionE" placeholder="Clasificación de la Investigación"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.clasificacion">
+                  </div>
+
+                  <label for="txtlineainvestigacionE" class="col-sm-2 control-label">Línea de Investigación:</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="txtlineainvestigacionE" name="txtlineainvestigacionE" placeholder="Línea de la Investigación"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.lineainvestigacion">
+                  </div>
+    
+                </div>
+              </div>
+
+
+              <div class="col-md-12" style="padding-top: 15px;">
                 <div class="form-group">
-    
       
-                      <label for="cbumaxgradoE" class="col-sm-2 control-label">Máximo Grado Académico:*</label>
-                      <div class="col-sm-4">
-                        <select class="form-control" id="cbumaxgradoE" name="cbumaxgradoE" v-model="filladministrativos.grado">
-                            <option value="0">Sin grado</option>                        
-                            <option value="1">Primaria completa</option>                        
-                            <option value="2">Secundaria completa</option>                        
-                            <option value="3">Técnico</option>                        
-                            <option value="4">Bachiller</option>                        
-                            <option value="5">Maestro</option>                        
-                            <option value="6">Doctor</option>                                             
-                          </select>
-                        </div>
-    
-    
+                    <label for="txtfinanciamientoE" class="col-sm-2 control-label">Financiamiento:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="txtfinanciamientoE" name="txtfinanciamientoE" placeholder="Financiamiento de la Investigación"
+                        maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.financiamiento">
+                    </div>
+
                   </div>
                 </div>
 
-                <div class="col-md-12" style="padding-top: 15px;" v-if="filladministrativos.grado!='0'">
-                    <div class="form-group">
-                        <label for="txtdescGradoE" class="col-sm-3 control-label">Descripción del Máximo Grado:</label>
-                        <div class="col-sm-9">
-                    <input type="text" class="form-control" id="txtdescGradoE" name="txtdescGradoE" placeholder="Grado Académico"
-                            maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.descripcionGrado">
-                      </div>
+                <div class="col-md-12" style="padding-top: 15px;">
+                  <div class="form-group">
+  
+  
+                        <label for="txtpresupuestoAsignadoE" class="col-sm-2 control-label">Presupuesto Asignado (S/.):*</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="txtpresupuestoAsignadoE" name="txtpresupuestoAsignadoE" placeholder="" onkeypress="return soloNumeros(event);"
+                              maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.presupuestoAsignado">
+                          </div>
+  
+                          <label for="txtpresupuestoEjecutadoE" class="col-sm-2 control-label">Presupuesto Ejecutado (S/.):*</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="txtpresupuestoEjecutadoE" name="txtpresupuestoEjecutadoE" placeholder="" onkeypress="return soloNumeros(event);"
+                              maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.presupuestoEjecutado">
+                          </div>
+  
+  
                     </div>
                   </div>
 
-
-                  <div class="col-md-12" style="padding-top: 15px;">
-                      <div class="form-group">
-          
-                          <label for="cbutitulounivE" class="col-sm-2 control-label">Título Universitario:*</label>
-                          <div class="col-sm-4">
-                              <select class="form-control" id="cbutitulounivE" name="cbutitulounivE" v-model="filladministrativos.esTitulado">
-                                <option value="1">Si</option>
-                                <option value="0">No</option>
-          
-                              </select>
-                            </div>
-                        </div>
-                      </div>
-    
-    
-                      <template v-if="parseInt(filladministrativos.esTitulado)==1">
-    
-                          <div class="col-md-12" style="padding-top: 15px;">
-                              <div class="form-group">
-                                  <label for="txttitulounivE" class="col-sm-3 control-label">Descripción del Título Universitario:</label>
-                                  <div class="col-sm-9">
-                              <input type="text" class="form-control" id="txttitulounivE" name="txttitulounivE" placeholder="Nombre del Título Universitario"
-                                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.descripcionTitulo">
-                                </div>
-                              </div>
-                            </div>
-    
-    
-                        </template>
-
-
-            <div class="col-md-12" style="padding-top: 15px;" v-if="filladministrativos.grado!='0'">
-                <div class="form-group">
-    
-                    <label for="cbulugarmaxgradoE" class="col-sm-2 control-label">Lugar del Máximo Grado:*</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" id="cbulugarmaxgradoE" name="cbulugarmaxgradoE" v-model="filladministrativos.lugarGrado">
-                          <option value="Nacional">Nacional</option>
-                          <option value="Internacional">Internacional</option>
-    
-                        </select>
-                      </div>
-                      
-                      <template v-if="filladministrativos.lugarGrado=='Internacional'">
-                      <label for="txtpaismaxgradoE" class="col-sm-2 control-label">País donde Obtuvo el Grado:*</label>
-                      <div class="col-sm-4">
-                        <input type="text" class="form-control" id="txtpaismaxgradoE" name="txtpaismaxgradoE" placeholder="Pais"
-                        maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.paisGrado">
-                        </div>
-                      </template>
-    
-                  </div>
-                </div>
-
+           
 
                 <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
                
-                <label for="cbuestadocontE" class="col-sm-2 control-label">Estado de Contrato:*</label>
+                <label for="cbuestadoE" class="col-sm-2 control-label">Estado de Investigación:*</label>
                 <div class="col-sm-2">
-                    <select class="form-control" id="cbuestadocontE" name="cbuestadocontE" v-model="filladministrativos.estado">
-                      <option value="1">Activo</option>
+                    <select class="form-control" id="cbuestadoE" name="cbuestadoE" v-model="fillinvestigacion.estado">
+                      <option value="1">En Ejecución</option>
                       <option value="0">Finalizado</option>
+                      <option value="2">Cancelado</option>
    
                     </select>
                   </div>
 
 
-                  <label for="txtfechaingresoE" class="col-sm-2 control-label">Fecha de Ingreso al Cargo:*</label>
+                  <label for="txtfechaInicioE" class="col-sm-2 control-label">Fecha de Inicio:*</label>
                 <div class="col-sm-2">
-                    <input type="date" class="form-control" id="txtfechaingresoE" name="txtfechaingresoE" placeholder="dd/mm/aaaa"
-                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.fechaIngreso">
+                    <input type="date" class="form-control" id="txtfechaInicioE" name="txtfechaInicioE" placeholder="dd/mm/aaaa"
+                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.fechaInicio">
                 </div>
 
-<template v-if="parseInt(filladministrativos.estado)==0">  
-                <label for="txtfechasalidaE" class="col-sm-2 control-label">Fecha de Egreso del Cargo:*</label>
+<template v-if="parseInt(fillinvestigacion.estado)!=1">  
+                <label for="txtfechaTerminoE" class="col-sm-2 control-label">Fecha de Término:*</label>
                 <div class="col-sm-2">
-                    <input type="date" class="form-control" id="txtfechasalidaE" name="txtfechasalidaE" placeholder="dd/mm/aaaa"
-                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.fechaSalida">
+                    <input type="date" class="form-control" id="txtfechaTerminoE" name="txtfechaTerminoE" placeholder="dd/mm/aaaa"
+                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.fechaTermino">
                 </div>
                 </template>    
               </div>
             </div>
 
 
+
+            <div class="col-md-12" style="padding-top: 15px;">
+              <div class="form-group">
+
+
+                    <label for="txthorasE" class="col-sm-2 control-label">Horas Dedicadas a la Investigación:*</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="txthorasE" name="txthorasE" placeholder="" onkeypress="return soloNumeros(event);"
+                          maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.horas">
+                      </div>
+
+                      <label for="txtavanceE" class="col-sm-2 control-label">Porcentaje de Avance (%):*</label>
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control" id="txtavanceE" name="txtavanceE" placeholder="" onkeypress="return soloNumeros(event);"
+                          maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.avance">
+                      </div>
+
+
+                </div>
+              </div>
+
+
+              <div class="col-md-12" style="padding-top: 15px;">
+                <div class="form-group">
+                 
+                  <label for="cbuestadoE" class="col-sm-2 control-label">Se encuentra Patentado:*</label>
+                  <div class="col-sm-2">
+                      <select class="form-control" id="cbuestadoE" name="cbuestadoE" v-model="fillinvestigacion.patentado">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+     
+                      </select>
+                    </div>
+  
+                </div>
+              </div>
+
+
                               <div class="col-md-12" style="padding-top: 15px;">
                                   <div class="form-group">
 
-                                      <label for="txtobsE" class="col-sm-2 control-label">Observaciones:</label>
+                                      <label for="txtobservacionesE" class="col-sm-2 control-label">Observaciones:</label>
                                       <div class="col-sm-10">
-<textarea name="txtobsE" id="txtobsE" rows="6" v-model="filladministrativos.observaciones" style="width:100%;"></textarea>
+<textarea name="txtobservacionesE" id="txtobservacionesE" rows="4" v-model="fillinvestigacion.observaciones" style="width:100%;"></textarea>
+
+  
+                                    </div>
+                                  </div>
+                                </div>
+
     
 
     </template>

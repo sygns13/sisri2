@@ -1,475 +1,168 @@
 <form v-on:submit.prevent="create">
   <div class="box-body" style="font-size: 14px;">
 
-    <div class="col-md-12">
-
-      <div class="form-group">
-
-          <label for="cbutipodoc" class="col-sm-1 control-label">Tipo de Doc:*</label>
-
-          <div class="col-sm-2">
-              <select class="form-control" id="cbutipodoc" name="cbutipodoc" v-model="tipodoc">
-                <option value="1">DNI</option>
-                <option value="2">RUC</option>
-                <option value="3">Carnet de Extranjería</option>
-                <option value="4">Pasaporte</option>
-                <option value="5">Partida de Nacimiento</option>
-              </select>
-            </div>
-
-
-
-        <label for="txtDNI" class="col-sm-1 control-label">Documento:*</label>
-
-        <div class="col-sm-2">
-          <input type="text" class="form-control" id="txtDNI" name="txtDNI" placeholder="N° de Doc" maxlength="20"
-            autofocus v-model="doc" @keyup.enter="pressNuevoDNI()" required
-            @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" :disabled="validated == 1"
-           >
-        </div>
-        <div class="col-sm-6">
-          <a href="#" class="btn btn-success btn-sm" v-on:click.prevent="pressNuevoDNI()"><span
-              class="  fa fa-check-square-o"></span> Validar</a>
-        </div>
-      </div>
-
-
-
-    </div>
+    
 
     <template v-if="formularioCrear">
 
 
-      <div class="col-md-12">
-        <hr style="border-top: 3px solid #1b5f43;">
-      </div>
-
-      <center>
-        <h4>Datos Personales del Personal Administrativo</h4>
-      </center>
-
       <div class="col-md-12" style="padding-top: 15px;">
         <div class="form-group">
-          <label for="txtapepat" class="col-sm-2 control-label">Apellido Paterno:*</label>
-          <div class="col-sm-4">
-            <input type="text" class="form-control" id="txtapepat" name="txtapepat" placeholder="Apellido Paterno"
-              maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="apellidopat">
-          </div>
 
-          <label for="txtapemat" class="col-sm-2 control-label">Apellido Materno:*</label>
-          <div class="col-sm-4">
-              <input type="text" class="form-control" id="txtapemat" name="txtapemat" placeholder="Apellido Materno"
-                maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="apellidomat">
-            </div>
-        </div>
-      </div>
 
-      <div class="col-md-12" style="padding-top: 15px;">
-        <div class="form-group">
-          <label for="txtnombres" class="col-sm-2 control-label">Nombres:*</label>
-          <div class="col-sm-8">
-            <input type="text" class="form-control" id="txtnombres" name="txtnombres" placeholder="Nombres"
-              maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="nombres">
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-12" style="padding-top: 15px;">
-          <div class="form-group">
-            <label for="cbugenero" class="col-sm-2 control-label">Género:*</label>
-            <div class="col-sm-2">
-              <select class="form-control" id="cbugenero" name="cbugenero" v-model="genero">
-                <option value="M">Masculino</option>
-                <option value="F">Femenino</option>
-              </select>
-            </div>
-
-            <label for="txtfechanac" class="col-sm-2 control-label">Fecha de Nacimiento:*</label>
-            <div class="col-sm-2">
-                <input type="date" class="form-control" id="txtfechanac" name="txtfechanac" placeholder="dd/mm/aaaa"
-                maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fechanac">
-            </div>
-
-            <label for="cbuestadocivil" class="col-sm-2 control-label">Estado Civil:*</label>
-            <div class="col-sm-2">
-                <select class="form-control" id="cbuestadocivil" name="cbuestadocivil" v-model="estadocivil">
-                  <option value="1">Soltero (a)</option>
-                  <option value="2">Casado (a)</option>
-                  <option value="3">Viudo (a)</option>
-                  <option value="4">Divorsiado (a)</option>
+            <label for="cbuescuela_id" class="col-sm-2 control-label">Escuela Profesional:*</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="cbuescuela_id" name="cbuescuela_id" v-model="escuela_id">
+                    <option value="0" disabled>Seleccione un Programa Profesional...</option>
+                  @foreach ($escuelas as $dato)
+                  <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
+                  @endforeach                   
                 </select>
               </div>
 
           </div>
         </div>
 
-        <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
+            <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
 
-                <label for="cbugenero" class="col-sm-2 control-label">Sufre Discapacidad:*</label>
-                <div class="col-sm-2">
-                  <select class="form-control" id="cbugenero" name="cbugenero" v-model="esdiscapacitado">
-                    <option value="0">No</option>
-                    <option value="1">Si</option>
-                  </select>
-                </div>
-
-                <template v-if="esdiscapacitado=='1'">
-                <label for="txtdiscapacidad" class="col-sm-2 control-label">Discapacidad que Padece:*</label>
-          <div class="col-sm-6">
-              <input type="text" class="form-control" id="txtdiscapacidad" name="txtdiscapacidad" placeholder="Discapacidad"
-                maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="discapacidad">
-            </div>
-          </template>
-            </div>
-          </div>
-
-    
-        <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
-
-                <label for="txtpais" class="col-sm-2 control-label">Pais de Procedencia:*</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="txtpais" name="txtpais" placeholder="Pais"
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="pais">
-                </div>
-
-                <label for="txtdep" class="col-sm-2 control-label">Departamento:*</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="txtdep" name="txtdep" placeholder="Departamento"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="departamento">
+              <label for="txttitulo" class="col-sm-2 control-label">Título:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="txttitulo" name="txttitulo" placeholder="Título de la Investigación"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="tituloI">
               </div>
-
-            </div>
-          </div>
-
-        <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
-
-                <label for="txtprov" class="col-sm-2 control-label">Provincia:*</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="txtprov" name="txtprov" placeholder="Provincia"
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="provincia">
-                </div>
-
-                <label for="txtdist" class="col-sm-2 control-label">Distrito:*</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="txtdist" name="txtdist" placeholder="Distrito"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="distrito">
-              </div>
-
-            </div>
-          </div>
-
-
-        <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
-
-                <label for="txtDir" class="col-sm-2 control-label">Dirección:</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="txtDir" name="txtDir" placeholder="Av. Jr. Psje."
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="direccion">
-                </div>
-  
-                <label for="txtemail" class="col-sm-2 control-label">Email:</label>
-                <div class="col-sm-4">
-                  <input type="email" class="form-control" id="txtemail" name="txtemail" placeholder="example@domain.com"
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="email">
-                </div>
 
             </div>
           </div>
 
 
           <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-  
-                  <label for="txtfono" class="col-sm-2 control-label">Teléfono:*</label>
-                  <div class="col-sm-2">
-                    <input type="text" class="form-control" id="txtfono" name="txtfono" placeholder="Telef / Cell"
-                      maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="telefono">
-                  </div>
-  
- 
-              </div>
-            </div>
+            <div class="form-group">
 
-
-
-      <div class="col-md-12">
-        <hr>
-      </div>
-
-      <center>
-        <h4>Datos Laborales del Personal Administrativo</h4>
-      </center>
-
-
-      <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-    
-                <label for="cbulocal" class="col-sm-2 control-label">Local:*</label>
+                <label for="txtdescripcion" class="col-sm-2 control-label">Descripción:</label>
                 <div class="col-sm-10">
-                    <select class="form-control" id="cbulocal" name="cbulocal" v-model="local_id">
-                      <option value="0" disabled>Seleccione Local...</option>
-                      @foreach ($locals as $dato)
-                        <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
-                      @endforeach 
-                    </select>
-                  </div>
-    
+<textarea name="txtdescripcion" id="txtdescripcion" rows="4" v-model="descripcion" style="width:100%;" placeholder="Descripción de la Investigación"></textarea>
+
+
               </div>
-            </div>
-
-        <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-               
-                <label for="cbutipodependencia" class="col-sm-2 control-label">Tipo de Dependencia:*</label>
-                <div class="col-sm-10">
-                    <select class="form-control" id="cbutipodependencia" name="cbutipodependencia" v-model="tipoDependencia">
-                    <option value="0" disabled>Seleccione Tipo de Dependencia...</option>
-
-                      <option value="0">Unidad orgánica</option>
-                      <option value="1">Dirección general</option>
-                      <option value="2">Consejo asesor</option>
-                      <option value="3">Unidad académica</option>
-                      <option value="4">Unidad de investigación</option>
-                      <option value="5">Unidad de formación continua</option>
-                      <option value="6">Área de administración</option>
-                      <option value="7">Área de calidad o secretaria académica</option>
-                      <option value="8">Unidad de bienestar y empleabilidad</option>
-                      <option value="9">Facultad</option>
-                      <option value="10">Escuela profesional</option>
-                    </select>
-                  </div>
-    
-              </div>
-            </div>
-
-
-            <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(tipoDependencia)<9">
-          <div class="form-group">
-
-              <label for="txtdependencia" class="col-sm-2 control-label">Dependencia:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="txtdependencia" name="txtdependencia" placeholder="Nombre de la Dependencia"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="dependencia">
-              </div>
-
             </div>
           </div>
 
+          <div class="col-md-12" style="padding-top: 15px;">
 
-          <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(tipoDependencia)==9">
-        <div class="form-group">
+            <div class="form-group">
+              <label for="txtArchivoAdjunto" class="col-sm-2 control-label">Archivo Adjunto: (Opcional: pdf, docx, xlsx, pptx)</label>
 
-            <label for="cbufacultad" class="col-sm-2 control-label">Facultad:*</label>
-            <div class="col-sm-10">
-                <select class="form-control" id="cbufacultad" name="cbufacultad" v-model="facultad">
-                    <option value="0" disabled>Seleccione una Facultad..</option>
-                  @foreach ($facultads as $dato)
-                  <option value="{{$dato->nombre}}">{{$dato->nombre}}</option>     
-                  @endforeach                   
-                </select>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="txtArchivoAdjunto" name="txtArchivoAdjunto" placeholder="Nombre del Archivo" maxlength="500" v-model="newNombreArchivo">
               </div>
 
-          </div>
-        </div>
+              <div class="col-sm-8">
+                 <input v-if="uploadReady" name="archivo2" type="file" id="archivo2" class="archivo form-control" @change="getArchivo" 
+      accept=".pdf, .doc, .docx, .xls, .xlsx, ppt, .pptx, .PDF, .DOC, .DOCX, .XLS, .XLSX, .PPT, .PTTX"/>
 
-
-
-
-
-      <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(tipoDependencia)==10">
-        <div class="form-group">
-
-
-            <label for="cbucarrera" class="col-sm-2 control-label">Escuela Profesional:*</label>
-            <div class="col-sm-10">
-                <select class="form-control" id="cbucarrera" name="cbucarrera" v-model="escuela">
-                    <option value="0" disabled>Seleccione una Escuela Profesional...</option>
-                  @foreach ($escuelas as $dato)
-                  <option value="{{$dato->nombre}}">{{$dato->nombre}}</option>     
-                  @endforeach                   
-                </select>
-              </div>
-
-          </div>
-        </div>
-
-
-        <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-  
-                <label for="cbucargo" class="col-sm-2 control-label">Cargo:*</label>
-  
-                <div class="col-sm-4">
-                  <select class="form-control" id="cbucargo" name="cbucargo" v-model="cargo">
-                  <option value="0" disabled>Seleccione un Cargo...</option>                       
-                      <option value="Rector">Rector</option>                        
-                      <option value="Vicerrector Académico">Vicerrector Académico</option>       
-                      <option value="Vicerrector de Investigación">Vicerrector de Investigación</option>     
-                      <option value="Vicerrector Administrativo">Vicerrector Administrativo</option>          
-                      <option value="Decano">Decano</option>                        
-                      <option value="Director de Escuela">Director de Escuela</option>                        
-                      <option value="Director de Oficina">Director de Oficina</option>                        
-                      <option value="Jefe de Oficina">Jefe de Oficina</option>                        
-                      <option value="Jefe de Departamento Académico">Jefe de Departamento Académico</option>
-                      <option value="Coordinador">Coordinador</option>                        
-                      <option value="Asesor">Asesor</option>                        
-                      <option value="Asistente Administrativo">Asistente Administrativo</option>              
-                      <option value="Especialista">Especialista</option>                        
-                      <option value="Analista">Analista</option>                        
-                      <option value="Otro">Otro</option>                        
-                    </select>
-                  </div>
-              
      
-                  </div>
-                </div>
 
-
-      <div class="col-md-12" style="padding-top: 15px;">
-          <div class="form-group">
-
-              <label for="txtdesccargo" class="col-sm-2 control-label">Descripción del Cargo:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="txtdesccargo" name="txtdesccargo" placeholder="Nombre del Cargo"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="descripcionCargo">
-              </div>
-
+  
+               </div>
             </div>
+
         </div>
            
 
-
+        
           <div class="col-md-12" style="padding-top: 15px;">
+            <div class="form-group">
+  
+                <label for="txtresolucionAprobacion" class="col-sm-2 control-label">Resolución:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="txtresolucionAprobacion" name="txtresolucionAprobacion" placeholder="Resolución de Aprobación"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="resolucionAprobacion">
+                </div>
+  
+              </div>
+            </div>
+
+
+
+            <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
-               
-                <label for="cbucondicion" class="col-sm-2 control-label">Condición Laboral:*</label>
-                <div class="col-sm-2">
-                    <select class="form-control" id="cbucondicion" name="cbucondicion" v-model="condicion">
-                      <option value="Nombrado">Nombrado</option>
-                      <option value="Contratado">Contratado</option>
-                      <option value="CAS">CAS</option>
-   
-                    </select>
+    
+                  <label for="txtclasificacion" class="col-sm-2 control-label">Clasificación:</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="txtclasificacion" name="txtclasificacion" placeholder="Clasificación de la Investigación"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="clasificacion">
                   </div>
 
+                  <label for="txtlineainvestigacion" class="col-sm-2 control-label">Línea de Investigación:</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="txtlineainvestigacion" name="txtlineainvestigacion" placeholder="Línea de la Investigación"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="lineainvestigacion">
+                  </div>
+    
                 </div>
-          </div>
+              </div>
 
-          <div class="col-md-12" style="padding-top: 15px;">
+
+              <div class="col-md-12" style="padding-top: 15px;">
                 <div class="form-group">
-    
       
-                      <label for="cbumaxgrado" class="col-sm-2 control-label">Máximo Grado Académico:*</label>
-                      <div class="col-sm-4">
-                        <select class="form-control" id="cbumaxgrado" name="cbumaxgrado" v-model="grado">
-                            <option value="0">Sin grado</option>                        
-                            <option value="1">Primaria completa</option>                        
-                            <option value="2">Secundaria completa</option>                        
-                            <option value="3">Técnico</option>                        
-                            <option value="4">Bachiller</option>                        
-                            <option value="5">Maestro</option>                        
-                            <option value="6">Doctor</option>                                             
-                          </select>
-                        </div>
-    
-    
+                    <label for="txtfinanciamiento" class="col-sm-2 control-label">Financiamiento:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="txtfinanciamiento" name="txtfinanciamiento" placeholder="Financiamiento de la Investigación"
+                        maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="financiamiento">
+                    </div>
+
                   </div>
                 </div>
 
-                <div class="col-md-12" style="padding-top: 15px;" v-if="grado!='0'">
-                    <div class="form-group">
-                        <label for="txtdescGrado" class="col-sm-3 control-label">Descripción del Máximo Grado:</label>
-                        <div class="col-sm-9">
-                    <input type="text" class="form-control" id="txtdescGrado" name="txtdescGrado" placeholder="Grado Académico"
-                            maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="descripcionGrado">
-                      </div>
+                <div class="col-md-12" style="padding-top: 15px;">
+                  <div class="form-group">
+  
+  
+                        <label for="txtpresupuestoAsignado" class="col-sm-2 control-label">Presupuesto Asignado (S/.):*</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="txtpresupuestoAsignado" name="txtpresupuestoAsignado" placeholder="" onkeypress="return soloNumeros(event);"
+                              maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="presupuestoAsignado">
+                          </div>
+  
+                          <label for="txtpresupuestoEjecutado" class="col-sm-2 control-label">Presupuesto Ejecutado (S/.):*</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="txtpresupuestoEjecutado" name="txtpresupuestoEjecutado" placeholder="" onkeypress="return soloNumeros(event);"
+                              maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="presupuestoEjecutado">
+                          </div>
+  
+  
                     </div>
                   </div>
 
-
-                  <div class="col-md-12" style="padding-top: 15px;">
-                      <div class="form-group">
-          
-                          <label for="cbutitulouniv" class="col-sm-2 control-label">Título Universitario:*</label>
-                          <div class="col-sm-4">
-                              <select class="form-control" id="cbutitulouniv" name="cbutitulouniv" v-model="esTitulado">
-                                <option value="1">Si</option>
-                                <option value="0">No</option>
-          
-                              </select>
-                            </div>
-                        </div>
-                      </div>
-    
-    
-                      <template v-if="parseInt(esTitulado)==1">
-    
-                          <div class="col-md-12" style="padding-top: 15px;">
-                              <div class="form-group">
-                                  <label for="txttitulouniv" class="col-sm-3 control-label">Descripción del Título Universitario:</label>
-                                  <div class="col-sm-9">
-                              <input type="text" class="form-control" id="txttitulouniv" name="txttitulouniv" placeholder="Nombre del Título Universitario"
-                                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="descripcionTitulo">
-                                </div>
-                              </div>
-                            </div>
-    
-    
-                        </template>
-
-
-            <div class="col-md-12" style="padding-top: 15px;" v-if="grado!='0'">
-                <div class="form-group">
-    
-                    <label for="cbulugarmaxgrado" class="col-sm-2 control-label">Lugar del Máximo Grado:*</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" id="cbulugarmaxgrado" name="cbulugarmaxgrado" v-model="lugarGrado">
-                          <option value="Nacional">Nacional</option>
-                          <option value="Internacional">Internacional</option>
-    
-                        </select>
-                      </div>
-                      
-                      <template v-if="lugarGrado=='Internacional'">
-                      <label for="txtpaismaxgrado" class="col-sm-2 control-label">País donde Obtuvo el Grado:*</label>
-                      <div class="col-sm-4">
-                        <input type="text" class="form-control" id="txtpaismaxgrado" name="txtpaismaxgrado" placeholder="Pais"
-                        maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="paisGrado">
-                        </div>
-                      </template>
-    
-                  </div>
-                </div>
-
+           
 
                 <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
                
-                <label for="cbuestadocont" class="col-sm-2 control-label">Estado de Contrato:*</label>
+                <label for="cbuestado" class="col-sm-2 control-label">Estado de Investigación:*</label>
                 <div class="col-sm-2">
-                    <select class="form-control" id="cbuestadocont" name="cbuestadocont" v-model="estado">
-                      <option value="1">Activo</option>
+                    <select class="form-control" id="cbuestado" name="cbuestado" v-model="estado">
+                      <option value="1">En Ejecución</option>
                       <option value="0">Finalizado</option>
+                      <option value="2">Cancelado</option>
    
                     </select>
                   </div>
 
 
-                  <label for="txtfechaingreso" class="col-sm-2 control-label">Fecha de Ingreso al Cargo:*</label>
+                  <label for="txtfechaInicio" class="col-sm-2 control-label">Fecha de Inicio:*</label>
                 <div class="col-sm-2">
-                    <input type="date" class="form-control" id="txtfechaingreso" name="txtfechaingreso" placeholder="dd/mm/aaaa"
-                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fechaIngreso">
+                    <input type="date" class="form-control" id="txtfechaInicio" name="txtfechaInicio" placeholder="dd/mm/aaaa"
+                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fechaInicio">
                 </div>
 
-<template v-if="parseInt(estado)==0">  
-                <label for="txtfechasalida" class="col-sm-2 control-label">Fecha de Egreso del Cargo:*</label>
+<template v-if="parseInt(estado)!=1">  
+                <label for="txtfechaTermino" class="col-sm-2 control-label">Fecha de Término:*</label>
                 <div class="col-sm-2">
-                    <input type="date" class="form-control" id="txtfechasalida" name="txtfechasalida" placeholder="dd/mm/aaaa"
-                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fechaSalida">
+                    <input type="date" class="form-control" id="txtfechaTermino" name="txtfechaTermino" placeholder="dd/mm/aaaa"
+                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fechaTermino">
                 </div>
                 </template>    
               </div>
@@ -477,12 +170,49 @@
 
 
 
+            <div class="col-md-12" style="padding-top: 15px;">
+              <div class="form-group">
+
+
+                    <label for="txthoras" class="col-sm-2 control-label">Horas Dedicadas a la Investigación:*</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="txthoras" name="txthoras" placeholder="" onkeypress="return soloNumeros(event);"
+                          maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="horas">
+                      </div>
+
+                      <label for="txtavance" class="col-sm-2 control-label">Porcentaje de Avance (%):*</label>
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control" id="txtavance" name="txtavance" placeholder="" onkeypress="return soloNumeros(event);"
+                          maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="avance">
+                      </div>
+
+
+                </div>
+              </div>
+
+
+              <div class="col-md-12" style="padding-top: 15px;">
+                <div class="form-group">
+                 
+                  <label for="cbuestado" class="col-sm-2 control-label">Se encuentra Patentado:*</label>
+                  <div class="col-sm-2">
+                      <select class="form-control" id="cbuestado" name="cbuestado" v-model="patentado">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+     
+                      </select>
+                    </div>
+  
+                </div>
+              </div>
+
+
                               <div class="col-md-12" style="padding-top: 15px;">
                                   <div class="form-group">
 
-                                      <label for="txtobs" class="col-sm-2 control-label">Observaciones:</label>
+                                      <label for="txtobservaciones" class="col-sm-2 control-label">Observaciones:</label>
                                       <div class="col-sm-10">
-<textarea name="txtobs" id="txtobs" rows="6" v-model="observaciones" style="width:100%;"></textarea>
+<textarea name="txtobservaciones" id="txtobservaciones" rows="4" v-model="observaciones" style="width:100%;"></textarea>
 
   
                                     </div>

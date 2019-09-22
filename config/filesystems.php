@@ -63,7 +63,7 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
-        'investigacions' => [
+        'investigacion' => [
             'driver' => 'local',
             'root' => public_path('investigacion'), // miproyecto.com/public/defaults/
             'visibility' => 'public',
