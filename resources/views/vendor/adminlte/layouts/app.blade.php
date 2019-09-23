@@ -192,6 +192,9 @@ desired effect
 @elseif($modulo=="investigacions")
 @include('investigacions.vue')
 
+@elseif($modulo=="usuario")
+@include('usuario.vue')
+
 @endif
 
 <script type="text/javascript">

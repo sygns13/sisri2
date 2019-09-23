@@ -76,6 +76,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('presentaciones/{idtaller}','PresentacionController@index1');
     Route::get('investigadores','InvestigadorController@index1');
     Route::get('investigaciones','InvestigacionController@index1');
+    Route::get('usuarios','UserController@index1');
+    Route::get('miperfil','UserController@index2');
 
 
     Route::resource('semestre','SemestreController');
@@ -114,6 +116,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('investigador','InvestigadorController');
     Route::resource('investigacions','InvestigacionController');
 
+    Route::resource('usuario','UserController');
+    Route::resource('permiso','PermisoController');
+
 
 
 
@@ -126,12 +131,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('facultad/altabaja/{id}/{var}','FacultadController@altabaja');
     Route::get('escuela/altabaja/{id}/{var}','EscuelaController@altabaja');
     Route::get('modadmision/altabaja/{id}/{var}','ModalidadadmisionController@altabaja');
+    Route::get('permisoDelete/{id1}/{id2}/{var}/{var2}','PermisoController@delete');
     
 
 
 
     Route::post('persona/buscarDNI','PersonaController@buscarDNI');
     Route::get('postulantes/imprimirExcel/{var1}','PostulanteController@imprimirExcel');
+
+    Route::get('usuario/altabaja/{id}/{var}','UserController@altabaja');
+    Route::get('usuario/verpersona/{dni}','UserController@verpersona');
+    Route::post('usuario/miperfil','UserController@miperfil');
+    Route::post('usuario/modificarclave','UserController@modificarclave');
 
  
     
@@ -148,14 +159,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('recibosemitidos','Detalle_reciboController@index1');
     Route::get('reportesgenerales','ReporteGeneralController@index1');
     Route::get('reportedestallados','ReporteDetalladoController@index1');
-    Route::get('usuarios','UserController@index1');
+    
     Route::get('reporteslocales','LocalController@index2');
     Route::get('reportesentidades','EntidadController@index2');
     Route::get('reportescategorias','CategoriaController@index2');
     Route::get('reportesrubros','RubroController@index2');
     Route::get('reportesprecios','PrecioController@index2');
     Route::get('reportespersonas','PersonaController@index2');
-    Route::get('miperfil','UserController@index2');
+    
     Route::get('procesar','ReciboController@index2');
     Route::get('recibosprocesados','ReporteDetalladoController@index2');
     Route::get('auditarrecibos','ReciboController@indexAudi');
@@ -174,7 +185,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('reciboemitido','Detalle_reciboController');
     Route::resource('reportegeneral','ReporteGeneralController');
     Route::resource('reportedetallado','ReporteDetalladoController');
-    Route::resource('usuario','UserController');
+    
     Route::resource('proceso','DetalleReciboController');
     
 
@@ -189,8 +200,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('precio/altabaja/{id}/{var}','PrecioController@altabaja');
     Route::get('persona/altabaja/{id}/{var}','PersonaController@altabaja');
     Route::get('reciboemitido/altabaja/{id}/{var}','Detalle_reciboController@altabaja');
-    Route::get('usuario/altabaja/{id}/{var}','UserController@altabaja');
-    Route::get('usuario/verpersona/{dni}','UserController@verpersona');
+   
     Route::get('reportedetallado/cambiarlocal/{var}','ReporteDetalladoController@cambiarlocal');
     Route::get('reportedetallado/cambiarcategoria/{var}','ReporteDetalladoController@cambiarcategoria');
     Route::get('reportedetallado/cambiarrubro/{var}','ReporteDetalladoController@cambiarrubro');
@@ -209,8 +219,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('categoria/buscarDatosImp','CategoriaController@buscarDatosImp');
     Route::post('precio/buscarDatosImp','PrecioController@buscarDatosImp');
     Route::post('persona/buscarDatosImp','PersonaController@buscarDatosImp');
-    Route::post('usuario/miperfil','UserController@miperfil');
-    Route::post('usuario/modificarclave','UserController@modificarclave');
+    
 
     Route::post('proceso/buscarDatos','DetalleReciboController@buscarDatos');
     Route::post('proceso/buscarDatosImp','DetalleReciboController@buscarDatosImp');

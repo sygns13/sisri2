@@ -1,147 +1,283 @@
-<form method="post" v-on:submit.prevent="updateUsuario(fillPersona.id,filluser.id)">
+<form method="post" v-on:submit.prevent="updateUsuario(filluser.id)">
   <div class="box-body" style="font-size: 14px;">
 
-    <center>
-      <h4>Datos Personales del Usuario</h4>
-    </center>
-
-    <div class="col-md-12" style="padding-top: 15px;">
-      <div class="form-group">
-        <label for="txtDNIE" class="col-sm-2 control-label">DNI:*</label>
-        <div class="col-sm-2">
-          <input type="text" class="form-control" id="txtDNIE" name="txtDNIE" placeholder="N° de DNI" maxlength="8"
-            autofocus v-model="fillPersona.dni_ruc" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false"
-            onkeypress="return soloNumeros(event);">
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-12" style="padding-top: 15px;">
-      <div class="form-group">
-        <label for="txtnombresE" class="col-sm-2 control-label">Nombres:*</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="txtnombresE" name="txtnombresE" placeholder="Nombres"
-            maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false"
-            v-model="fillPersona.nombre">
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-12" style="padding-top: 15px;">
-      <div class="form-group">
-        <label for="cbuTipoPersonaE" class="col-sm-2 control-label">Tipo Persona:</label>
-        <div class="col-sm-3">
-          <select class="form-control" id="cbuTipoPersonaE" name="cbuTipoPersonaE" v-model="fillPersona.tipopersona_id">
-            <option disabled value="">Seleccione un Tipo de Persona</option>
-            <option v-for="tipopersona, key in tipopersonas" v-bind:value="tipopersona.id">@{{ tipopersona.tipo }}
-            </option>
-          </select>
-        </div>
-
-        <label for="txtDirE" class="col-sm-1 control-label">Dirección:</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" id="txtDirE" name="txtDirE" placeholder="Av. Jr. Psje."
-            maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false"
-            v-model="fillPersona.direccion">
-        </div>
-      </div>
-    </div>
+ 
 
     <div class="col-md-12">
-      <hr>
+
+      <div class="form-group">
+
+          <label for="cbutipodocE" class="col-sm-1 control-label">Tipo de Doc:*</label>
+
+          <div class="col-sm-2">
+              <select class="form-control" id="cbutipodocE" name="cbutipodocE" v-model="filluser.tipodoc">
+                <option value="1">DNI</option>
+                <option value="2">RUC</option>
+                <option value="3">Carnet de Extranjería</option>
+                <option value="4">Pasaporte</option>
+                <option value="5">Partida de Nacimiento</option>
+              </select>
+            </div>
+
+
+
+        <label for="txtDNIE" class="col-sm-1 control-label">Documento:*</label>
+
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="txtDNIE" name="txtDNIE" placeholder="N° de Doc" maxlength="20"
+            autofocus v-model="filluser.doc" required
+            @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" :disabled="validated == 1"
+           >
+        </div>
+
+      </div>
+
+
+
     </div>
 
-    <center>
-      <h4>Datos de Usuario</h4>
-    </center>
 
-    <div class="col-md-12" style="padding-top: 15px; color: black;">
-      <div class="form-group">
-        <label for="cbuTipoUserE" class="col-sm-2 control-label">Tipo de Usuario:*</label>
-        <div class="col-sm-4">
-          <select class="form-control" id="cbuTipoUserE" name="cbuTipoUserE" v-model="filluser.tipouser_id" @change="cambiartipo2">
-            <option disabled value="">Seleccione un Tipo de Usuario</option>
-            <option v-for="tipouser, key in tipousers" v-bind:value="tipouser.id">@{{ tipouser.tipo }} </option>
-          </select>
+    <template v-if="1==1">
+
+
+      <div class="col-md-12">
+        <hr style="border-top: 3px solid rgb(208, 211, 51);">
+      </div>
+
+      <center>
+        <h4>Datos Personales del Usuario</h4>
+      </center>
+
+      <div class="col-md-12" style="padding-top: 15px;">
+        <div class="form-group">
+          <label for="txtapepatE" class="col-sm-2 control-label">Apellido Paterno:*</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" id="txtapepatE" name="txtapepatE" placeholder="Apellido Paterno"
+              maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.apellidopat">
+          </div>
+
+          <label for="txtapematE" class="col-sm-2 control-label">Apellido Materno:*</label>
+          <div class="col-sm-4">
+              <input type="text" class="form-control" id="txtapematE" name="txtapematE" placeholder="Apellido Materno"
+                maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.apellidomat">
+            </div>
         </div>
       </div>
-    </div>
+
+      <div class="col-md-12" style="padding-top: 15px;">
+        <div class="form-group">
+          <label for="txtnombresE" class="col-sm-2 control-label">Nombres:*</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="txtnombresE" name="txtnombresE" placeholder="Nombres"
+              maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.nombres">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
+            <label for="cbugeneroE" class="col-sm-2 control-label">Género:*</label>
+            <div class="col-sm-2">
+              <select class="form-control" id="cbugeneroE" name="cbugeneroE" v-model="filluser.genero">
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+              </select>
+            </div>
+
+            <label for="txtfechanacE" class="col-sm-2 control-label">Fecha de Nacimiento:*</label>
+            <div class="col-sm-2">
+                <input type="date" class="form-control" id="txtfechanacE" name="txtfechanacE" placeholder="dd/mm/aaaa"
+                maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.fechanac">
+            </div>
+
+            <label for="cbuestadocivilE" class="col-sm-2 control-label">Estado Civil:*</label>
+            <div class="col-sm-2">
+                <select class="form-control" id="cbuestadocivilE" name="cbuestadocivilE" v-model="filluser.estadocivil">
+                  <option value="1">Soltero (a)</option>
+                  <option value="2">Casado (a)</option>
+                  <option value="3">Viudo (a)</option>
+                  <option value="4">Divorsiado (a)</option>
+                </select>
+              </div>
+
+          </div>
+        </div>
+
+        <div class="col-md-12" style="padding-top: 15px;">
+            <div class="form-group">
+
+                <label for="cbuesdiscapacitadoE" class="col-sm-2 control-label">Sufre Discapacidad:*</label>
+                <div class="col-sm-2">
+                  <select class="form-control" id="cbuesdiscapacitadoE" name="cbuesdiscapacitadoE" v-model="filluser.esdiscapacitado">
+                    <option value="0">No</option>
+                    <option value="1">Si</option>
+                  </select>
+                </div>
+
+                <template v-if="filluser.esdiscapacitado=='1'">
+                <label for="txtdiscapacidadE" class="col-sm-2 control-label">Discapacidad que Padece:*</label>
+          <div class="col-sm-6">
+              <input type="text" class="form-control" id="txtdiscapacidadE" name="txtdiscapacidadE" placeholder="Discapacidad"
+                maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.discapacidad">
+            </div>
+          </template>
+            </div>
+          </div>
+
+    
+        <div class="col-md-12" style="padding-top: 15px;">
+            <div class="form-group">
+
+                <label for="txtpaisE" class="col-sm-2 control-label">Pais de Procedencia:*</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="txtpaisE" name="txtpaisE" placeholder="Pais"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.pais">
+                </div>
+
+                <label for="txtdepE" class="col-sm-2 control-label">Departamento:*</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="txtdepE" name="txtdepE" placeholder="Departamento"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.departamento">
+              </div>
+
+            </div>
+          </div>
+
+        <div class="col-md-12" style="padding-top: 15px;">
+            <div class="form-group">
+
+                <label for="txtprovE" class="col-sm-2 control-label">Provincia:*</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="txtprovE" name="txtprovE" placeholder="Provincia"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.provincia">
+                </div>
+
+                <label for="txtdistE" class="col-sm-2 control-label">Distrito:*</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="txtdistE" name="txtdistE" placeholder="Distrito"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.distrito">
+              </div>
+
+            </div>
+          </div>
 
 
-    <div class="col-md-12"  style="padding-top: 15px;" v-if="mostrarentidad2">
+        <div class="col-md-12" style="padding-top: 15px;">
+            <div class="form-group">
+
+                <label for="txtDirE" class="col-sm-2 control-label">Dirección:</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="txtDirE" name="txtDirE" placeholder="Av. Jr. Psje."
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.direccion">
+                </div>
+  
+                <label for="txtemailE" class="col-sm-2 control-label">Email:</label>
+                <div class="col-sm-4">
+                  <input type="email" class="form-control" id="txtemailE" name="txtemailE" placeholder="example@domain.com"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.email">
+                </div>
+
+            </div>
+          </div>
+
+
+          <div class="col-md-12" style="padding-top: 15px;">
+              <div class="form-group">
+  
+                  <label for="txtfonoE" class="col-sm-2 control-label">Teléfono:*</label>
+                  <div class="col-sm-2">
+                    <input type="text" class="form-control" id="txtfonoE" name="txtfonoE" placeholder="Telef / Cell"
+                      maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.telefono">
+                  </div>
+  
+ 
+              </div>
+            </div>
+
+
+
+
+      <div class="col-md-12">
+        <hr>
+      </div>
+
+      <center>
+        <h4>Datos del Registro del Titulado</h4>
+      </center>
+
+
+      <center>
+        <h4>Datos del Usuario</h4>
+      </center>
+
+
+      <div class="col-md-12" style="padding-top: 15px;">
+        <div class="form-group">
+          <label for="cbutipouser_idE" class="col-sm-2 control-label">Tipo de Usuario:*</label>
+          <div class="col-sm-4">
+            <select class="form-control" id="cbutipouser_idE" name="cbutipouser_idE" v-model="filluser.tipouser_id" >
+              <option disabled value="">Seleccione un Tipo de Usuario</option>
+              @foreach ($tipousers as $dato)
+                <option value="{{$dato->id}}">{{$dato->nombre}}</option> 
+              @endforeach
+            </select>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-12" style="padding-top: 15px;">
+        <div class="form-group">
+          <label for="txtnameE" class="col-sm-2 control-label">Username:*</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" id="txtnameE" name="txtnameE" placeholder="Username" maxlength="255"
+              @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.name">
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-12" style="padding-top: 15px;">
+        <div class="form-group">
+          <label for="cbumodifpassword" class="col-sm-2 control-label">¿Modificar Password?:*</label>
+          <div class="col-sm-4">
+            <select class="form-control" id="cbumodifpassword" name="cbumodifpassword" v-model="filluser.modifpassword">
+              <option value="1">No</option>
+              <option value="2">Si</option>
+            </select>
+          </div>
+        </div>
+      </div>
       
-      <div class="form-group">
-        <label for="cbsEntidadE" class="col-sm-2 control-label">Entidad:*</label>
 
-        <div class="col-sm-8">
-
-          <select name="cbsEntidadE" id="cbsEntidadE" class="form-control">
-
-              <option disabled value="">Seleccione una Entidad</option>
-          <option v-for="entidad, key in entidads" v-bind:value="entidad.id">@{{entidad.descripcion}}</option>
-          </select>
+      <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(filluser.modifpassword)==2">
+        <div class="form-group">
+          <label for="txtpasswordE" class="col-sm-2 control-label">Password:*</label>
+          <div class="col-sm-4">
+            <input type="password" class="form-control" id="txtpasswordE" name="txtpasswordE" placeholder="********"
+              maxlength="500" v-model="filluser.password">
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-12" style="padding-top: 15px;">
-      <div class="form-group">
-        <label for="txtuserE" class="col-sm-2 control-label">Username:*</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" id="txtuserE" name="txtuserE" placeholder="Username" maxlength="255"
-            @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.name">
+      <div class="col-md-12" style="padding-top: 15px;">
+        <div class="form-group">
+          <label for="cbuactivoE" class="col-sm-2 control-label">Estado:*</label>
+          <div class="col-sm-4">
+            <select class="form-control" id="cbuactivoE" name="cbuactivoE" v-model="filluser.activo">
+              <option value="1">Activado</option>
+              <option value="0">Desactivado</option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-12" style="padding-top: 15px;">
-      <div class="form-group">
-        <label for="txtmailE" class="col-sm-2 control-label">Correo:*</label>
-        <div class="col-sm-4">
-          <input type="email" class="form-control" id="txtmailE" name="txtmailE" placeholder="example@mail.com"
-            maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filluser.email">
-        </div>
-      </div>
-    </div>
+    
+
+    </template>
 
 
 
-    <div class="col-md-12" style="padding-top: 15px; color: black;">
-      <div class="form-group">
-        <label for="cbuModifPassword" class="col-sm-2 control-label">¿Modificar Password?:*</label>
-        <div class="col-sm-4">
-          <select class="form-control" id="cbuModifPassword" name="cbuModifPassword" v-model="modifpassword" @change="modifclave">
-            <option value="1">No</option>
-            <option value="2">Si</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-
-
-    <div class="col-md-12" style="padding-top: 15px;" v-show="modifpassword>1">
-      <div class="form-group">
-        <label for="txtclaveE" class="col-sm-2 control-label">Password:*</label>
-        <div class="col-sm-4">
-          <input type="password" class="form-control" id="txtclaveE" name="txtclaveE" placeholder="********"
-            maxlength="500" v-model="filluser.password">
-        </div>
-      </div>
-    </div>
-
-
-    <div class="col-md-12" style="padding-top: 15px;">
-      <div class="form-group">
-        <label for="cbuestadoE" class="col-sm-2 control-label">Estado Usuario:*</label>
-        <div class="col-sm-4">
-          <select class="form-control" id="cbuestadoE" name="cbuestadoE" v-model="filluser.activo">
-            <option value="1">Activado</option>
-            <option value="0">Desactivado</option>
-          </select>
-        </div>
-      </div>
-    </div>
 
   </div>
 

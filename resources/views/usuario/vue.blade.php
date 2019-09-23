@@ -32,20 +32,22 @@
         classMenu2:'',
         classMenu3:'',
         classMenu4:'',
-        classMenu5:'active',
+        classMenu5:'',
         classMenu6:'',
         classMenu7:'',
         classMenu8:'',
+        classMenu9:'active',
 
 
         usuarios: [],
+        permisoModulos: [],
+        permisoSubModulos: [],
         tipousers: [],
         persona:[],
         user:[],
         errors:[],
-        fillPersona:{'id':'', 'dni_ruc':'', 'nombre':'', 'direccion':'', 'tipopersona_id':''},
 
-        filluser:{'id':'', 'name':'', 'email':'', 'password':'', 'tipouser_id':'', 'activo':'','entidad_id':''},
+        filluser:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','id':'', 'name':'', 'password':'', 'tipouser_id':'', 'activo':'','persona_id':'','token2':'','modifpassword':'1'},
 
         pagination: {
             'total': 0,
@@ -61,23 +63,34 @@
         divNuevoUsuario:false,
         divEditUsuario:false,
 
-        newDNI:'',
-        newNombres:'',
-        newDireccion:'',
+        tipodoc:1,
+        doc:'',
+        nombres:'',
+        apellidopat:'',
+        apellidomat:'',
+        genero:'M',
+        estadocivil:1,
+        fechanac:'',
+        esdiscapacitado:0,
+        discapacidad:'',
+        pais:'PERÚ',
+        departamento:'ANCASH',
+        provincia:'HUARAZ',
+        distrito:'HUARAZ',
+        direccion:'',
+        email:'',
+        telefono:'',
 
-        newTipoUser:'',
-        newTipoPersona:'',
-        newEstado:'1',
 
-        newUsername:'',
-        newEmail:'',
-        newPassword:'',
+        name:'',
+        password:'',
+        activo:1,
+        tipouser_id:0,
+        persona_id:'0',
 
 
         divloaderNuevo:false,
-
         divloaderEdit:false,
-
         divloaderEditUsuario:false,
 
 
@@ -87,24 +100,19 @@
         validated:'0',
         imagen : null,
 
-        idPersona:'0',
-        idUser:'0',
-        tipoUser:'',
 
         thispage:'1',
 
         divprincipal:false,
-
-        modifpassword:1,
-
-
-        entidads:[],
+        divloaderCredencial:false,
 
 
-        mostrarentidad:false,
-        mostrarentidad2:false,
+        idmodulo:0,
+        idsubmodulo:0,
 
-        entidadvista:'',
+
+        formularioCredenciales:false,
+
 
 
     },
@@ -149,56 +157,7 @@
 
     methods: {
 
-        cambiartipo: function () {
 
-            if(this.newTipoUser==4){
-            this.mostrarentidad=true;
-            this.$nextTick(function () {
-                $("#cbsEntidad").select2();
-                $('#cbsEntidad').val('').trigger('change');
-                this.$nextTick(function () {
-                $('#cbsEntidad').select2('open');
-            });
-            });
-
-        }else{
-            this.mostrarentidad=false;
-        }
-        },
-        cambiartipo2: function () {
-
-if(this.filluser.tipouser_id==4){
-this.mostrarentidad2=true;
-this.$nextTick(function () {
-    $("#cbsEntidadE").select2();
-    $('#cbsEntidadE').val('').trigger('change');
-    this.$nextTick(function () {
-    $('#cbsEntidadE').select2('open');
-});
-});
-
-}else{
-this.mostrarentidad2=false;
-}
-},
-
-
-cambiartipo3: function () {
-
-if(this.filluser.tipouser_id==4){
-this.mostrarentidad2=true;
-this.$nextTick(function () {
-    $("#cbsEntidadE").select2();
-    
-    this.$nextTick(function () {
-        $('#cbsEntidadE').val(app.filluser.entidad_id).trigger('change');  
-});
-});
-
-}else{
-this.mostrarentidad2=false;
-}
-},
         getUsuarios: function (page) {
             var busca=this.buscar;
             var url = 'usuario?page='+page+'&busca='+busca;
@@ -206,10 +165,10 @@ this.mostrarentidad2=false;
             axios.get(url).then(response=>{
 
                 this.usuarios= response.data.usuarios.data;
-                this.tipousers= response.data.tipousers;
-                this.tipopersonas= response.data.tipopersonas;
                 this.pagination= response.data.pagination;
-                this.entidads= response.data.entidads;
+                this.permisoModulos= response.data.permisoModulos;
+                this.permisoSubModulos= response.data.permisoSubModulos;
+
                 this.mostrarPalenIni=true;
 
                 if(this.usuarios.length==0 && this.thispage!='1'){
@@ -245,84 +204,128 @@ this.mostrarentidad2=false;
         cancelFormUsuario: function () {
             this.validated='0';
             this.$nextTick(function () {
+                this.formularioCrear=false;
+                $(".form-control").css("border","1px solid #d2d6de");
                 $('#txtDNI').focus();
             })
-            this.newDNI='';
-            this.newNombres='';
-            this.newDireccion='';
+            this.tipodoc=1;
+            this.doc='';
+            this.nombres='';
+            this.apellidopat='';
+            this.apellidomat='';
+            this.genero='M';
+            this.estadocivil=1;
+            this.fechanac='';
+            this.esdiscapacitado=0;
+            this.discapacidad='';
+            this.pais='PERÚ';
+            this.departamento='ANCASH';
+            this.provincia='HUARAZ';
+            this.distrito='HUARAZ';
+            this.direccion='';
+            this.email='';
+            this.telefono='';
 
-            this.newUsername='';
-            this.newEmail='';
-            this.newPassword='';
-            this.formularioCrear=false;
-            this.idPersona='0';
-            this.persona=[];
-            this.idUser='0';
-            this.user=[];
+            this.name='';
+            this.password='';
+            this.activo=1;
+            this.tipouser_id=0;
+            this.persona_id='0';
 
-            this.newTipoUser='';
-            this.newEstado='1';
             this.divEditUsuario=false;
 
 
         },
-        pressNuevoDNI: function (dni) {
+        pressNuevoDNI: function() {
 
-            if(dni.length!=8){
-                alertify.error('Complete los 08 dígitos correspondientes del DNI');
-            }
-            else{
+var url='persona/buscarDNI';
 
-                var url = 'usuario/verpersona/'+dni;
+   axios.post(url,{doc:this.doc,tipodoc:this.tipodoc}).then(response=>{
 
-                axios.get(url).then(response=>{
+       if(String(response.data.result)=='1'){
 
-                    this.idUser=response.data.idUser;
-                    if(this.idUser=="0")
-                    {
-                        this.idPersona=response.data.id;
-                        this.persona=response.data.persona;
-                        if(this.idPersona !='0'){
-                  
-                        $.each(this.persona, function( index, dato ) {
+        this.nombres='';
+            this.apellidopat='';
+            this.apellidomat='';
+            this.genero='M';
+            this.estadocivil=1;
+            this.fechanac='';
+            this.esdiscapacitado=0;
+            this.discapacidad='';
+            this.pais='PERÚ';
+            this.departamento='ANCASH';
+            this.provincia='HUARAZ';
+            this.distrito='HUARAZ';
+            this.direccion='';
+            this.email='';
+            this.telefono='';
 
-                        app.newDNI=dato.dni_ruc;
-                        app.newNombres=dato.nombre;
-                        app.newDireccion=dato.direccion;
-                        app.newTipoPersona=dato.tipopersona_id;
+            this.persona_id='0';
 
-                        });
 
-                        this.$nextTick(function () {
-                            this.formularioCrear=true;
-                            this.$nextTick(function () {
-                                this.validated='1';
-                                $('#txtnombres').focus();
-                            })
-                        })
+           this.formularioCrear=true;
 
-                    }else{
-                            this.formularioCrear=true;
-                            this.$nextTick(function () {
-                                this.validated='1';
-                                $('#txtnombres').focus();
-
-                            })
-                        }
-                    }
-            else{
-               
-            swal.fire({
-                title: 'Usuario Registrado',
-                text: 'Ya se encuentra registrado el usuario con el DNI: '+dni,
-                type: 'info',
-                confirmButtonText: 'Aceptar'
+           this.$nextTick(function () {
+                $("#txtapepat").focus();
             });
-                this.cancelFormUsuario();
-            }
-     });             
-            }
-        },
+
+           toastr.success(response.data.msj);
+       }else if (String(response.data.result)=='2') {
+
+        this.persona_id=response.data.idPer;
+
+    this.nombres=response.data.persona.nombres;
+    this.apellidopat=response.data.persona.apellidopat;
+    this.apellidomat=response.data.persona.apellidomat;
+    this.genero=response.data.persona.genero;
+    this.estadocivil=response.data.persona.estadocivil;
+    this.fechanac=response.data.persona.fechanac;
+    this.esdiscapacitado=response.data.persona.esdiscapacitado;
+    this.discapacidad=response.data.persona.discapacidad;
+    this.pais=response.data.persona.pais;
+    this.departamento=response.data.persona.departamento;
+    this.provincia=response.data.persona.provincia;
+    this.distrito=response.data.persona.distrito;
+    this.direccion=response.data.persona.direccion;
+    this.email=response.data.persona.email;
+    this.telefono=response.data.persona.telefono;
+
+
+        this.formularioCrear=true;
+
+        this.$nextTick(function () {
+                $("#txtapepat").focus();
+            });
+
+        }else{
+            this.nombres='';
+            this.apellidopat='';
+            this.apellidomat='';
+            this.genero='M';
+            this.estadocivil=1;
+            this.fechanac='';
+            this.esdiscapacitado=0;
+            this.discapacidad='';
+            this.pais='PERÚ';
+            this.departamento='ANCASH';
+            this.provincia='HUARAZ';
+            this.distrito='HUARAZ';
+            this.direccion='';
+            this.email='';
+            this.telefono='';
+
+            this.persona_id='0';
+
+            this.formularioCrear=false;
+           $('#'+response.data.selector).focus();
+           $('#'+response.data.selector).css( "border", "1px solid red" );
+           toastr.error(response.data.msj);
+       }
+   }).catch(error=>{
+       //this.errors=error.response.data
+   })
+
+},
         createUsuario:function () {
             var url='usuario';
 
@@ -332,26 +335,33 @@ this.mostrarentidad2=false;
 
             this.divloaderNuevo=true;
 
-            var identidad=$("#cbsEntidad").val();
-
-            if (typeof identidad === "undefined") {
-                identidad=0;
-                }
 
             var data = new  FormData();
 
-            data.append('idPersona', this.idPersona);
-            data.append('idUser', this.idUser);
-            data.append('newDNI', this.newDNI);
-            data.append('newNombres', this.newNombres);
-            data.append('newDireccion', this.newDireccion);
-            data.append('newUsername', this.newUsername);
-            data.append('newEmail', this.newEmail);
-            data.append('newPassword', this.newPassword);
-            data.append('newEstado', this.newEstado);
-            data.append('newTipoUser', this.newTipoUser);
-            data.append('newTipoPersona', this.newTipoPersona);
-            data.append('identidad', identidad);
+            data.append('tipodoc', this.tipodoc);
+            data.append('doc', this.doc);
+            data.append('nombres', this.nombres);
+            data.append('apellidopat', this.apellidopat);
+            data.append('apellidomat', this.apellidomat);
+            data.append('genero', this.genero);
+            data.append('estadocivil', this.estadocivil);
+            data.append('fechanac', this.fechanac);
+            data.append('esdiscapacitado', this.esdiscapacitado);
+            data.append('discapacidad', this.discapacidad);
+            data.append('pais', this.pais);
+            data.append('departamento', this.departamento);
+            data.append('provincia', this.provincia);
+            data.append('distrito', this.distrito);
+            data.append('direccion', this.direccion);
+            data.append('email', this.email);
+            data.append('telefono', this.telefono);
+
+            data.append('name', this.name);
+            data.append('password', this.password);
+            data.append('tipouser_id', this.tipouser_id);
+            data.append('persona_id', this.persona_id);
+            data.append('activo', this.activo);
+  
 
             const config = { headers: { 'Content-Type': 'multipart/form-data' } };
 
@@ -388,7 +398,7 @@ this.mostrarentidad2=false;
 
 
             if (result.value) {
-            var url = 'usuario/'+usuario.idUser;
+            var url = 'usuario/'+usuario.id;
                             axios.delete(url).then(response=>{//eliminamos
 
                                 if(response.data.result=='1'){
@@ -405,37 +415,40 @@ this.mostrarentidad2=false;
         },
         editUsuario:function (usuario) {
 
-            this.fillPersona.id=usuario.idPer;
-            this.fillPersona.dni_ruc=usuario.dni_ruc;
-            this.fillPersona.nombre=usuario.nombre;
-            this.fillPersona.direccion=usuario.direccion;
-            this.fillPersona.tipopersona_id=usuario.idtipoPer;
-
-            this.filluser.id=usuario.idUser;
-            this.filluser.name=usuario.username;
+            
+            this.filluser.id=usuario.id;
+            this.filluser.tipodoc=usuario.tipodoc;
+            this.filluser.doc=usuario.doc;
+            this.filluser.nombres=usuario.nombres;
+            this.filluser.apellidopat=usuario.apellidopat;
+            this.filluser.apellidomat=usuario.apellidomat;
+            this.filluser.genero=usuario.genero;
+            this.filluser.estadocivil=usuario.estadocivil;
+            this.filluser.fechanac=usuario.fechanac;
+            this.filluser.esdiscapacitado=usuario.esdiscapacitado;
+            this.filluser.discapacidad=usuario.discapacidad;
+            this.filluser.pais=usuario.pais;
+            this.filluser.departamento=usuario.departamento;
+            this.filluser.provincia=usuario.provincia;
+            this.filluser.distrito=usuario.distrito;
+            this.filluser.direccion=usuario.direccion;
             this.filluser.email=usuario.email;
+            this.filluser.telefono=usuario.telefono;
 
-            this.filluser.tipouser_id=usuario.idtipouser;
+
+            this.filluser.name=usuario.name;
+            this.filluser.password=usuario.token2;
+
+            this.filluser.tipouser_id=usuario.tipouser_id;
+            this.filluser.persona_id=usuario.persona_id;
             this.filluser.activo=usuario.activo;
 
             this.divNuevoUsuario=false;
             this.divEditUsuario=true;
             this.divloaderEdit=false;
 
+            this.filluser.modifpassword=1;
 
-            this.filluser.password='';
-            this.modifpassword=1;
-
-            this.filluser.entidad_id=usuario.entidad_id;
-            this.$nextTick(function () {
-
-                if(this.filluser.tipouser_id==4){
-                    app.cambiartipo3();
-                }
-             this.validated='1';
-             $('#txtnombresE').focus();
-
-        })
 
         },
         cerrarFormUsuarioE: function(){
@@ -443,29 +456,23 @@ this.mostrarentidad2=false;
             this.divEditUsuario=false;
 
             this.$nextTick(function () {
-                this.fillPersona={'id':'', 'dni_ruc':'', 'nombre':'', 'direccion':'', 'tipopersona_id':''};
-                this.filluser={'id':'', 'name':'', 'email':'', 'password':'', 'tipouser_id':'', 'activo':'','entidad_id':''};
-                this.modifpassword=1;
+                this.filluser={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','id':'', 'name':'', 'password':'', 'tipouser_id':'', 'activo':'','persona_id':'','token2':'','modifpassword':'1'};
+    
             })
 
         },
 
         modifclave: function(){
 
-            if(this.modifpassword=='2'){
-                setTimeout(function(){ $("#txtclaveE").focus(); }, 100);
+            if(this.filluser.modifpassword=='2'){
+                setTimeout(function(){ $("#txtpasswordE").focus(); }, 100);
             }
 
         },
-        updateUsuario:function (idPer,idUser) {
+        updateUsuario:function (id) {
 
-            var identidad=$("#cbsEntidadE").val();
 
-            if (typeof identidad === "undefined") {
-                identidad=0;
-                }
-
-            var data = new  FormData();
+          /*   var data = new  FormData();
 
             data.append('idPersona', this.fillPersona.id);
             data.append('idUser', this.filluser.id);
@@ -487,12 +494,17 @@ this.mostrarentidad2=false;
 
             const config = { headers: { 'Content-Type': 'multipart/form-data' } };
 
-            var url="usuario/"+idUser;
+            var url="usuario/"+idUser; */
+    
+
+
+            var url="usuario/"+id;
             $("#btnSaveE").attr('disabled', true);
             $("#btnCloseE").attr('disabled', true);
             this.divloaderEdit=true;
 
-            axios.post(url, data, config).then(response=>{
+            axios.put(url, this.filluser).then(response=>{
+
 
                 $("#btnSaveE").removeAttr("disabled");
                 $("#btnCloseE").removeAttr("disabled");
@@ -524,7 +536,7 @@ this.mostrarentidad2=false;
           }).then((result) => {
 
             if (result.value) {
-            var url = 'usuario/altabaja/'+usuario.idUser+'/0';
+            var url = 'usuario/altabaja/'+usuario.id+'/0';
                             axios.get(url).then(response=>{//eliminamos
 
                                 if(response.data.result=='1'){
@@ -551,7 +563,7 @@ this.mostrarentidad2=false;
           }).then((result) => {
 
             if (result.value) {
-            var url = 'usuario/altabaja/'+usuario.idUser+'/1';
+            var url = 'usuario/altabaja/'+usuario.id+'/1';
                             axios.get(url).then(response=>{//eliminamos
 
                                 if(response.data.result=='1'){
@@ -588,7 +600,7 @@ this.mostrarentidad2=false;
 
 
             this.filluser.password='';
-            this.modifpassword=1;
+            this.filluser.modifpassword=1;
 
             this.filluser.entidad_id=usuario.entidad_id;
 
@@ -617,6 +629,169 @@ this.mostrarentidad2=false;
     Imprimir:function (usuario) {
         $("#FichaUsuario").printArea();
     },
+    gestionCredenciales:function (usuario) {
+
+
+        this.idmodulo=0;
+        this.idsubmodulo=0;
+
+        this.formularioCredenciales=false;
+
+            this.filluser.id=usuario.id;
+            this.filluser.tipodoc=usuario.tipodoc;
+            this.filluser.doc=usuario.doc;
+            this.filluser.nombres=usuario.nombres;
+            this.filluser.apellidopat=usuario.apellidopat;
+            this.filluser.apellidomat=usuario.apellidomat;
+            this.filluser.genero=usuario.genero;
+            this.filluser.estadocivil=usuario.estadocivil;
+            this.filluser.fechanac=usuario.fechanac;
+            this.filluser.esdiscapacitado=usuario.esdiscapacitado;
+            this.filluser.discapacidad=usuario.discapacidad;
+            this.filluser.pais=usuario.pais;
+            this.filluser.departamento=usuario.departamento;
+            this.filluser.provincia=usuario.provincia;
+            this.filluser.distrito=usuario.distrito;
+            this.filluser.direccion=usuario.direccion;
+            this.filluser.email=usuario.email;
+            this.filluser.telefono=usuario.telefono;
+
+
+            this.filluser.name=usuario.name;
+            this.filluser.password=usuario.token2;
+
+            this.filluser.tipouser_id=usuario.tipouser_id;
+            this.filluser.persona_id=usuario.persona_id;
+            this.filluser.activo=usuario.activo;
+
+
+
+        $('#modalActualizarCredenciales').modal(); 
+    },
+
+    nuevaCredencial:function () {
+        this.idmodulo=0;
+        this.idsubmodulo=0;
+
+        this.formularioCredenciales=true;
+            
+        },
+        cerrarFormCred: function () {
+            this.idmodulo=0;
+        this.idsubmodulo=0;
+
+        this.formularioCredenciales=false;
+        },
+        cancelFormCred: function () {
+            this.idmodulo=0;
+            this.idsubmodulo=0;
+        },
+
+
+
+        ActualizarCredenciales:function () {
+            var url='permiso';
+
+            $("#btnGuardarCred").attr('disabled', true);
+            $("#btnCancelCred").attr('disabled', true);
+            $("#btnCloseCred").attr('disabled', true);
+
+            this.divloaderCredencial=true;
+
+            var data = new  FormData();
+
+            data.append('idmodulo', this.idmodulo);
+            data.append('idsubmodulo', this.idsubmodulo);
+            data.append('id', this.filluser.id);
+
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+            axios.post(url,data,config).then(response=>{
+
+                $("#btnGuardarCred").removeAttr("disabled");
+                $("#btnCancelCred").removeAttr("disabled");
+                $("#btnCloseCred").removeAttr("disabled");
+                this.divloaderCredencial=false;
+
+                if(response.data.result=='1'){
+                    this.getUsuarios(this.thispage);
+                    this.errors=[];
+                    this.cerrarFormCred();
+                    toastr.success(response.data.msj);
+                }else{
+                    $('#'+response.data.selector).focus();
+                    toastr.error(response.data.msj);
+                }
+            }).catch(error=>{
+                this.errors=error.response.data
+            })
+        },
+
+        cambioModulo:function () {
+            this.idsubmodulo=0;
+        },
+
+
+        borrarCredencial1:function (perModulo) {
+          swal.fire({
+              title: '¿Estás seguro?',
+              text: "¿Desea eliminar la Credencial de Usuario Seleccionada? -- Nota: Este proceso no se podrá revertir",
+              type: 'info',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, eliminar'
+          }).then((result) => {
+
+
+            if (result.value) {
+            var url = 'permiso/'+perModulo.id;
+                            axios.delete(url).then(response=>{//eliminamos
+
+                                if(response.data.result=='1'){
+                                app.getUsuarios(app.thispage);//listamos
+                                toastr.success(response.data.msj);//mostramos mensaje
+                            }else{
+                               // $('#'+response.data.selector).focus();
+                               toastr.error(response.data.msj);
+                           }
+                       });
+                    }
+
+                        }).catch(swal.noop);
+        },
+
+
+        borrarCredencial2:function (perModulo,perSubModulo) {
+          swal.fire({
+              title: '¿Estás seguro?',
+              text: "¿Desea eliminar la Credencial de Usuario Seleccionada? -- Nota: Este proceso no se podrá revertir",
+              type: 'info',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, eliminar'
+          }).then((result) => {
+
+
+            if (result.value) {
+            var url = 'permisoDelete/'+perModulo.id+'/'+perSubModulo.id+'/'+perModulo.modulo_id+'/'+app.filluser.id;
+                            axios.get(url).then(response=>{//eliminamos
+
+                                if(response.data.result=='1'){
+                                app.getUsuarios(app.thispage);//listamos
+                                toastr.success(response.data.msj);//mostramos mensaje
+                            }else{
+                               // $('#'+response.data.selector).focus();
+                               toastr.error(response.data.msj);
+                           }
+                       });
+                    }
+
+                        }).catch(swal.noop);
+        },
+
+
 }
 });
 </script>

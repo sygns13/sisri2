@@ -2662,14 +2662,26 @@ CREATE TABLE `investigacions` (
   `lineainvestigacion` varchar(500) DEFAULT NULL,
   `financiamiento` varchar(500) DEFAULT NULL,
   `patentado` tinyint(4) DEFAULT NULL,
+  `observaciones` text,
+  `archivonombre` varchar(5000) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `investigacions`
 --
 
 /*!40000 ALTER TABLE `investigacions` DISABLE KEYS */;
+INSERT INTO `investigacions` (`id`,`titulo`,`descripcion`,`resolucionAprobacion`,`presupuestoAsignado`,`presupuestoEjecutado`,`horas`,`fechaInicio`,`fechaTermino`,`clasificacion`,`rutadocumento`,`estado`,`activo`,`borrado`,`created_at`,`updated_at`,`avance`,`descripcionAvance`,`escuela_id`,`lineainvestigacion`,`financiamiento`,`patentado`,`observaciones`,`archivonombre`) VALUES 
+ (1,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+ (2,'titulo ed','desc','resolucion',323,2313,23,'2019-12-31','0000-00-00','clasif','2_380.xls2019-09-2114-03-58.xls',0,1,0,'2019-09-21 11:26:06','2019-09-21 14:03:58',10,NULL,5,'linea','financi',0,'sad','file excel'),
+ (3,'titulo2','desc2','resol',124,123,5,'2019-12-31',NULL,'clasif','Reportedis.pdf2019-09-2111-31-34.pdf',1,1,1,'2019-09-21 11:31:34','2019-09-21 12:24:57',15,NULL,11,'linea','finan',1,'obs','nombre archivo.pdf'),
+ (4,'asdasd','dasdas','res',123,125,15,'2019-09-11','2019-09-20','clasft','',0,1,1,'2019-09-21 12:11:11','2019-09-21 12:24:59',25,NULL,0,'linea','asdas',1,'asf','file invest'),
+ (5,'asdasd','dasdas','res',123,125,15,'2019-09-11','2019-09-20','clasft','',0,1,1,'2019-09-21 12:11:19','2019-09-21 12:25:02',25,NULL,0,'linea','asdas',1,'asf','file invest'),
+ (6,'asdasd','dasdas','res',123,125,15,'2019-09-11','2019-09-20','clasft','',0,1,1,'2019-09-21 12:11:30','2019-09-21 12:25:05',25,NULL,0,'linea','asdas',1,'asf','file invest'),
+ (7,'asdasd','dasdas','res',123,125,15,'2019-09-11','2019-09-20','clasft','Proforma-de-Servicio-CID.docx2019-09-2112-17-41.docx',0,1,1,'2019-09-21 12:17:41','2019-09-21 12:25:07',25,NULL,0,'linea','asdas',1,'asf','file investdocx'),
+ (8,'asdasd','asdsad','res aprobacion',126,127,8,'2019-09-11','2019-09-28','clasifif aprovacion','certbd.pdf2019-09-2114-04-26.pdf',0,1,0,'2019-09-21 12:19:52','2019-09-21 14:04:26',6,NULL,10,'linea invest','financiamiento',0,'a obs','prueba documento'),
+ (9,'asdasd','asdsad','res aprov',200,100,1234,'2019-09-04','2019-09-27','clasif','(BBVA)_Cronograma_prestamo.pdf2019-09-2112-22-22.pdf',2,1,0,'2019-09-21 12:22:22','2019-09-21 12:22:22',65,NULL,13,'lin','financiamiento',1,'obs gg','documento prueba2');
 /*!40000 ALTER TABLE `investigacions` ENABLE KEYS */;
 
 
@@ -2810,6 +2822,39 @@ INSERT INTO `modalidadadmisions` (`id`,`nombre`,`descripcion`,`activo`,`borrado`
 
 
 --
+-- Definition of table `modulos`
+--
+
+DROP TABLE IF EXISTS `modulos`;
+CREATE TABLE `modulos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `modulo` varchar(250) DEFAULT NULL,
+  `activo` tinyint(4) DEFAULT NULL,
+  `borrado` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `modulos`
+--
+
+/*!40000 ALTER TABLE `modulos` DISABLE KEYS */;
+INSERT INTO `modulos` (`id`,`modulo`,`activo`,`borrado`,`created_at`,`updated_at`) VALUES 
+ (1,'Tablas Base',1,0,NULL,NULL),
+ (2,'Gestión Académica',1,0,NULL,NULL),
+ (3,'Grados y Títulos',1,0,NULL,NULL),
+ (4,'Investigación',1,0,NULL,NULL),
+ (5,'Gestión y Soporte',1,0,NULL,NULL),
+ (6,'Bienestar Universitario',1,0,NULL,NULL),
+ (7,'Proyección Social',1,0,NULL,NULL),
+ (8,'Convenios e Intercambio',1,0,NULL,NULL),
+ (9,'Configuraciones',1,1,NULL,NULL);
+/*!40000 ALTER TABLE `modulos` ENABLE KEYS */;
+
+
+--
 -- Definition of table `movilidads`
 --
 
@@ -2942,6 +2987,71 @@ INSERT INTO `pasantias` (`id`,`persona_id`,`escuela_id`,`modalidads`,`concepto`,
 
 
 --
+-- Definition of table `permisomodulos`
+--
+
+DROP TABLE IF EXISTS `permisomodulos`;
+CREATE TABLE `permisomodulos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `activo` tinyint(4) DEFAULT NULL,
+  `borrado` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `modulo_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `tipo` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_permisomodulos_modulos1_idx` (`modulo_id`),
+  KEY `fk_permisomodulos_users1_idx` (`user_id`),
+  CONSTRAINT `fk_permisomodulos_modulos1` FOREIGN KEY (`modulo_id`) REFERENCES `modulos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_permisomodulos_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `permisomodulos`
+--
+
+/*!40000 ALTER TABLE `permisomodulos` DISABLE KEYS */;
+INSERT INTO `permisomodulos` (`id`,`activo`,`borrado`,`created_at`,`updated_at`,`modulo_id`,`user_id`,`tipo`) VALUES 
+ (27,1,0,'2019-09-22 23:55:27','2019-09-22 23:55:27',1,3,2),
+ (28,1,0,'2019-09-22 23:55:44','2019-09-22 23:55:44',2,2,2),
+ (29,1,0,'2019-09-22 23:55:47','2019-09-22 23:55:47',3,2,2),
+ (30,1,0,'2019-09-22 23:55:52','2019-09-22 23:55:52',4,2,1);
+/*!40000 ALTER TABLE `permisomodulos` ENABLE KEYS */;
+
+
+--
+-- Definition of table `permisossubmodulos`
+--
+
+DROP TABLE IF EXISTS `permisossubmodulos`;
+CREATE TABLE `permisossubmodulos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `activo` tinyint(4) DEFAULT NULL,
+  `borrado` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `submodulo_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_permisos_users1_idx` (`user_id`),
+  KEY `fk_permisos_submodulos1_idx` (`submodulo_id`),
+  CONSTRAINT `fk_permisos_submodulos1` FOREIGN KEY (`submodulo_id`) REFERENCES `submodulos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_permisos_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `permisossubmodulos`
+--
+
+/*!40000 ALTER TABLE `permisossubmodulos` DISABLE KEYS */;
+INSERT INTO `permisossubmodulos` (`id`,`activo`,`borrado`,`created_at`,`updated_at`,`user_id`,`submodulo_id`) VALUES 
+ (26,1,0,'2019-09-22 23:55:52','2019-09-22 23:55:52',2,17),
+ (27,1,0,'2019-09-22 23:55:56','2019-09-22 23:55:56',2,19);
+/*!40000 ALTER TABLE `permisossubmodulos` ENABLE KEYS */;
+
+
+--
 -- Definition of table `personas`
 --
 
@@ -2970,7 +3080,7 @@ CREATE TABLE `personas` (
   `email` varchar(500) DEFAULT NULL,
   `telefono` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `personas`
@@ -3026,7 +3136,9 @@ INSERT INTO `personas` (`id`,`tipodoc`,`doc`,`nombres`,`apellidopat`,`apellidoma
  (46,1,'12355584','dsadsad','adasd','dasda','M','2','1999-11-13',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','asasd',1,0,'2019-09-14 23:51:08','2019-09-14 23:51:08','dasdsa@mail.com','1321312'),
  (47,1,'14725845','sdadasd','asddsa','dsad','M','2','2019-08-27',0,NULL,'PERÚ','ANCASH','HUARAZ','HUARAZ','assad',1,0,'2019-09-15 15:21:29','2019-09-15 15:21:29','sad@mail.com','sadasd'),
  (48,1,'47331633','dasdsad','Juan','dsada','M','3','2019-09-11',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsa',1,0,'2019-09-15 15:25:01','2019-09-15 15:25:15','dsadas@mail.com','123122'),
- (49,1,'147258312','Miguel','Pancho','Fierro','M','1','2019-09-17',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','adasdasd',1,0,'2019-09-15 17:50:36','2019-09-15 17:51:14','asdsad6@mail.com','3123213');
+ (49,1,'147258312','Miguel','Pancho','Fierro','M','1','2019-09-17',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','adasdasd',1,0,'2019-09-15 17:50:36','2019-09-15 17:51:14','asdsad6@mail.com','3123213'),
+ (50,1,'14785254','Carmen Rosa','Quintana','Romero','F','2','1965-06-15',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','asdsad',1,0,'2019-09-22 19:32:35','2019-09-22 19:32:35','dasdsa@mail.com','458595'),
+ (51,1,'08315297','Hector','Chavez','Rios','M','2','1954-06-30',0,'','PERÚ','ANCASH','HUARAZ','HUARAZ','Av. Luzuriaga 563',1,0,'2019-09-22 19:37:49','2019-09-22 19:37:49','hector@mail.com','943854585');
 /*!40000 ALTER TABLE `personas` ENABLE KEYS */;
 
 
@@ -3511,6 +3623,71 @@ INSERT INTO `semestres` (`id`,`nombre`,`fechainicio`,`fechafin`,`estado`,`activo
 
 
 --
+-- Definition of table `submodulos`
+--
+
+DROP TABLE IF EXISTS `submodulos`;
+CREATE TABLE `submodulos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `submodulo` varchar(250) DEFAULT NULL,
+  `activo` tinyint(4) DEFAULT NULL,
+  `borrado` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `modulo_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_submodulos_modulos1_idx` (`modulo_id`),
+  CONSTRAINT `fk_submodulos_modulos1` FOREIGN KEY (`modulo_id`) REFERENCES `modulos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `submodulos`
+--
+
+/*!40000 ALTER TABLE `submodulos` DISABLE KEYS */;
+INSERT INTO `submodulos` (`id`,`submodulo`,`activo`,`borrado`,`created_at`,`updated_at`,`modulo_id`) VALUES 
+ (1,'Gestión de Semestres',1,0,NULL,NULL,1),
+ (2,'Gestión de Locales',1,0,NULL,NULL,1),
+ (3,'Gestión de Facultades',1,0,NULL,NULL,1),
+ (4,'Gestión de Escuelas',1,0,NULL,NULL,1),
+ (5,'Modalidades de Admisión',1,0,NULL,NULL,1),
+ (6,'Postulantes de Pregrado',1,0,NULL,NULL,2),
+ (7,'Matriculados Pregrado',1,0,NULL,NULL,2),
+ (8,'Egresados Pregrado',1,0,NULL,NULL,2),
+ (9,'Postulantes de Postgrado',1,0,NULL,NULL,2),
+ (10,'Matriculados Postgrado',1,0,NULL,NULL,2),
+ (11,'Egresados Posrgrado',1,0,NULL,NULL,2),
+ (12,'Docentes',1,0,NULL,NULL,2),
+ (13,'Bachilleres',1,0,NULL,NULL,3),
+ (14,'Titulados',1,0,NULL,NULL,3),
+ (15,'Maestros',1,0,NULL,NULL,3),
+ (16,'Doctores',1,0,NULL,NULL,3),
+ (17,'Investigadores',1,0,NULL,NULL,4),
+ (18,'Investigaciones',1,0,NULL,NULL,4),
+ (19,'Tesis',1,0,NULL,NULL,4),
+ (20,'Revistas y Publicaciones',1,0,NULL,NULL,4),
+ (21,'Administrativos',1,0,NULL,NULL,5),
+ (22,'Locación de Servicios',1,0,NULL,NULL,5),
+ (23,'Beneficiarios del Comedor',1,0,NULL,NULL,6),
+ (24,'Beneficiarios del GYM',1,0,NULL,NULL,6),
+ (25,'Benef Talleres Deportivos',1,0,NULL,NULL,6),
+ (26,'Programas de Salud',1,0,NULL,NULL,6),
+ (27,'Campañas de DBU',1,0,NULL,NULL,6),
+ (28,'Camp Itinerantes y Proyectos',1,0,NULL,NULL,7),
+ (29,'Eventos Culturales',1,0,NULL,NULL,7),
+ (30,'Talleres',1,0,NULL,NULL,7),
+ (31,'Convenios Marco',1,0,NULL,NULL,8),
+ (32,'Convenios Específicos',1,0,NULL,NULL,8),
+ (33,'Convenios de Colaboración',1,0,NULL,NULL,8),
+ (34,'Alumnos Pasantías',1,0,NULL,NULL,8),
+ (35,'Docentes Pasantías',1,0,NULL,NULL,8),
+ (36,'Administrativos Pasantías',1,0,NULL,NULL,8),
+ (37,'Personas Llegaron UNASAM',1,0,NULL,NULL,8),
+ (38,'Gestión de Usuarios',1,1,NULL,NULL,9);
+/*!40000 ALTER TABLE `submodulos` ENABLE KEYS */;
+
+
+--
 -- Definition of table `talleresparticipantes`
 --
 
@@ -3667,9 +3844,9 @@ CREATE TABLE `tipousers` (
 
 /*!40000 ALTER TABLE `tipousers` DISABLE KEYS */;
 INSERT INTO `tipousers` (`id`,`nombre`,`descripcion`,`activo`,`borrado`,`created_at`,`updated_at`) VALUES 
- (1,'Superadministrador','sa',1,0,NULL,NULL),
- (2,'Administrador','admin',1,0,NULL,NULL),
- (3,'Digitador','digit',1,0,NULL,NULL);
+ (1,'Administrador','sa',1,0,NULL,NULL),
+ (2,'Digitador','digit',1,0,NULL,NULL),
+ (3,'Libre','libre',0,1,NULL,NULL);
 /*!40000 ALTER TABLE `tipousers` ENABLE KEYS */;
 
 
@@ -3690,20 +3867,23 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `tipouser_id` int(11) NOT NULL,
   `persona_id` int(11) NOT NULL,
+  `token2` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_users_tipousers_idx` (`tipouser_id`),
   KEY `fk_users_personas1_idx` (`persona_id`),
   CONSTRAINT `fk_users_personas1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_users_tipousers` FOREIGN KEY (`tipouser_id`) REFERENCES `tipousers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
 --
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`,`name`,`email`,`password`,`remember_token`,`activo`,`borrado`,`created_at`,`updated_at`,`tipouser_id`,`persona_id`) VALUES 
- (1,'admin','cristian_7_70@hotmail.com','$2y$10$8R0Wn4QFvXNfiCdfM3XgIO36/Cw.qBEsJ9VMc1wls0pbK4Sx2cjES',NULL,1,0,NULL,NULL,1,1);
+INSERT INTO `users` (`id`,`name`,`email`,`password`,`remember_token`,`activo`,`borrado`,`created_at`,`updated_at`,`tipouser_id`,`persona_id`,`token2`) VALUES 
+ (1,'admin','cristian_7_70@hotmail.com','$2y$10$8R0Wn4QFvXNfiCdfM3XgIO36/Cw.qBEsJ9VMc1wls0pbK4Sx2cjES',NULL,1,0,NULL,'2019-09-22 19:06:01',1,1,NULL),
+ (2,'carmen1','dasdsa@mail.com','$2y$10$j2qn4EPUYPlYmbNnX1I6l.N9sdznESI2ShvR0jAgb83OwwnLPpNBe',NULL,0,0,'2019-09-22 19:32:35','2019-09-22 21:04:21',2,50,'1234'),
+ (3,'hector','hector@mail.com','$2y$10$/xYvRXa.okTSMxrnGcBVG.hXj4BzfcFgw691ae8Y2WOjNYU0aPhMG',NULL,1,0,'2019-09-22 19:37:49','2019-09-22 19:37:49',2,51,'123');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 
