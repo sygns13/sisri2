@@ -48,9 +48,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('titulados','GraduadoController@index2');
     Route::get('maestros','GraduadoController@index3');
     Route::get('doctores','GraduadoController@index4');
-    Route::get('investigadores','InvestigadorController@index1');
-    Route::get('tesis','TesisController@index1');
-    Route::get('revistas','RevistapublicacionController@index1');
+    Route::get('tesisinfo','TesisController@index1');
+    Route::get('revistaspublicaciones','RevistapublicacionController@index1');
     Route::get('administrativos','AdministrativoController@index1');
     Route::get('locacionservicios','AdminlocacionController@index1');
     Route::get('beneficiarioscomedor','BeneficiarioscomedorController@index1');
@@ -78,8 +77,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('investigaciones','InvestigacionController@index1');
     Route::get('usuarios','UserController@index1');
     Route::get('miperfil','UserController@index2');
-
-
+    
+    
     Route::resource('semestre','SemestreController');
     Route::resource('local','LocalController');
     Route::resource('pais','PaiseController');
@@ -91,17 +90,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('alumnopregrado','AlumnoController');
     Route::resource('docente','DocenteController');
     Route::resource('graduado','GraduadoController');
-
+    
     Route::resource('administrativo','AdministrativoController');
     Route::resource('locacionservicio','AdminlocacionController');
-
+    
     Route::resource('benefcomedor','BeneficiarioscomedorController');
     Route::resource('benefgym','BeneficiariosgymController');
     Route::resource('beneftalldep','BeneficiariostalldeportivoController');
-
+    
     Route::resource('pasantia','PasantiaController');
     Route::resource('convenio','ConvenioController');
-
+    
     Route::resource('programasalud','ProgramassaludController');
     Route::resource('medico','MedicoController');
     Route::resource('beneficiario','BeneficiarioController');
@@ -112,17 +111,21 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('taller','TallerController');
     Route::resource('participante','ParticipanteController');
     Route::resource('presentacion','PresentacionController');
-
+    
     Route::resource('investigador','InvestigadorController');
     Route::resource('investigacions','InvestigacionController');
-
+    
     Route::resource('usuario','UserController');
     Route::resource('permiso','PermisoController');
-
-
-
-
-
+    Route::resource('detalleInvestigacion','DetalleinvestigacionController');
+    Route::resource('publicacion','PublicacionController');
+    Route::resource('tesisresource','TesisController');
+    Route::resource('revistasPubli','RevistapublicacionController');
+    
+    
+    
+    
+    
     Route::get('semestre/activar/{id}/{var}','SemestreController@activar');
     Route::get('local/altabaja/{id}/{var}','LocalController@altabaja');
     Route::get('local/cambiarPais/{var}','LocalController@cambiarPais');
@@ -132,6 +135,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('escuela/altabaja/{id}/{var}','EscuelaController@altabaja');
     Route::get('modadmision/altabaja/{id}/{var}','ModalidadadmisionController@altabaja');
     Route::get('permisoDelete/{id1}/{id2}/{var}/{var2}','PermisoController@delete');
+
+    Route::get('investigadores/obtenerDatos','InvestigadorController@obtenerDatos');
+    Route::get('investigaciones/obtenerAutors/{var}','InvestigacionController@obtenerAutors');
+    Route::get('investigaciones/obtenerPublicacion/{var}','InvestigacionController@obtenerPublicacion');
     
 
 

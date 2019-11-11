@@ -101,8 +101,8 @@
                 <ul class="treeview-menu">
                     <li><a href="{{URL::to('investigadores')}}"><i class='fa fa-gg'></i> Investigadores</a></li>
                     <li><a href="{{URL::to('investigaciones')}}"><i class='fa fa-gg'></i> Investigaciones</a></li>
-                    <li><a href="{{URL::to('tesis')}}"><i class='fa fa-gg'></i> Tesis</a></li>
-                    <li><a href="{{URL::to('revistas')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
+                    <li><a href="{{URL::to('tesisinfo')}}"><i class='fa fa-gg'></i> Tesis</a></li>
+                    <li><a href="{{URL::to('revistaspublicaciones')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
                 </ul>
             </li>
             @endif
@@ -317,7 +317,7 @@
                             @if($permisoMod->tipo==2)
                             <li><a href="{{URL::to('investigadores')}}"><i class='fa fa-gg'></i> Investigadores</a></li>
                             <li><a href="{{URL::to('investigaciones')}}"><i class='fa fa-gg'></i> Investigaciones</a></li>
-                            <li><a href="{{URL::to('tesis')}}"><i class='fa fa-gg'></i> Tesis</a></li>
+                            <li><a href="{{URL::to('tesisinfo')}}"><i class='fa fa-gg'></i> Tesis</a></li>
                             <li><a href="{{URL::to('revistas')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
                             @else
         
@@ -331,7 +331,7 @@
                                 @endif
         
                                 @if($permiso2->submodulo_id==19)
-                                <li><a href="{{URL::to('tesis')}}"><i class='fa fa-gg'></i> Tesis</a></li>
+                                <li><a href="{{URL::to('tesisinfo')}}"><i class='fa fa-gg'></i> Tesis</a></li>
                                 @endif
         
                                 @if($permiso2->submodulo_id==20)

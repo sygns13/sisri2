@@ -88,6 +88,7 @@ class InvestigacionController extends Controller
  $invest=$investigacions->items();
 
  $autores = array();
+ $publicaciones = array();
 
  foreach ($invest as $key => $dato) {
      
@@ -103,8 +104,22 @@ class InvestigacionController extends Controller
     ->select('investigacions.id',
     'detalleinvestigacions.id','detalleinvestigacions.investigacion_id','detalleinvestigacions.cargo','detalleinvestigacions.tipoAutor','detalleinvestigacions.investigador_id','personas.nombres','personas.apellidopat','personas.apellidomat','personas.tipodoc','personas.doc')->get(); 
 
+    $publishs = DB::table('investigacions')
+     ->join('publicaciones', 'investigacions.id', '=', 'publicaciones.investigacion_id')
+     ->where('publicaciones.borrado','0')
+     ->where('investigacions.id',$dato->id)
+
+     ->orderBy('publicaciones.fecha')
+     ->orderBy('publicaciones.nombre')
+
+     ->select('publicaciones.id','publicaciones.nombre','publicaciones.detalles','publicaciones.fecha','publicaciones.investigacion_id')->get();
+
     foreach ($autors as $key2 => $value) {
-        # code...
+        $autores[]= $value;
+    }
+
+    foreach ($publishs as $key3 => $value3) {
+        $publicaciones[]= $value3;
     }
 
  }
@@ -119,7 +134,9 @@ class InvestigacionController extends Controller
             'to'=> $investigacions->lastItem(),
         ],
         'investigacions'=>$investigacions,
-        'invest'=>$invest
+        'invest'=>$invest,
+        'autores'=>$autores,
+        'publicaciones'=>$publicaciones
     ];
     }
 
@@ -770,5 +787,49 @@ return response()->json(["result"=>$result,'msj'=>$msj,'selector'=>$selector]);
      }
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+    public function obtenerAutors($id)
+    {   
+
+
+     $investigadorsRegis = DB::table('investigadors')
+     ->join('personas', 'personas.id', '=', 'investigadors.persona_id')
+     ->join('detalleinvestigacions', 'investigadors.id', '=', 'detalleinvestigacions.investigador_id')
+     ->leftjoin('facultads', 'facultads.id', '=', 'investigadors.facultad_id')
+     ->leftjoin('escuelas', 'escuelas.id', '=', 'investigadors.escuela_id')
+     ->where('investigadors.borrado','0')
+     ->where('detalleinvestigacions.investigacion_id',$id)
+
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','investigadors.id',
+    'investigadors.persona_id','investigadors.escuela_id','investigadors.facultad_id','investigadors.observaciones','investigadors.clasificacion',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"),'detalleinvestigacions.cargo','detalleinvestigacions.tipoAutor','detalleinvestigacions.id as idDetalle')->get();
+
+
+     return [
+        'investigadorsRegis'=>$investigadorsRegis
+    ];
+    }
+
+    public function obtenerPublicacion($id)
+    {   
+
+
+     $publicacionRegis = DB::table('investigacions')
+     ->join('publicaciones', 'investigacions.id', '=', 'publicaciones.investigacion_id')
+     ->where('publicaciones.borrado','0')
+     ->where('investigacions.id',$id)
+
+     ->orderBy('publicaciones.fecha')
+     ->orderBy('publicaciones.nombre')
+
+     ->select('publicaciones.id','publicaciones.nombre','publicaciones.detalles','publicaciones.fecha','publicaciones.investigacion_id')->get();
+
+
+     return [
+        'publicacionRegis'=>$publicacionRegis
+    ];
     }
 }

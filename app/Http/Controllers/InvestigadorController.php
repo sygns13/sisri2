@@ -719,4 +719,28 @@ class InvestigadorController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+    public function obtenerDatos()
+    {   
+
+
+     $investigadors = DB::table('investigadors')
+     ->join('personas', 'personas.id', '=', 'investigadors.persona_id')
+     ->leftjoin('facultads', 'facultads.id', '=', 'investigadors.facultad_id')
+     ->leftjoin('escuelas', 'escuelas.id', '=', 'investigadors.escuela_id')
+     ->where('investigadors.borrado','0')
+
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','investigadors.id',
+    'investigadors.persona_id','investigadors.escuela_id','investigadors.facultad_id','investigadors.observaciones','investigadors.clasificacion',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"))->get();
+
+
+     return [
+        'investigadors'=>$investigadors
+    ];
+    }
+
+
 }

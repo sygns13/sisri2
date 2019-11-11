@@ -26,7 +26,7 @@ data:{
    divloader9:false,
    divloader10:false,
    divtitulo:true,
-   classTitle:'fa fa-books',
+   classTitle:'fa fa-book',
    classMenu0:'',
    classMenu1:'',
    classMenu2:'',
@@ -46,9 +46,10 @@ data:{
 
    facultads: [],
    escuelas: [],
+   tesis: [],
    errors:[],
 
-   filltesis:{'id':'', 'proyecto':'', 'autor':'','dni':'','grado':'','financiamiento':'','escuela_id':'','programaprofesional':''},
+   filltesis:{'id':'', 'nombreProyecto':'', 'autor':'','fuenteFinanciamiento':'','autor2':'','escuela_id':'','facultad_id':''},
 
    pagination: {
    'total': 0,
@@ -66,13 +67,12 @@ data:{
 
    thispage:'1',
 
-   proyecto:'',
+   nombreProyecto:'',
    autor:'',
-   dni:'',
-   grado:1,
-   financiamiento:'',
+   fuenteFinanciamiento:'',
+   autor2:'',
    escuela_id:0,
-   programaprofesional:'',
+   facultad_id:0,
 
 
 
@@ -120,14 +120,13 @@ computed:{
 methods: {
    getTesis: function (page) {
        var busca=this.buscar;
-       var url = 'escuela?page='+page+'&busca='+busca;
+       var url = 'tesisresource?page='+page+'&busca='+busca;
 
        axios.get(url).then(response=>{
-           this.escuelas= response.data.escuelas.data;
+           this.tesis= response.data.tesis.data;
            this.pagination= response.data.pagination;
-           this.facultads= response.data.facultads;
 
-           if(this.escuelas.length==0 && this.thispage!='1'){
+           if(this.tesis.length==0 && this.thispage!='1'){
                var a = parseInt(this.thispage) ;
                a--;
                this.thispage=a.toString();
@@ -158,27 +157,26 @@ methods: {
        this.cancelFormNuevo();
    },
    cancelFormNuevo: function () {
-       $('#txtautor').focus();
-        this.proyecto='';
+       $('#txtnombreProyecto').focus();
+        this.nombreProyecto='';
         this.autor='';
-        this.dni='';
-        this.grado=1;
-        this.financiamiento='';
+        this.fuenteFinanciamiento='';
+        this.autor2='';
         this.escuela_id=0;
-        this.programaprofesional='';
+        this.facultad_id=0;
 
        $(".form-control").css("border","1px solid #d2d6de");
    },
    create:function () {
 
        this.newFacultad=$("#cbsFacultad").val();
-       var url='escuela';
+       var url='tesisresource';
        $("#btnGuardar").attr('disabled', true);
        $("#btnCancel").attr('disabled', true);
        $("#btnClose").attr('disabled', true);
        this.divloaderNuevo=true;
        $(".form-control").css("border","1px solid #d2d6de");
-       axios.post(url,{nombre:this.newEscuela, activo:this.newActivo, facultad_id:this.newFacultad}).then(response=>{
+       axios.post(url,{nombreProyecto:this.nombreProyecto, autor:this.autor, fuenteFinanciamiento:this.fuenteFinanciamiento,autor2:this.autor2,escuela_id:this.escuela_id}).then(response=>{
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -201,13 +199,13 @@ methods: {
            //this.errors=error.response.data
        })
    },
-   borrarescuela:function (escuela) {
+   borrar:function (tesis) {
 
 
     
         swal.fire({
              title: '¿Estás seguro?',
-             text: "¿Desea eliminar la Escuela Profesional Seleccionada? -- Nota: este proceso no se podrá revertir.",
+             text: "¿Desea eliminar la Tesis Seleccionada? -- Nota: este proceso no se podrá revertir.",
              type: 'info',
              showCancelButton: true,
              confirmButtonColor: '#3085d6',
@@ -217,7 +215,7 @@ methods: {
 
             if (result.value) {
 
-                var url = 'escuela/'+escuela.id;
+                var url = 'tesisresource/'+tesis.id;
                 axios.delete(url).then(response=>{//eliminamos
 
                 if(response.data.result=='1'){
@@ -233,27 +231,27 @@ methods: {
                    
                }).catch(swal.noop);  
    },
-   editescuela:function (escuela) {
 
-       this.filltesis.id=escuela.id;
-       this.filltesis.nombre=escuela.nombre;
-       this.filltesis.activo=escuela.activo;
-       this.filltesis.facultad_id=escuela.facultad_id;
+   
+   edit:function (tesis) {
 
 
-       $("#cbsfacultadE").select2();
-       this.$nextTick(function () {
-       $("#cbsfacultadE").val( this.filltesis.facultad_id).trigger('change');
-       $('.select2').css("width","100%");
-    });
+       this.filltesis.id=tesis.id;
+       this.filltesis.nombreProyecto=tesis.nombreProyecto;
+       this.filltesis.autor=tesis.autor;
+       this.filltesis.fuenteFinanciamiento=tesis.fuenteFinanciamiento;
+       this.filltesis.autor2=tesis.autor2;
+       this.filltesis.escuela_id=tesis.escuela_id;
+       this.filltesis.facultad_id=tesis.facultad_id;
 
-       $("#boxTitulo").text('Escuela: '+escuela.nombre);
+
+       $("#boxTitulo").text('Tesis: '+tesis.nombreProyecto);
        $("#modalEditar").modal('show');
 
        $("#txtfacE").focus();
    },
-   updateEscuela:function (id) {
-       var url="escuela/"+id;
+   update:function (id) {
+       var url="tesisresource/"+id;
        $("#btnSaveE").attr('disabled', true);
        $("#btnCancelE").attr('disabled', true);
        this.divloaderEdit=true;
@@ -268,7 +266,7 @@ methods: {
            
            if(response.data.result=='1'){   
            this.getTesis(this.thispage);
-           this.fillLocal={'id':'', 'nombre':'', 'activo':'','facultad_id':''};
+           this.filltesis={'id':'', 'nombreProyecto':'', 'autor':'','fuenteFinanciamiento':'','autor2':'','escuela_id':'','facultad_id':''};
            this.errors=[];
            $("#modalEditar").modal('hide');
            toastr.success(response.data.msj);
@@ -282,68 +280,13 @@ methods: {
            this.errors=error.response.data
        })
    },
-   bajaescuela:function (escuela) {
 
-
-    swal.fire({
-             title: '¿Estás seguro?',
-             text: "Desea desactivar la Escuela seleccionada",
-             type: 'info',
-             showCancelButton: true,
-             confirmButtonColor: '#3085d6',
-             cancelButtonColor: '#d33',
-             confirmButtonText: 'Si, Desactivar'
-           }).then((result) => {
-
-            if (result.value) {
-
-                var url = 'escuela/altabaja/'+escuela.id+'/0';
-                       axios.get(url).then(response=>{//eliminamos
-
-                       if(response.data.result=='1'){
-                           app.getTesis(app.thispage);//listamos
-                           toastr.success(response.data.msj);//mostramos mensaje
-                       }else{
-                          // $('#'+response.data.selector).focus();
-                           toastr.error(response.data.msj);
-                       }
-                       });
-                }
-
-                   
-               }).catch(swal.noop);  
-
+   cambiarFacultad:function(){
+        this.escuela_id=0;
    },
-   altaescuela:function (escuela) {
 
-    swal.fire({
-             title: '¿Estás seguro?',
-             text: "Desea activar la Escuela seleccionada",
-             type: 'info',
-             showCancelButton: true,
-             confirmButtonColor: '#3085d6',
-             cancelButtonColor: '#d33',
-             confirmButtonText: 'Si, Activar'
-           }).then((result) => {
-
-            if (result.value) {
-
-                var url = 'escuela/altabaja/'+escuela.id+'/1';
-                       axios.get(url).then(response=>{//eliminamos
-
-                       if(response.data.result=='1'){
-                           app.getTesis(app.thispage);//listamos
-                           toastr.success(response.data.msj);//mostramos mensaje
-                       }else{
-                          // $('#'+response.data.selector).focus();
-                           toastr.error(response.data.msj);
-                       }
-                       });
-                }
-
-                   
-               }).catch(swal.noop);  
-
+   cambiarFacultadE:function(){
+        this.filltesis.escuela_id=0;
    },
 }
 });
