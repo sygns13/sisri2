@@ -1,6 +1,35 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/dusk/compare/v5.5.0...5.0)
+## [Unreleased](https://github.com/laravel/dusk/compare/v5.6.1...5.0)
+
+
+## [v5.6.1 (2019-11-12)](https://github.com/laravel/dusk/compare/v5.6.0...v5.6.1)
+
+### Fixed
+- Ensure jQuery for scrollTo ([#686](https://github.com/laravel/dusk/pull/686))
+- Added missing return statement in withDuskEnvironment ([#691](https://github.com/laravel/dusk/pull/691))
+- Prevent using pcntl when not installed ([#692](https://github.com/laravel/dusk/pull/692))
+
+
+## [v5.6.0 (2019-10-29)](https://github.com/laravel/dusk/compare/v5.5.2...v5.6.0)
+
+### Added
+- Add scrollTo method ([#684](https://github.com/laravel/dusk/pull/684))
+
+### Fixed
+- Add graceful handler for `SIGINT` for .env restoration ([#682](https://github.com/laravel/dusk/pull/682), [f843b8a](https://github.com/laravel/dusk/commit/f843b8a51ae96933cefcc74dec515377d3135611))
+
+
+## [v5.5.2 (2019-09-24)](https://github.com/laravel/dusk/compare/v5.5.1...v5.5.2)
+
+### Fixed
+- Improve detection of latest stable ChromeDriver release ([#677](https://github.com/laravel/dusk/pull/677))
+
+
+## [v5.5.1 (2019-09-12)](https://github.com/laravel/dusk/compare/v5.5.0...v5.5.1)
+
+### Fixed
+- Update regular expression base on website changes ([#674](https://github.com/laravel/dusk/pull/674))
 
 
 ## [v5.5.0 (2019-08-06)](https://github.com/laravel/dusk/compare/v5.4.0...v5.5.0)

@@ -2,14 +2,14 @@
 
 namespace Laravel\Dusk;
 
-use Closure;
 use BadMethodCallException;
-use Illuminate\Support\Str;
-use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverPoint;
-use Illuminate\Support\Traits\Macroable;
-use Facebook\WebDriver\WebDriverDimension;
+use Closure;
 use Facebook\WebDriver\Remote\WebDriverBrowserType;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverDimension;
+use Facebook\WebDriver\WebDriverPoint;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 
 class Browser
 {
@@ -275,6 +275,23 @@ class Browser
         $this->driver->manage()->window()->setPosition(
             new WebDriverPoint($x, $y)
         );
+
+        return $this;
+    }
+
+    /**
+     * Scroll screen to element at the given selector.
+     *
+     * @param  string  $selector
+     * @return $this
+     */
+    public function scrollTo($selector)
+    {
+        $this->ensurejQueryIsAvailable();
+
+        $selector = $this->resolver->format($selector);
+
+        $this->driver->executeScript("jQuery(\"html, body\").animate({scrollTop: jQuery(\"$selector\").offset().top}, 0);");
 
         return $this;
     }
