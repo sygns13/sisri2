@@ -71,7 +71,7 @@ data:{
    formularioCrear:true,
 
 
-   tipoPublicacion:'',
+   tipoPublicacion:'REVISTA',
    tituloR:'',
    descripcion:'',
    escuela_id:0,
@@ -112,6 +112,8 @@ data:{
         divloaderNuevoAutor:false,
 
         autoresRegis:[],
+
+        autoresRevistas:[],
 
 
 },
@@ -195,7 +197,7 @@ methods: {
        axios.get(url).then(response=>{
            this.revistas= response.data.revistas.data;
            this.pagination= response.data.pagination;
-           this.autores= response.data.autores;
+           this.autoresRevistas= response.data.autoresRevistas;
 
            
 
@@ -238,7 +240,7 @@ methods: {
    cancelFormNuevo: function () {
 
 
-    this.tipoPublicacion='';
+    this.tipoPublicacion='REVISTA';
     this.tituloR='';
     this.descripcion='';
     this.escuela_id=0;
@@ -259,7 +261,7 @@ methods: {
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       $('#txttitulo').focus();
+       $('#cbuescuela_id').focus();
 
     })
    },
@@ -323,7 +325,7 @@ axios.post(url,data, config).then(response=>{
 
 
 
-   borrar:function (investigacion) {
+   borrar:function (revista) {
 
 
     
@@ -339,7 +341,7 @@ axios.post(url,data, config).then(response=>{
 
             if (result.value) {
 
-                var url = 'investigacions/'+investigacion.id;
+                var url = 'revistasPubli/'+revista.id;
                 axios.delete(url).then(response=>{//eliminamos
 
                 if(response.data.result=='1'){
@@ -357,7 +359,11 @@ axios.post(url,data, config).then(response=>{
    },
 
 
+/*
 
+  fillrevista:{'tipoPublicacion':'', 'tituloR':'', 'descripcion':'','escuela_id':'','fechaPublicado':'','indexada':'','lugarIndexada':'','numero':'','rutadoc':'','archivonombre':''},
+
+  */
 
    edit:function (investigacion) {
 
@@ -374,30 +380,19 @@ axios.post(url,data, config).then(response=>{
 
        this.cerrarFormNuevo();
 
+       this.fillrevista.id=investigacion.id;
+       this.fillrevista.tipoPublicacion=investigacion.tipoPublicacion;
+       this.fillrevista.titulo=investigacion.titulo;
+       this.fillrevista.descripcion=investigacion.descripcion;
+       this.fillrevista.escuela_id=investigacion.escuela_id;
+       this.fillrevista.fechaPublicado=investigacion.fechaPublicado;
+       this.fillrevista.indexada=investigacion.indexada;
+       this.fillrevista.lugarIndexada=investigacion.lugarIndexada;
+       this.fillrevista.numero=investigacion.numero;
+       this.fillrevista.rutadoc=investigacion.rutadoc;
+       this.fillrevista.archivonombre=investigacion.archivonombre;
 
-       this.fillinvestigacion.id=investigacion.id;
-       this.fillinvestigacion.titulo=investigacion.titulo;
-       this.fillinvestigacion.descripcion=investigacion.descripcion;
-       this.fillinvestigacion.resolucionAprobacion=investigacion.resolucionAprobacion;
-       this.fillinvestigacion.presupuestoAsignado=investigacion.presupuestoAsignado;
-       this.fillinvestigacion.presupuestoEjecutado=investigacion.presupuestoEjecutado;
-       this.fillinvestigacion.horas=investigacion.horas;
-       this.fillinvestigacion.fechaInicio=investigacion.fechaInicio;
-       this.fillinvestigacion.fechaTermino=investigacion.fechaTermino;
-       this.fillinvestigacion.clasificacion=investigacion.clasificacion;
-       this.fillinvestigacion.rutadocumento=investigacion.rutadocumento;
-       this.fillinvestigacion.estado=investigacion.estado;
-       this.fillinvestigacion.avance=investigacion.avance;
-       this.fillinvestigacion.descripcionAvance=investigacion.descripcionAvance;
-       this.fillinvestigacion.escuela_id=investigacion.escuela_id;
-       this.fillinvestigacion.lineainvestigacion=investigacion.lineainvestigacion;
-       this.fillinvestigacion.financiamiento=investigacion.financiamiento;
-       this.fillinvestigacion.patentado=investigacion.patentado;
-       this.fillinvestigacion.observaciones=investigacion.observaciones;
-       this.fillinvestigacion.archivonombre=investigacion.archivonombre;
-
-
-       this.oldFile=investigacion.rutadocumento;
+       this.oldFile=investigacion.rutadoc;
 
       
 
@@ -416,7 +411,7 @@ axios.post(url,data, config).then(response=>{
    },
 
    update:function (id) {
-       var url="investigacions/"+id;
+       var url="revistasPubli/"+id;
        $("#btnSaveE").attr('disabled', true);
        $("#btnCloseE").attr('disabled', true);
        this.divloaderEdit=true;
@@ -424,27 +419,19 @@ axios.post(url,data, config).then(response=>{
 
        var data = new  FormData();
 
-data.append('id', this.fillinvestigacion.id);
-data.append('titulo', this.fillinvestigacion.titulo);
-data.append('descripcion', this.fillinvestigacion.descripcion);
-data.append('resolucionAprobacion', this.fillinvestigacion.resolucionAprobacion);
-data.append('presupuestoAsignado', this.fillinvestigacion.presupuestoAsignado);
-data.append('presupuestoEjecutado', this.fillinvestigacion.presupuestoEjecutado);
+
+data.append('id', this.fillrevista.id);
+data.append('titulo', this.fillrevista.titulo);
+data.append('tipoPublicacion', this.fillrevista.tipoPublicacion);
+data.append('descripcion', this.fillrevista.descripcion);
+data.append('escuela_id', this.fillrevista.escuela_id);
+data.append('fechaPublicado', this.fillrevista.fechaPublicado);
+data.append('indexada', this.fillrevista.indexada);
+data.append('lugarIndexada', this.fillrevista.lugarIndexada);
+data.append('numero', this.fillrevista.numero);
+data.append('archivonombre', this.fillrevista.archivonombre);
 data.append('archivo', this.archivoE);
-data.append('horas', this.fillinvestigacion.horas);
-data.append('fechaInicio', this.fillinvestigacion.fechaInicio);
-data.append('fechaTermino', this.fillinvestigacion.fechaTermino);
-data.append('clasificacion', this.fillinvestigacion.clasificacion);
-data.append('rutadocumento', this.fillinvestigacion.rutadocumento);
-data.append('estado', this.fillinvestigacion.estado);
-data.append('avance', this.fillinvestigacion.avance);
-data.append('descripcionAvance', this.fillinvestigacion.descripcionAvance);
-data.append('escuela_id', this.fillinvestigacion.escuela_id);
-data.append('lineainvestigacion', this.fillinvestigacion.lineainvestigacion);
-data.append('financiamiento', this.fillinvestigacion.financiamiento);
-data.append('patentado', this.fillinvestigacion.patentado);
-data.append('observaciones', this.fillinvestigacion.observaciones);
-data.append('nombreArchivo', this.fillinvestigacion.archivonombre);
+data.append('rutadoc', this.fillrevista.rutadoc);
 
 data.append('oldfile', this.oldFile);
 
@@ -461,7 +448,7 @@ data.append('_method', 'PUT');
            
            if(response.data.result=='1'){   
            this.getRevistas(this.thispage);
-           this.fillinvestigacion={'titulo':'', 'descripcion':'', 'resolucionAprobacion':'','presupuestoAsignado':'','presupuestoEjecutado':'','horas':'','fechaInicio':'','fechaTermino':'','clasificacion':'','rutadocumento':'','estado':'','avance':'','descripcionAvance':'','escuela_id':'','lineainvestigacion':'','financiamiento':'','patentado':'','id':'','observaciones':'','archivonombre':''};
+           this.fillrevista={'tipoPublicacion':'', 'tituloR':'', 'descripcion':'','escuela_id':'','fechaPublicado':'','indexada':'','lugarIndexada':'','numero':'','rutadoc':'','archivonombre':''};
            this.errors=[];
 
            this.cerrarFormE();
@@ -479,82 +466,92 @@ data.append('_method', 'PUT');
 
 
 
-   getInvestigadores: function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+
+   getAutors: function () {
        var busca=this.buscar;
-       var url = 'investigadores/obtenerDatos';
+       var url = 'personas/obtenerDatos';
 
        axios.get(url).then(response=>{
-           this.investigadors= response.data.investigadors;
+           this.autores= response.data.autores;
        })
    },
 
-   getInvestigadoresInvest: function (id) {
+   getAutorsInvest: function (id) {
        var busca=this.buscar;
-       var url = 'investigaciones/obtenerAutors/'+id;
+       var url = 'personas/obtenerAutors/'+id;
 
        axios.get(url).then(response=>{
-           this.investigadorsRegis= response.data.investigadorsRegis;
+           this.autoresRegis= response.data.autoresRegis;
 
 
        })
    },
 
-   getPublicacionesInvest: function (id) {
-       var busca=this.buscar;
-       var url = 'investigaciones/obtenerPublicacion/'+id;
-
-       axios.get(url).then(response=>{
-           this.publicacionRegis= response.data.publicacionRegis;
-
-
-       })
-   },
+  
 
 
 
-   gestautores:function (investigacion) {
+   gestautores:function (revista) {
 
-    this.getInvestigadores();
-    this.getInvestigadoresInvest(investigacion.id);
+    this.getAutors();
+    this.getAutorsInvest(revista.id);
 
     this.divNuevoAutor=false;
 
-        this.fillinvestigacion.id=investigacion.id;
-       this.fillinvestigacion.titulo=investigacion.titulo;
-       this.fillinvestigacion.descripcion=investigacion.descripcion;
-       this.fillinvestigacion.resolucionAprobacion=investigacion.resolucionAprobacion;
-       this.fillinvestigacion.presupuestoAsignado=investigacion.presupuestoAsignado;
-       this.fillinvestigacion.presupuestoEjecutado=investigacion.presupuestoEjecutado;
-       this.fillinvestigacion.horas=investigacion.horas;
-       this.fillinvestigacion.fechaInicio=investigacion.fechaInicio;
-       this.fillinvestigacion.fechaTermino=investigacion.fechaTermino;
-       this.fillinvestigacion.clasificacion=investigacion.clasificacion;
-       this.fillinvestigacion.rutadocumento=investigacion.rutadocumento;
-       this.fillinvestigacion.estado=investigacion.estado;
-       this.fillinvestigacion.avance=investigacion.avance;
-       this.fillinvestigacion.descripcionAvance=investigacion.descripcionAvance;
-       this.fillinvestigacion.escuela_id=investigacion.escuela_id;
-       this.fillinvestigacion.lineainvestigacion=investigacion.lineainvestigacion;
-       this.fillinvestigacion.financiamiento=investigacion.financiamiento;
-       this.fillinvestigacion.patentado=investigacion.patentado;
-       this.fillinvestigacion.observaciones=investigacion.observaciones;
-       this.fillinvestigacion.archivonombre=investigacion.archivonombre;
+    this.fillrevista.id=revista.id;
+       this.fillrevista.tipoPublicacion=revista.tipoPublicacion;
+       this.fillrevista.titulo=revista.titulo;
+       this.fillrevista.descripcion=revista.descripcion;
+       this.fillrevista.escuela_id=revista.escuela_id;
+       this.fillrevista.fechaPublicado=revista.fechaPublicado;
+       this.fillrevista.indexada=revista.indexada;
+       this.fillrevista.lugarIndexada=revista.lugarIndexada;
+       this.fillrevista.numero=revista.numero;
+       this.fillrevista.rutadoc=revista.rutadoc;
+       this.fillrevista.archivonombre=revista.archivonombre;
 
 
-       this.oldFile=investigacion.rutadocumento;
+       this.oldFile=revista.rutadoc;
 
        this.tipoAutor='AUTOR';
        this.cargo='';
-       this.investigador_id=0;
+       this.persona_id=0;
 
-       $("#cbsinvestigador").select2();
+       $("#cbsautor").select2();
        this.$nextTick(function () {
-       $("#cbsinvestigador").val("0").trigger('change');
+       $("#cbsautor").val("0").trigger('change');
        $('.select2').css("width","100%");
     });
 
 
-$("#boxTituloInvest").text('Investigación: '+investigacion.titulo);
+$("#boxTituloInvest").text('Revista o Publicación: '+revista.titulo);
 $("#modalAutores").modal('show');
 
 
@@ -580,22 +577,22 @@ nuevoAutor:function () {
        this.tipoAutor='AUTOR';
        this.cargo='';
 
-       $("#cbsinvestigador").select2();
-       $('#cbsinvestigador').val('0').trigger('change');
+       $("#cbsautor").select2();
+       $('#cbsautor').val('0').trigger('change');
        $(".form-control").css("border","1px solid #d2d6de");
    },
 
 
    createAutor:function () {
 
-this.investigador_id=$("#cbsinvestigador").val();
-var url='detalleInvestigacion';
+this.persona_id=$("#cbsautor").val();
+var url='autor';
 $("#btnGuardarAutor").attr('disabled', true);
 $("#btnCancelAutor").attr('disabled', true);
 $("#btnCloseAutor").attr('disabled', true);
 this.divloaderNuevoAutor=true;
 $(".form-control").css("border","1px solid #d2d6de");
-axios.post(url,{investigacion_id:this.fillinvestigacion.id, cargo:this.cargo, tipoAutor:this.tipoAutor,investigador_id:this.investigador_id}).then(response=>{
+axios.post(url,{revistaspublicacion_id:this.fillrevista.id, cargo:this.cargo,persona_id:this.persona_id}).then(response=>{
     //console.log(response.data);
 
     $("#btnGuardarAutor").removeAttr("disabled");
@@ -605,7 +602,7 @@ axios.post(url,{investigacion_id:this.fillinvestigacion.id, cargo:this.cargo, ti
 
 
     if(String(response.data.result)=='1'){
-        this.getInvestigadoresInvest(this.fillinvestigacion.id);
+        this.getAutorsInvest(this.fillrevista.id);
         this.getRevistas(this.thispage);
         this.errors=[];
         this.cerrarFormNuevoAutor();
@@ -620,7 +617,7 @@ axios.post(url,{investigacion_id:this.fillinvestigacion.id, cargo:this.cargo, ti
 })
 },
 
-borrarAutor:function (investigador) {
+borrarAutor:function (revista) {
 
 
     
@@ -636,11 +633,11 @@ swal.fire({
 
     if (result.value) {
 
-        var url = 'detalleInvestigacion/'+investigador.idDetalle;
+        var url = 'autor/'+revista.id;
         axios.delete(url).then(response=>{//eliminamos
 
         if(response.data.result=='1'){
-            app.getInvestigadoresInvest(app.fillinvestigacion.id);//listamos
+            app.getAutorsInvest(app.fillrevista.id);//listamos
             app.getRevistas(app.thispage);
             toastr.success(response.data.msj);//mostramos mensaje
         }else{
@@ -656,138 +653,6 @@ swal.fire({
 
 
 
-getPublicaciones:function (investigacion) {
-
-
-this.getPublicacionesInvest(investigacion.id);
-
-this.divNuevoAutor=false;
-
-    this.fillinvestigacion.id=investigacion.id;
-   this.fillinvestigacion.titulo=investigacion.titulo;
-   this.fillinvestigacion.descripcion=investigacion.descripcion;
-   this.fillinvestigacion.resolucionAprobacion=investigacion.resolucionAprobacion;
-   this.fillinvestigacion.presupuestoAsignado=investigacion.presupuestoAsignado;
-   this.fillinvestigacion.presupuestoEjecutado=investigacion.presupuestoEjecutado;
-   this.fillinvestigacion.horas=investigacion.horas;
-   this.fillinvestigacion.fechaInicio=investigacion.fechaInicio;
-   this.fillinvestigacion.fechaTermino=investigacion.fechaTermino;
-   this.fillinvestigacion.clasificacion=investigacion.clasificacion;
-   this.fillinvestigacion.rutadocumento=investigacion.rutadocumento;
-   this.fillinvestigacion.estado=investigacion.estado;
-   this.fillinvestigacion.avance=investigacion.avance;
-   this.fillinvestigacion.descripcionAvance=investigacion.descripcionAvance;
-   this.fillinvestigacion.escuela_id=investigacion.escuela_id;
-   this.fillinvestigacion.lineainvestigacion=investigacion.lineainvestigacion;
-   this.fillinvestigacion.financiamiento=investigacion.financiamiento;
-   this.fillinvestigacion.patentado=investigacion.patentado;
-   this.fillinvestigacion.observaciones=investigacion.observaciones;
-   this.fillinvestigacion.archivonombre=investigacion.archivonombre;
-
-
-   this.oldFile=investigacion.rutadocumento;
-
-        this.nombre='';
-        this.detalles='';
-        this.fecha='';
-
-
-$("#boxTituloPublicacion").text('Investigación: '+investigacion.titulo);
-$("#modalPublicaciones").modal('show');
-
-
-},
-
-nuevaPublicacion:function () {
-       this.divNuevaPublicacion=true;
-       //$("#txtespecialidad").focus();
-       //$('#txtespecialidad').focus();
-       this.$nextTick(function () {
-       this.cancelFormNuevoAutor();
-     })
-       
-   },
-
-   cerrarFormNuevoPublicacion: function () {
-       this.divNuevaPublicacion=false;
-       this.cancelFormNuevoPublicacion();
-   },
-   cancelFormNuevoPublicacion: function () {
-       
-        this.nombre='';
-        this.detalles='';
-        this.fecha='';
-       $(".form-control").css("border","1px solid #d2d6de");
-   },
-
-   createPublicacion:function () {
-
-
-var url='publicacion';
-$("#btnGuardarPublicacion").attr('disabled', true);
-$("#btnCancelPublicacion").attr('disabled', true);
-$("#btnClosePublicacion").attr('disabled', true);
-this.divloaderNuevoPublicacion=true;
-$(".form-control").css("border","1px solid #d2d6de");
-axios.post(url,{investigacion_id:this.fillinvestigacion.id, nombre:this.nombre, detalles:this.detalles,fecha:this.fecha}).then(response=>{
-    //console.log(response.data);
-
-    $("#btnGuardarPublicacion").removeAttr("disabled");
-    $("#btnCancelPublicacion").removeAttr("disabled");
-    $("#btnClosePublicacion").removeAttr("disabled");
-    this.divloaderNuevoPublicacion=false;
-
-
-    if(String(response.data.result)=='1'){
-        this.getPublicacionesInvest(this.fillinvestigacion.id);
-        this.getRevistas(this.thispage);
-        this.errors=[];
-        this.cerrarFormNuevoPublicacion();
-        toastr.success(response.data.msj);
-    }else{
-        $('#'+response.data.selector).focus();
-        $('#'+response.data.selector).css( "border", "1px solid red" );
-        toastr.error(response.data.msj);
-    }
-}).catch(error=>{
-    //this.errors=error.response.data
-})
-},
-
-
-borrarPublicacion:function (investigador) {
-
-
-    
-swal.fire({
-     title: '¿Estás seguro?',
-     text: "¿Desea borrar el Publicación Seleccionada? -- Nota: este proceso no se podrá revertir.",
-     type: 'info',
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Si, eliminar'
-   }).then((result) => {
-
-    if (result.value) {
-
-        var url = 'publicacion/'+investigador.id;
-        axios.delete(url).then(response=>{//eliminamos
-
-        if(response.data.result=='1'){
-            app.getPublicacionesInvest(app.fillinvestigacion.id);//listamos
-            app.getRevistas(app.thispage);
-            toastr.success(response.data.msj);//mostramos mensaje
-        }else{
-            // $('#'+response.data.selector).focus();
-            toastr.error(response.data.msj);
-        }
-        })
-        }
-
-           
-       }).catch(swal.noop);  
-},
 
 
 

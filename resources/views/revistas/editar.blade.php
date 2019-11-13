@@ -1,4 +1,4 @@
-<form method="post" v-on:submit.prevent="update(fillinvestigacion.id)">
+<form method="post" v-on:submit.prevent="update(fillrevista.id)">
   <div class="box-body" style="font-size: 14px;">
 
    
@@ -13,7 +13,7 @@
 
             <label for="cbuescuela_idE" class="col-sm-2 control-label">Escuela Profesional:*</label>
             <div class="col-sm-10">
-                <select class="form-control" id="cbuescuela_idE" name="cbuescuela_idE" v-model="fillinvestigacion.escuela_id">
+                <select class="form-control" id="cbuescuela_idE" name="cbuescuela_idE" v-model="fillrevista.escuela_id">
                     <option value="0" disabled>Seleccione un Programa Profesional...</option>
                   @foreach ($escuelas as $dato)
                   <option value="{{$dato->id}}">{{$dato->nombre}}</option>     
@@ -24,19 +24,36 @@
           </div>
         </div>
 
-            <div class="col-md-12" style="padding-top: 15px;">
+        <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
 
-              <label for="txttituloE" class="col-sm-2 control-label">Título:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="txttituloE" name="txttituloE" placeholder="Título de la Investigación"
-                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.titulo">
+              <label for="txttipoPublicacionE" class="col-sm-2 control-label">Tipo de Publicación:</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="txttipoPublicacionE" name="txttipoPublicacionE" placeholder="Título de la Revista o Publicación"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillrevista.tipoPublicacion">
+              </div>
+
+              <label for="txtnumeroE" class="col-sm-2 control-label">N° de Publicación:</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="txtnumeroE" name="txtnumeroE" placeholder="N° de la Revista o Publicación"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillrevista.numero">
               </div>
 
             </div>
           </div>
 
 
+          <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
+
+              <label for="txttituloE" class="col-sm-2 control-label">Título:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="txttituloE" name="txttituloE" placeholder="Título de la Revista o Publicación"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillrevista.titulo">
+              </div>
+
+            </div>
+          </div>
 
 
           <div class="col-md-12" style="padding-top: 15px;">
@@ -44,12 +61,13 @@
 
                 <label for="txtdescripcionE" class="col-sm-2 control-label">Descripción:</label>
                 <div class="col-sm-10">
-<textarea name="txtdescripcionE" id="txtdescripcionE" rows="4" v-model="fillinvestigacion.descripcion" style="width:100%;" placeholder="Descripción de la Investigación"></textarea>
+<textarea name="txtdescripcionE" id="txtdescripcionE" rows="4" v-model="fillrevista.descripcion" style="width:100%;" placeholder="Descripción de la Revista o Publicación"></textarea>
 
 
               </div>
             </div>
           </div>
+
 
           <div class="col-md-12" style="padding-top: 15px;">
 
@@ -57,7 +75,7 @@
               <label for="txtArchivoAdjuntoE" class="col-sm-2 control-label">Archivo Adjunto: (Opcional: pdf, docx, xlsx, pptx)</label>
 
               <div class="col-sm-8">
-                <input type="text" class="form-control" id="txtArchivoAdjuntoE" name="txtArchivoAdjuntoE" placeholder="Nombre del Archivo" maxlength="500"  v-model="fillinvestigacion.archivonombre">
+                <input type="text" class="form-control" id="txtArchivoAdjuntoE" name="txtArchivoAdjuntoE" placeholder="Nombre del Archivo" maxlength="500"  v-model="fillrevista.archivonombre">
               </div>
 
               <div class="col-sm-8" v-if="uploadReadyE">
@@ -73,156 +91,46 @@
         </div>  
 
 
-
-
-          <div class="col-md-12" style="padding-top: 15px;">
-            <div class="form-group">
-  
-                <label for="txtresolucionAprobacionE" class="col-sm-2 control-label">Resolución:</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="txtresolucionAprobacionE" name="txtresolucionAprobacionE" placeholder="Resolución de Aprobación"
-                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.resolucionAprobacion">
+        <div class="col-md-12" style="padding-top: 15px;">
+              <div class="form-group">
+                  <label for="txtfechaPublicadoE" class="col-sm-2 control-label">Fecha de Publicación:*</label>
+                <div class="col-sm-2">
+                    <input type="date" class="form-control" id="txtfechaPublicadoE" name="txtfechaPublicadoE" placeholder="dd/mm/aaaa"
+                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillrevista.fechaPublicado">
                 </div>
-  
+
               </div>
             </div>
 
 
-
             <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-    
-                  <label for="txtclasificacionE" class="col-sm-2 control-label">Clasificación:</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="txtclasificacionE" name="txtclasificacionE" placeholder="Clasificación de la Investigación"
-                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.clasificacion">
-                  </div>
-
-                  <label for="txtlineainvestigacionE" class="col-sm-2 control-label">Línea de Investigación:</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="txtlineainvestigacionE" name="txtlineainvestigacionE" placeholder="Línea de la Investigación"
-                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.lineainvestigacion">
-                  </div>
-    
-                </div>
-              </div>
-
-
-              <div class="col-md-12" style="padding-top: 15px;">
-                <div class="form-group">
-      
-                    <label for="txtfinanciamientoE" class="col-sm-2 control-label">Financiamiento:</label>
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="txtfinanciamientoE" name="txtfinanciamientoE" placeholder="Financiamiento de la Investigación"
-                        maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.financiamiento">
-                    </div>
-
-                  </div>
-                </div>
-
-                <div class="col-md-12" style="padding-top: 15px;">
-                  <div class="form-group">
-  
-  
-                        <label for="txtpresupuestoAsignadoE" class="col-sm-2 control-label">Presupuesto Asignado (S/.):*</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="txtpresupuestoAsignadoE" name="txtpresupuestoAsignadoE" placeholder="" onkeypress="return soloNumeros(event);"
-                              maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.presupuestoAsignado">
-                          </div>
-  
-                          <label for="txtpresupuestoEjecutadoE" class="col-sm-2 control-label">Presupuesto Ejecutado (S/.):*</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="txtpresupuestoEjecutadoE" name="txtpresupuestoEjecutadoE" placeholder="" onkeypress="return soloNumeros(event);"
-                              maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.presupuestoEjecutado">
-                          </div>
-  
-  
-                    </div>
-                  </div>
-
-           
-
-                <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-               
-                <label for="cbuestadoE" class="col-sm-2 control-label">Estado de Investigación:*</label>
-                <div class="col-sm-2">
-                    <select class="form-control" id="cbuestadoE" name="cbuestadoE" v-model="fillinvestigacion.estado">
-                      <option value="1">En Ejecución</option>
-                      <option value="0">Finalizado</option>
-                      <option value="2">Cancelado</option>
-   
-                    </select>
-                  </div>
-
-
-                  <label for="txtfechaInicioE" class="col-sm-2 control-label">Fecha de Inicio:*</label>
-                <div class="col-sm-2">
-                    <input type="date" class="form-control" id="txtfechaInicioE" name="txtfechaInicioE" placeholder="dd/mm/aaaa"
-                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.fechaInicio">
-                </div>
-
-<template v-if="parseInt(fillinvestigacion.estado)!=1">  
-                <label for="txtfechaTerminoE" class="col-sm-2 control-label">Fecha de Término:*</label>
-                <div class="col-sm-2">
-                    <input type="date" class="form-control" id="txtfechaTerminoE" name="txtfechaTerminoE" placeholder="dd/mm/aaaa"
-                    maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.fechaTermino">
-                </div>
-                </template>    
-              </div>
-            </div>
-
-
-
-            <div class="col-md-12" style="padding-top: 15px;">
-              <div class="form-group">
-
-
-                    <label for="txthorasE" class="col-sm-2 control-label">Horas Dedicadas a la Investigación:*</label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control" id="txthorasE" name="txthorasE" placeholder="" onkeypress="return soloNumeros(event);"
-                          maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.horas">
-                      </div>
-
-                      <label for="txtavanceE" class="col-sm-2 control-label">Porcentaje de Avance (%):*</label>
-                    <div class="col-sm-2">
-                      <input type="text" class="form-control" id="txtavanceE" name="txtavanceE" placeholder="" onkeypress="return soloNumeros(event);"
-                          maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillinvestigacion.avance">
-                      </div>
-
-
-                </div>
-              </div>
-
-
-              <div class="col-md-12" style="padding-top: 15px;">
                 <div class="form-group">
                  
-                  <label for="cbuestadoE" class="col-sm-2 control-label">Se encuentra Patentado:*</label>
+                  <label for="cbuindexadaE" class="col-sm-2 control-label">Se encuentra Indexada:*</label>
                   <div class="col-sm-2">
-                      <select class="form-control" id="cbuestadoE" name="cbuestadoE" v-model="fillinvestigacion.patentado">
+                      <select class="form-control" id="cbuindexadaE" name="cbuindexadaE" v-model="fillrevista.indexada">
                         <option value="1">Si</option>
                         <option value="0">No</option>
      
                       </select>
                     </div>
+
+                <template v-if="parseInt(fillrevista.indexada)==1">
+
+                <label for="txtlugarIndexadaE" class="col-sm-2 control-label">Lugar de Indexación:</label>
+                <div class="col-sm-6">
+
+                    <input type="text" class="form-control" id="txtlugarIndexadaE" name="txtlugarIndexadaE" placeholder="Lugar de Indexación"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillrevista.lugarIndexada">
+
+
+
+              </div>
+
+                </template>
   
                 </div>
               </div>
-
-
-                              <div class="col-md-12" style="padding-top: 15px;">
-                                  <div class="form-group">
-
-                                      <label for="txtobservacionesE" class="col-sm-2 control-label">Observaciones:</label>
-                                      <div class="col-sm-10">
-<textarea name="txtobservacionesE" id="txtobservacionesE" rows="4" v-model="fillinvestigacion.observaciones" style="width:100%;"></textarea>
-
-  
-                                    </div>
-                                  </div>
-                                </div>
-
     
 
     </template>

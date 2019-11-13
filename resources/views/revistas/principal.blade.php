@@ -1,6 +1,6 @@
 <div class="box box-primary panel-group">
         <div class="box-header with-border" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-          <h3 class="box-title">Gestión de Investigaciones</h3>
+          <h3 class="box-title">Gestión de Revistas y Publicaciones</h3>
           <a style="float: right;" type="button" class="btn btn-default" href="{{URL::to('home')}}"><i class="fa fa-reply-all" aria-hidden="true"></i> 
           Volver</a>
         </div>
@@ -21,22 +21,22 @@
       
  <div class="box box-success" v-if="divNuevo">
   <div class="box-header with-border" style="border: 1px solid rgb(0, 166, 90); background-color: rgb(0, 166, 90); color: white;">
-    <h3 class="box-title" id="tituloAgregar">Nuevo Registro de Investigación
+    <h3 class="box-title" id="tituloAgregar">Nuevo Registro de Revista o Publicación
     </h3>
   </div>
-  @include('investigacions.formulario')  
+  @include('revistas.formulario')  
 </div>
 
 
 <div class="box box-warning" v-if="divEdit">
   <div class="box-header with-border" style="border: 1px solid #f39c12; background-color: #f39c12; color: white;">
-    <h3 class="box-title" id="tituloAgregar">Editar Registro de Investigación: @{{ fillinvestigacion.titulo }}
+    <h3 class="box-title" id="tituloAgregar">Editar Registro de Revista o Publicación: @{{ fillrevista.titulo }}
 
 
     </h3>
   </div>
 
-  @include('investigacions.editar')  
+  @include('revistas.editar')  
 
 </div>
 
@@ -46,7 +46,7 @@
       
       <div class="box box-primary" style="border: 1px solid #3c8dbc;">
         <div class="box-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-        <h3 class="box-title">Listado de Investigaciones</h3>
+        <h3 class="box-title">Listado de Revistas y Publicaciones</h3>
       
           <div class="box-tools">
             <div class="input-group input-group-sm" style="width: 300px;">
@@ -67,76 +67,53 @@
               <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 10px;">#</th>
               <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Facultad</th>
               <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Escuela</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 250px;">Título de Investigación</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 30px;">Autores</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Tipo de Publicación</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Tìtulo</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 150px;">Número</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 250px;">Autores</th>
               <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 300px;">Descripción</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Publicaciones</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Archivo</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Resolución de Aprobación</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Clasificación</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 150px;">Línea de Investigación</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Tipo de Financiamiento</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Presupuesto Asignado</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 100px;">Presupuesto Ejecutado</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Fecha de Inicio</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Fecha de Término</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Horas Dedicadas</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Patentado</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Estado</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Avance</th>
-              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 300px;">Gestión de Investigacines</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Fecha de Publicación</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 80px;">Indexada</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Lugar de Indexación</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 200px;">Archivo</th>
+              <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 300px;">Gestión de Revistas y Publicaciones</th>
             </tr>
-            <tr v-for="investigacion, key in investigacions">
+            <tr v-for="revista, key in revistas">
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{key+pagination.from}}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ investigacion.facultad }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.escuela }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.titulo }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
-               <center> <a href="#" class="btn btn-primary btn-sm" v-on:click.prevent="gestautores(investigacion)" data-placement="top" data-toggle="tooltip" title="Gestionar Autories"><i class="fa fa-users"></i></a></center>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ revista.facultad }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ revista.escuela }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ revista.tipoPublicacion }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ revista.titulo }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ revista.numero }}</td>
 
-                <template v-for="autor, in autores" v-if="investigacion.id==autor.investigacion_id">
-                  -@{{ autor.tipoAutor }}: @{{ autor.doc }} @{{ autor.apellidopat }} @{{ autor.apellidomat }} @{{ autor.nombres }} <br>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
+               <center> <a href="#" class="btn btn-primary btn-sm" v-on:click.prevent="gestautores(revista)" data-placement="top" data-toggle="tooltip" title="Gestionar Autories"><i class="fa fa-users"></i></a></center>
+
+                <template v-for="autor, in autoresRevistas" v-if="revista.id==autor.revistaspublicacion_id">
+                  -<b>@{{ autor.cargo }}</b> @{{ autor.doc }} @{{ autor.apellidopat }} @{{ autor.apellidomat }} @{{ autor.nombres }} <br>
                 </template>
               </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.descripcion }} </td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ revista.descripcion }} </td>
+              
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ revista.fechaPublicado | fecha }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
-                  <center><a href="#" class="btn btn-info btn-sm" v-on:click.prevent="getPublicaciones(investigacion)" data-placement="top" data-toggle="tooltip" title="Gestionar Publicaciones"><i class="fa fa-book"></i></a></center>
-
-                <template v-for="publicacion, in publicaciones" v-if="investigacion.id==publicacion.investigacion_id">
-                  -@{{ publicacion.fecha | fecha }}: @{{ publicacion.nombre }}<br>
-                </template>
-
+              <template v-if="parseInt(revista.indexada)==1">Si</template>
+              <template v-if="parseInt(revista.indexada)==0">No</template>
               </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"><a v-bind:href="'investigacion/'+investigacion.rutadocumento" v-bind:download="investigacion.archivonombre">@{{ investigacion.archivonombre }}</a>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ revista.lugarIndexada }}
+                  <center><template v-if="parseInt(revista.indexada)==0">------------</template></center>
               </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.resolucionAprobacion }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.clasificacion }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.lineainvestigacion }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.financiamiento }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.presupuestoAsignado }} </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.presupuestoEjecutado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.fechaInicio }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.fechaTermino }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.horas }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.patentado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.estado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;width: 300px;">@{{ investigacion.avance }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"><a v-bind:href="'revistas/'+revista.rutadoc" v-bind:download="revista.archivonombre">@{{ revista.archivonombre }}</a>
+
+                <center><template v-if="String(revista.archivonombre).length==0">------------</template></center>
+              </td>
   
                 
-      
-          {{--     
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
-                <center><span v-if="investigacion.estado=='1'">---------</span></center>
-              <center>
-               <span class="label label-success" v-if="investigacion.estado=='1'">Activo</span>
-               <span class="label label-warning" v-if="investigacion.estado=='0'">Finalizado</span>
-              </center>
-              </td> --}}
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      
-               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(investigacion)" data-placement="top" data-toggle="tooltip" title="Editar Investigación"><i class="fa fa-edit"></i></a>
-               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(investigacion)" data-placement="top" data-toggle="tooltip" title="Borrar Investigación"><i class="fa fa-trash"></i></a>
+               <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(revista)" data-placement="top" data-toggle="tooltip" title="Editar Revista o Publicación"><i class="fa fa-edit"></i></a>
+               <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(revista)" data-placement="top" data-toggle="tooltip" title="Borrar Revista o Publicación"><i class="fa fa-trash"></i></a>
       </center>
              </td>
            </tr>
@@ -200,12 +177,12 @@
 
 
 
-        <div class="modal bs-example-modal-lg" id="modalAutores" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal bs-example-modal-lg" id="modalAutores" role="dialog" aria-labelledby="myLargeModalLabel">
           <div class="modal-dialog modal-lg" role="document" id="modaltamanio">
             <div class="modal-content" style="border: 1px solid #3c8dbc;">
               <div class="modal-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size: 35px;">&times;</span></button>
-                <h4 class="modal-title" id="desAutoresTitulo" style="font-weight: bold;text-decoration: underline;">GESTIONAR AUTORES DE INVESTIGACIÓN</h4>
+                <h4 class="modal-title" id="desAutoresTitulo" style="font-weight: bold;text-decoration: underline;">GESTIONAR AUTORES DE REVISTAS Y PUBLICACIONES</h4>
       
               </div> 
               <div class="modal-body">
@@ -215,7 +192,7 @@
       
                   <div class="box" id="o" style="border:0px; box-shadow:none;" >
                     <div class="box-header with-border">
-                      <h3 class="box-title" id="boxTituloInvest">Investigación:</h3>
+                      <h3 class="box-title" id="boxTituloInvest">Revista o Publicación:</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
@@ -238,28 +215,17 @@
 
                             <div class="col-md-12"  >
                                 <div class="form-group">
-                                  <label for="cbsinvestigador" class="col-sm-2 control-label">Investigador:*</label>
+                                  <label for="cbsautor" class="col-sm-2 control-label">Autor:*</label>
                                   <div class="col-sm-10">
-                                    <select name="cbsinvestigador" id="cbsinvestigador" class="form-control">
-                                        <option disabled value="0">Seleccione un Investigador</option>
-                                    <option v-for="investigador, key in investigadors" v-bind:value="investigador.id">@{{investigador.doc}} - @{{investigador.apellidopat}}  @{{investigador.apellidomat}},  @{{investigador.nombres}}</option>
+                                    <select name="cbsautor" id="cbsautor" class="form-control">
+                                        <option disabled value="0">Seleccione un Autor</option>
+                                    <option v-for="autor, key in autores" v-bind:value="autor.id">@{{autor.doc}} - @{{autor.apellidopat}}  @{{autor.apellidomat}},  @{{autor.nombres}}</option>
                                     </select>
                                   </div>
                                 </div>
                               </div>
 
 
-                              <div class="col-md-12" style="padding-top: 15px;">
-                                  <div class="form-group">
-                                    <label for="cbutipoAutor" class="col-sm-2 control-label">Tipo de Investigador:*</label>
-                                    <div class="col-sm-4">
-                                      <select class="form-control" id="cbutipoAutor" name="cbutipoAutor" v-model="tipoAutor">
-                                        <option value="AUTOR">AUTOR</option>
-                                        <option value="COAUTOR">COAUTOR</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                </div>
                     
                           <div class="col-md-12" style="padding-top: 5px;">
                     
@@ -309,22 +275,18 @@
                         <table class="table table-hover table-bordered table-dark table-condensed table-striped" >
                           <tbody><tr>
                             <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 5%;">#</th>
-                            <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 10%;">DNI</th>
-                            <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 35%;">Apellidos y Nombres</th>
-                            <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 20%;">Clasificación</th>
-                            <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 10%;">Tipo de Autor</th>
+                            <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 15%;">DNI</th>
+                            <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 40%;">Apellidos y Nombres</th>
                             <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 20%;">Cargo</th>
                             <th style="font-size: 13px;border:1px solid #ddd;padding: 5px; width: 20%;">Gestión</th>
                           </tr>
-                          <tr v-for="investigador, key in investigadorsRegis">
+                          <tr v-for="autor, key in autoresRegis">
                             <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{key+1}}</td>
-                            <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ investigador.doc }}</td>
-                            <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;"> @{{investigador.apellidopat}}  @{{investigador.apellidomat}},  @{{investigador.nombres}}</td>
-                            <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ investigador.clasificacion }}</td>
-                            <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ investigador.tipoAutor }}</td>
-                            <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ investigador.cargo }}</td>
+                            <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ autor.doc }}</td>
+                            <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;"> @{{autor.apellidopat}}  @{{autor.apellidomat}},  @{{autor.nombres}}</td>
+                            <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ autor.cargo }}</td>
                             <td  style="border:1px solid #ddd;font-size: 14px; padding: 5px;">
-                                <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrarAutor(investigador)" data-placement="top" data-toggle="tooltip" title="Borrar Autor"><i class="fa fa-trash"></i></a>
+                                <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrarAutor(autor)" data-placement="top" data-toggle="tooltip" title="Borrar Autor"><i class="fa fa-trash"></i></a>
                             </td>
                          </tr>
                     
@@ -366,8 +328,7 @@
 
 
 
-
-      
+      {{-- 
       <div class="modal bs-example-modal-lg" id="modalPublicaciones" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
           <div class="modal-dialog modal-lg" role="document" id="modaltamanio">
             <div class="modal-content" style="border: 1px solid #f39c12;">
@@ -516,3 +477,4 @@
           </div>
         </div>
       </div>
+      --}}

@@ -95,7 +95,7 @@
                <center> <a href="#" class="btn btn-primary btn-sm" v-on:click.prevent="gestautores(investigacion)" data-placement="top" data-toggle="tooltip" title="Gestionar Autories"><i class="fa fa-users"></i></a></center>
 
                 <template v-for="autor, in autores" v-if="investigacion.id==autor.investigacion_id">
-                  -@{{ autor.tipoAutor }}: @{{ autor.doc }} @{{ autor.apellidopat }} @{{ autor.apellidomat }} @{{ autor.nombres }} <br>
+                  -<b>@{{ autor.tipoAutor }}</b> @{{ autor.doc }} @{{ autor.apellidopat }} @{{ autor.apellidomat }} @{{ autor.nombres }} <br>
                 </template>
               </td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.descripcion }} </td>
@@ -200,7 +200,7 @@
 
 
 
-        <div class="modal bs-example-modal-lg" id="modalAutores" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal bs-example-modal-lg" id="modalAutores" role="dialog" aria-labelledby="myLargeModalLabel">
           <div class="modal-dialog modal-lg" role="document" id="modaltamanio">
             <div class="modal-content" style="border: 1px solid #3c8dbc;">
               <div class="modal-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">

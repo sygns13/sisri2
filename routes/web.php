@@ -121,6 +121,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('publicacion','PublicacionController');
     Route::resource('tesisresource','TesisController');
     Route::resource('revistasPubli','RevistapublicacionController');
+    Route::resource('autor','AutorController');
     
     
     
@@ -139,6 +140,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('investigadores/obtenerDatos','InvestigadorController@obtenerDatos');
     Route::get('investigaciones/obtenerAutors/{var}','InvestigacionController@obtenerAutors');
     Route::get('investigaciones/obtenerPublicacion/{var}','InvestigacionController@obtenerPublicacion');
+    Route::get('personas/obtenerDatos','PersonaController@obtenerDatos');
+    Route::get('personas/obtenerAutors/{var}','PersonaController@obtenerAutors');
     
 
 

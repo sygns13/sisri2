@@ -12,6 +12,7 @@ use DB;
 use App\Persona;
 use App\Tipouser;
 use App\User;
+use App\Autor;
 
 
 class PersonaController extends Controller
@@ -436,6 +437,47 @@ class PersonaController extends Controller
      }
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+    public function obtenerDatos()
+    {   
+
+
+     $autores = DB::table('personas')
+
+     ->where('personas.borrado','0')
+
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+     ->groupBy('personas.doc')
+     ->select('personas.id','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono')->get();
+
+
+     return [
+        'autores'=>$autores
+    ];
+    }
+
+    public function obtenerAutors($id)
+    {   
+
+
+     $autoresRegis = DB::table('personas')
+     ->join('autors', 'personas.id', '=', 'autors.persona_id')
+     ->join('revistaspublicacions', 'revistaspublicacions.id', '=', 'autors.revistaspublicacion_id')
+     ->where('autors.borrado','0')
+     ->where('revistaspublicacions.id',$id)
+
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','autors.id','autors.cargo','autors.persona_id','autors.revistaspublicacion_id')->get();
+
+
+     return [
+        'autoresRegis'=>$autoresRegis
+    ];
     }
 
 
