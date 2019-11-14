@@ -154,6 +154,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('usuario/miperfil','UserController@miperfil');
     Route::post('usuario/modificarclave','UserController@modificarclave');
 
+
+
+
+
+
+    Route::get('postulantespregrado/exportarExcel','PostulanteController@descargarExcel');
  
     
  /*    

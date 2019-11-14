@@ -69,13 +69,13 @@ function pasFechaVista($fecha)
 function genero($sexo)
 {
 	$genero="";
-	if($sexo==2)
+	if($sexo=="F")
 	{
 		$genero="FEMENINO";
 	}
-	elseif($sexo==1)
+	elseif($sexo=="M")
 	{
-		$result="MASCULINO";
+		$genero="MASCULINO";
 	}
 
 	return $genero;
@@ -84,41 +84,121 @@ function genero($sexo)
 function estadoCivil($ecivil,$sexo)
 {
 	$result="";
-	if($ecivil==0 && $sexo==1)
+	if(intval($ecivil)==0 && $sexo=="M")
 	{
 		$result="SIN DATOS";
-	}elseif($ecivil==1 && $sexo==1)
+	}elseif(intval($ecivil)==1 && $sexo=="M")
 	{
 		$result="SOLTERO";
-	}elseif($ecivil==2 && $sexo==1)
+	}elseif(intval($ecivil)==2 && $sexo=="M")
 	{
 		$result="CASADO";
-	}elseif($ecivil==3 && $sexo==1)
+	}elseif(intval($ecivil)==3 && $sexo=="M")
 	{
 		$result="VIUDO";
-	}elseif($ecivil==4 && $sexo==1)
+	}elseif(intval($ecivil)==4 && $sexo=="M")
 	{
 		$result="DIVORCIADO";
 	}
 
-	if($ecivil==0 && $sexo==2)
+	if(intval($ecivil)==0 && $sexo=="F")
 	{
 		$result="SIN DATOS";
-	}elseif($ecivil==1 && $sexo==2)
+	}elseif(intval($ecivil==1) && $sexo=="F")
 	{
 		$result="SOLTERA";
-	}elseif($ecivil==2 && $sexo==2)
+	}elseif(intval($ecivil)==2 && $sexo=="F")
 	{
 		$result="CASADA";
-	}elseif($ecivil==3 && $sexo==2)
+	}elseif(intval($ecivil)==3 && $sexo=="F")
 	{
 		$result="VIUDA";
-	}elseif($ecivil==4 && $sexo==2)
+	}elseif(intval($ecivil)==4 && $sexo=="F")
 	{
 		$result="DIVORCIADA";
 	}
 
 	return $result;
+}
+
+
+function esDiscpacitado($var)
+{
+    $result="";
+    if(intval($var)==0)
+    {
+        $result="No";
+    }else if(intval($var)==1)
+    {
+        $result="Si";
+    }
+    return $result;
+}
+
+function modalidadEstudios($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Presencial";
+    }else if(intval($var)==2)
+    {
+        $result="Semipresencial";
+    }else if(intval($var)==3)
+    {
+        $result="Virtual";
+    }
+    return $result;
+}
+
+
+function tipoDoc($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="DNI";
+    }else if(intval($var)==2)
+    {
+        $result="RUC";
+    }else if(intval($var)==3)
+    {
+        $result="Carnet de Extranjería";
+    }else if(intval($var)==4)
+    {
+        $result="Pasaporte";
+    }else if(intval($var)==5)
+    {
+        $result="Partida de Nacimiento";
+    }
+    return $result;
+}
+
+
+function estadoIngreso($var)
+{
+    $result="";
+    if(intval($var)==0)
+    {
+        $result="No Ingresó";
+    }else if(intval($var)==1)
+    {
+        $result="Ingresó";
+    }
+    return $result;
+}
+
+function gestionColegio($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Pùblico";
+    }else if(intval($var)==2)
+    {
+        $result="Privado";
+    }
+    return $result;
 }
 
 
