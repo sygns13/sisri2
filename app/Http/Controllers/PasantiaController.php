@@ -19,8 +19,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-use App\Exports\PlantillaPostulanteExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+set_time_limit(600);
 
 class PasantiaController extends Controller
 {
@@ -1218,4 +1218,699 @@ class PasantiaController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+
+
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+        Excel::create('Alumnos UNASAM - Pasantías', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('Base de Datos Pasantías', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:V3');
+                $sheet->cells('A3:V3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:V3', 'thin');
+                $sheet->cells('A3:V3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:V4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'45',
+                'P'=>'45',
+                'Q'=>'45',
+                'R'=>'20',
+                'S'=>'20',
+                'T'=>'22',
+                'U'=>'30',
+                'V'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS PASANTÍAS DE ALUMNOS UNASAM - AL MUNDO';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:V4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','MODALIDAD DE PASANTÍA','CONCEPTO DE LA PASANTÍA','PAÍS','INSTITUCIÓN','FECHA DE INICIO','FECHA FINAL','MONTO ASIGNADO S/.','RESOLUCIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('pasantias')
+     ->join('personas', 'personas.id', '=', 'pasantias.persona_id')
+     ->join('escuelas', 'escuelas.id', '=', 'pasantias.escuela_id')
+     ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+
+     ->where('pasantias.borrado','0')
+     ->where('pasantias.tipo',$tipo)
+
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        })
+
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','pasantias.id',
+     
+     'pasantias.persona_id','pasantias.escuela_id','pasantias.modalidads','pasantias.concepto','pasantias.paispasantia','pasantias.institucionpasantia','pasantias.fechainicio','pasantias.fechafinal','pasantias.monto','pasantias.resolucions','pasantias.activo','pasantias.tipo','pasantias.dependencia','pasantias.observaciones','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','pasantias.facultad_id')
+     ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':V'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','MODALIDAD DE PASANTÍA','CONCEPTO DE LA PASANTÍA','PAÍS','INSTITUCIÓN','FECHA DE INICIO','FECHA FINAL','MONTO ASIGNADO','RESOLUCIÓN','OBSERVACIONES'));
+                */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->modalidads,
+           $dato->concepto,
+           $dato->paispasantia,
+           $dato->institucionpasantia,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           strval(number_format($dato->monto,2)),
+           $dato->resolucions,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function descargarExcel2(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+        Excel::create('Docentes UNASAM - Pasantías', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('Base de Datos Pasantías', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:V3');
+                $sheet->cells('A3:V3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:V3', 'thin');
+                $sheet->cells('A3:V3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:V4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'45',
+                'P'=>'45',
+                'Q'=>'45',
+                'R'=>'20',
+                'S'=>'20',
+                'T'=>'22',
+                'U'=>'30',
+                'V'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS PASANTÍAS DE DOCENTES UNASAM - AL MUNDO';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:V4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','MODALIDAD DE PASANTÍA','CONCEPTO DE LA PASANTÍA','PAÍS','INSTITUCIÓN','FECHA DE INICIO','FECHA FINAL','MONTO ASIGNADO S/.','RESOLUCIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('pasantias')
+        ->join('personas', 'personas.id', '=', 'pasantias.persona_id')
+        ->join('facultads', 'facultads.id', '=', 'pasantias.facultad_id')
+        ->leftjoin('escuelas', 'escuelas.id', '=', 'pasantias.escuela_id')
+   
+        ->where('pasantias.borrado','0')
+        ->where('pasantias.tipo',$tipo)
+   
+        ->where(function($query) use ($buscar){
+           $query->where('personas.nombres','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+           $query->orWhere('personas.doc','like','%'.$buscar.'%');
+           })
+   
+        ->orderBy('personas.apellidopat')
+        ->orderBy('personas.apellidomat')
+        ->orderBy('personas.nombres')
+   
+        ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','pasantias.id',
+        
+        'pasantias.persona_id','pasantias.escuela_id','pasantias.modalidads','pasantias.concepto','pasantias.paispasantia','pasantias.institucionpasantia','pasantias.fechainicio','pasantias.fechafinal','pasantias.monto','pasantias.resolucions','pasantias.activo','pasantias.tipo','pasantias.dependencia','pasantias.observaciones','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','pasantias.facultad_id')
+        ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':V'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','MODALIDAD DE PASANTÍA','CONCEPTO DE LA PASANTÍA','PAÍS','INSTITUCIÓN','FECHA DE INICIO','FECHA FINAL','MONTO ASIGNADO','RESOLUCIÓN','OBSERVACIONES'));
+                */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->modalidads,
+           $dato->concepto,
+           $dato->paispasantia,
+           $dato->institucionpasantia,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           strval(number_format($dato->monto,2)),
+           $dato->resolucions,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function descargarExcel3(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+        Excel::create('Personal Administrativo UNASAM - Pasantías', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('Base de Datos Pasantías', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:U3');
+                $sheet->cells('A3:U3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:U3', 'thin');
+                $sheet->cells('A3:U3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:U4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'45',
+                'P'=>'45',
+                'Q'=>'20',
+                'R'=>'20',
+                'S'=>'22',
+                'T'=>'30',
+                'U'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS PASANTÍAS DE PERSONAL ADMINISTRATIVO UNASAM - AL MUNDO';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:U4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','DEPENDENCIA','MODALIDAD DE PASANTÍA','CONCEPTO DE LA PASANTÍA','PAÍS','INSTITUCIÓN','FECHA DE INICIO','FECHA FINAL','MONTO ASIGNADO S/.','RESOLUCIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('pasantias')
+        ->join('personas', 'personas.id', '=', 'pasantias.persona_id')
+
+   
+        ->where('pasantias.borrado','0')
+        ->where('pasantias.tipo',$tipo)
+   
+        ->where(function($query) use ($buscar){
+           $query->where('personas.nombres','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+           $query->orWhere('personas.doc','like','%'.$buscar.'%');
+           })
+   
+        ->orderBy('personas.apellidopat')
+        ->orderBy('personas.apellidomat')
+        ->orderBy('personas.nombres')
+   
+        ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','pasantias.id',
+        
+        'pasantias.persona_id','pasantias.escuela_id','pasantias.modalidads','pasantias.concepto','pasantias.paispasantia','pasantias.institucionpasantia','pasantias.fechainicio','pasantias.fechafinal','pasantias.monto','pasantias.resolucions','pasantias.activo','pasantias.tipo','pasantias.dependencia','pasantias.observaciones')
+        ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':U'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->dependencia,
+           $dato->modalidads,
+           $dato->concepto,
+           $dato->paispasantia,
+           $dato->institucionpasantia,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           strval(number_format($dato->monto,2)),
+           $dato->resolucions,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function descargarExcel4(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+        Excel::create('LLegada de Personas a la UNASAM - Pasantías', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('Base de Datos Pasantías', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:W3');
+                $sheet->cells('A3:W3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:W3', 'thin');
+                $sheet->cells('A3:W3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:W4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'45',
+                'P'=>'45',
+                'Q'=>'45',
+                'R'=>'45',
+                'S'=>'20',
+                'T'=>'20',
+                'U'=>'22',
+                'V'=>'30',
+                'W'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS PASANTÍAS DE PERSONAS DEL MUNDO QUE LLEGAN A LA UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:W4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','TIPO DE PERSONA','PAÍS DE PROCEDENCIA','INSTITUCIÓN DE PROCEDENCIA','FACULTAD DE LLEGADA','ESCUELA PROFESIONAL DE LLEGADA','MODALIDAD DE PASANTÍA','CONCEPTO DE LA PASANTÍA','FECHA DE INICIO','FECHA FINAL','MONTO ASIGNADO S/.','RESOLUCIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('pasantias')
+                ->join('personas', 'personas.id', '=', 'pasantias.persona_id')
+                ->join('facultads', 'facultads.id', '=', 'pasantias.facultad_id')
+                ->leftjoin('escuelas', 'escuelas.id', '=', 'pasantias.escuela_id')
+           
+                ->where('pasantias.borrado','0')
+                ->where('pasantias.tipo','>','3')
+           
+                ->where(function($query) use ($buscar){
+                   $query->where('personas.nombres','like','%'.$buscar.'%');
+                   $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+                   $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+                   $query->orWhere('personas.doc','like','%'.$buscar.'%');
+                   })
+           
+                ->orderBy('personas.apellidopat')
+                ->orderBy('personas.apellidomat')
+                ->orderBy('personas.nombres')
+           
+                ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','pasantias.id',
+                
+                'pasantias.persona_id','pasantias.escuela_id','pasantias.modalidads','pasantias.concepto','pasantias.paispasantia','pasantias.institucionpasantia','pasantias.fechainicio','pasantias.fechafinal','pasantias.monto','pasantias.resolucions','pasantias.activo','pasantias.tipo','pasantias.dependencia','pasantias.observaciones','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','pasantias.facultad_id')
+                ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':W'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+                 array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','TIPO DE PERSONA','PAÍS DE PROCEDENCIA','INSTITUCIÓN DE PROCEDENCIA','FACULTAD DE LLEGADA','ESCUELA PROFESIONAL DE LLEGADA','MODALIDAD DE PASANTÍA','CONCEPTO DE LA PASANTÍA','FECHA DE INICIO','FECHA FINAL','MONTO ASIGNADO S/.','RESOLUCIÓN','OBSERVACIONES'));
+                */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           tipoPersonaLlegaPasantia($dato->tipo),
+           $dato->paispasantia,
+           $dato->institucionpasantia,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->modalidads,
+           $dato->concepto,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           strval(number_format($dato->monto,2)),
+           $dato->resolucions,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
 }

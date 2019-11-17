@@ -17,6 +17,9 @@ use App\Departamento;
 use App\Provincia;
 use App\Distrito;
 
+use Excel;
+set_time_limit(600);
+
 class LocalController extends Controller
 {
     /**
@@ -394,4 +397,131 @@ class LocalController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+
+
+        Excel::create('Locales de la UNASAM', function($excel) use($buscar)  {
+            $excel->sheet('Base de Datos Locales', function($sheet) use($buscar){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:H3');
+                $sheet->cells('A3:H3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:H3', 'thin');
+                $sheet->cells('A3:H3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:H4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'50',
+                'D'=>'45',
+                'E'=>'45',
+                'F'=>'45',
+                'G'=>'45',
+                'H'=>'20',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS LOCALES DE LA UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:H4', 'thin');
+                array_push($data, array('N°','NOMBRE','DIRECCIÓN','PAÍS','DEPARRTAMENTO','PROVINCIA','DISTRITO','ESTADO'));
+
+                $cont=5;
+                $cont2=5;
+
+				$locals = DB::table('locals')
+     ->join('distritos', 'distritos.id', '=', 'locals.distrito_id')
+     ->join('provincias', 'provincias.id', '=', 'distritos.provincia_id')
+     ->join('departamentos', 'departamentos.id', '=', 'provincias.departamento_id')
+     ->join('paises', 'paises.id', '=', 'departamentos.paise_id')
+
+
+     ->where('locals.borrado','0')
+     ->where(function($query) use ($buscar){
+        $query->where('locals.nombre','like','%'.$buscar.'%');
+        $query->orWhere('distritos.nombre','like','%'.$buscar.'%');
+        $query->orWhere('provincias.nombre','like','%'.$buscar.'%');
+        $query->orWhere('departamentos.nombre','like','%'.$buscar.'%');
+        $query->orWhere('paises.nombre','like','%'.$buscar.'%');
+        })
+     ->orderBy('nombre')
+     ->select('locals.id','locals.nombre','locals.direccion','locals.activo','locals.borrado','locals.distrito_id','distritos.nombre as distrito','provincias.nombre as provincia','departamentos.nombre as departamento','paises.nombre as pais' , 'distritos.id as idDis','provincias.id as idProv','departamentos.id as idDep','paises.id as idPa')
+     ->get();
+
+        foreach ($locals as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':H'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+		   $dato->nombre,
+		   $dato->direccion,
+		   $dato->pais,
+		   $dato->departamento,
+		   $dato->provincia,
+		   $dato->distrito,
+		   activoInactivo($dato->activo)        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
 }

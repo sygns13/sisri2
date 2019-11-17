@@ -21,8 +21,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-use App\Exports\PlantillaPostulanteExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+set_time_limit(600);
 
 class EventoculturalController extends Controller
 {
@@ -391,4 +391,139 @@ class EventoculturalController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $semestre_id=$request->semestre_id;
+
+        $semestre=Semestre::find($semestre_id);
+
+
+        Excel::create('Eventos Culturales - '.$semestre->nombre, function($excel) use($buscar,$semestre)  {
+            $excel->sheet('BD Eventos', function($sheet) use($buscar,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:I3');
+                $sheet->cells('A3:I3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:I3', 'thin');
+                $sheet->cells('A3:I3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:I4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'65',
+                'D'=>'20',
+                'E'=>'21',
+                'F'=>'22',
+                'G'=>'45',
+                'H'=>'35',
+                'I'=>'65'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS EVENTOS CULTURALES - SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:I4', 'thin');
+                array_push($data, array('N°','EVENTO CULTURAL','DESCRIPCIÓN','SEMESTRE','FECHA DE INICIO','FECHA DE FINALIZACIÓN','LUGAR DE PRESENTACIÓN','ENTIDAD ASOCIADA','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $eventos = DB::table('eventoculturals')
+                ->join('semestres as semestre', 'semestre.id', '=', 'eventoculturals.semestre_id')
+           
+                ->where('eventoculturals.borrado','0')
+                ->where('semestre.id',$semestre->id)
+                ->where(function($query) use ($buscar){
+                   $query->where('eventoculturals.nombre','like','%'.$buscar.'%');
+                   $query->orwhere('eventoculturals.descripcion','like','%'.$buscar.'%');
+                   $query->orwhere('eventoculturals.entidad','like','%'.$buscar.'%');
+                   $query->orwhere('eventoculturals.lugarpresentacion','like','%'.$buscar.'%');
+           
+                   })
+           
+                ->orderBy('eventoculturals.fechainicio')
+                ->orderBy('eventoculturals.fechafinal')
+                ->orderBy('eventoculturals.id')
+           
+                ->select('eventoculturals.id',
+                'eventoculturals.nombre','eventoculturals.descripcion','eventoculturals.lugarpresentacion','eventoculturals.fechainicio','eventoculturals.fechafinal','eventoculturals.semestre_id','eventoculturals.entidad','eventoculturals.observaciones')
+                ->get();
+
+        foreach ($eventos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':I'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+ $sheet->setBorder('A4:T4', 'thin');
+                array_push($data, array('N°','EVENTO CULTURAL','DESCRIPCIÓN','FECHA DE INICIO','FECHA DE FINALIZACIÓN','LUGAR','ENTIDAD ASOCIADA','OBSERVACIONES'));
+ */
+           array_push($data, array($key+1,
+           $dato->nombre,
+           $dato->descripcion,
+           $semestre->nombre,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           $dato->lugarpresentacion,
+           $dato->entidad,
+           $dato->observaciones
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
 }

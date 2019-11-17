@@ -6,7 +6,7 @@
 
           </h3>
 
-          <a style="float: right;" type="button" class="btn btn-default" href="{{URL::to('tallere')}}"><i class="fa fa-reply-all" aria-hidden="true"></i> 
+          <a style="float: right;" type="button" class="btn btn-default" href="{{URL::to('talleres')}}"><i class="fa fa-reply-all" aria-hidden="true"></i> 
           Volver a Talleres</a>
 
         </div>
@@ -18,9 +18,9 @@
 
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
 
-            <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Plantilla</button>
+           {{--  <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Plantilla</button> --}}
 
-     
+           <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'/presentacionesR/exportarExcel?busca='+buscar+'&taller='+taller" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
       
       
                     

@@ -14,6 +14,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use Excel;
+set_time_limit(600);
 class ConvenioController extends Controller
 {
     /**
@@ -425,4 +427,397 @@ class ConvenioController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+
+
+
+
+
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+
+        Excel::create('Convenios Marco - UNASAM', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('BD Convenios', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:J3');
+                $sheet->cells('A3:J3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:J3', 'thin');
+                $sheet->cells('A3:J3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:J4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'65',
+                'D'=>'45',
+                'E'=>'30',
+                'F'=>'65',
+                'G'=>'85',
+                'H'=>'25',
+                'I'=>'25',
+                'J'=>'20',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS CONVENIOS MARCO - UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:J4', 'thin');
+                array_push($data, array('N°','NOMBRE', 'DESCRIPCIÓN','INSTITUCIÓN','RESOLUCIÓN','OBJETIVO','OBLIGACIONES','FECHA DE INICIO','FECHA DE FINALIZACIÓN','ESTADO'));
+
+                $cont=5;
+                $cont2=5;
+
+    $convenios = Convenio::where('borrado','0')
+     ->where('activo','1')
+     ->where('tipo',$tipo)
+     ->where(function($query) use ($buscar){
+        $query->where('nombre','like','%'.$buscar.'%');
+        $query->orwhere('descripcion','like','%'.$buscar.'%');
+        $query->orwhere('institucion','like','%'.$buscar.'%');
+        $query->orwhere('resolucion','like','%'.$buscar.'%');
+        $query->orwhere('objetivo','like','%'.$buscar.'%');
+        $query->orwhere('obligaciones','like','%'.$buscar.'%');
+        })
+     ->orderBy('id')->get();
+
+        foreach ($convenios as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':J'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           $dato->nombre,
+           $dato->descripcion,
+           $dato->institucion,
+           $dato->resolucion,
+           $dato->objetivo,
+           $dato->obligaciones,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           estadoConvenio($dato->estado)
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+
+
+
+
+
+    public function descargarExcel2(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+
+        Excel::create('Convenios Específicos - UNASAM', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('BD Convenios', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:J3');
+                $sheet->cells('A3:J3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:J3', 'thin');
+                $sheet->cells('A3:J3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:J4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'65',
+                'D'=>'45',
+                'E'=>'30',
+                'F'=>'65',
+                'G'=>'85',
+                'H'=>'25',
+                'I'=>'25',
+                'J'=>'20',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS CONVENIOS ESPECÍFICOS - UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:J4', 'thin');
+                array_push($data, array('N°','NOMBRE', 'DESCRIPCIÓN','INSTITUCIÓN','RESOLUCIÓN','OBJETIVO','OBLIGACIONES','FECHA DE INICIO','FECHA DE FINALIZACIÓN','ESTADO'));
+
+                $cont=5;
+                $cont2=5;
+
+    $convenios = Convenio::where('borrado','0')
+     ->where('activo','1')
+     ->where('tipo',$tipo)
+     ->where(function($query) use ($buscar){
+        $query->where('nombre','like','%'.$buscar.'%');
+        $query->orwhere('descripcion','like','%'.$buscar.'%');
+        $query->orwhere('institucion','like','%'.$buscar.'%');
+        $query->orwhere('resolucion','like','%'.$buscar.'%');
+        $query->orwhere('objetivo','like','%'.$buscar.'%');
+        $query->orwhere('obligaciones','like','%'.$buscar.'%');
+        })
+     ->orderBy('id')->get();
+
+        foreach ($convenios as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':J'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           $dato->nombre,
+           $dato->descripcion,
+           $dato->institucion,
+           $dato->resolucion,
+           $dato->objetivo,
+           $dato->obligaciones,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           estadoConvenio($dato->estado)
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+
+
+
+
+    public function descargarExcel3(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+
+        Excel::create('Convenios de Colaboración - UNASAM', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('BD Convenios', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:J3');
+                $sheet->cells('A3:J3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:J3', 'thin');
+                $sheet->cells('A3:J3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:J4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'65',
+                'D'=>'45',
+                'E'=>'30',
+                'F'=>'65',
+                'G'=>'85',
+                'H'=>'25',
+                'I'=>'25',
+                'J'=>'20',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS CONVENIOS DE COLABORACIÓN - UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:J4', 'thin');
+                array_push($data, array('N°','NOMBRE', 'DESCRIPCIÓN','INSTITUCIÓN','RESOLUCIÓN','OBJETIVO','OBLIGACIONES','FECHA DE INICIO','FECHA DE FINALIZACIÓN','ESTADO'));
+
+                $cont=5;
+                $cont2=5;
+
+    $convenios = Convenio::where('borrado','0')
+     ->where('activo','1')
+     ->where('tipo',$tipo)
+     ->where(function($query) use ($buscar){
+        $query->where('nombre','like','%'.$buscar.'%');
+        $query->orwhere('descripcion','like','%'.$buscar.'%');
+        $query->orwhere('institucion','like','%'.$buscar.'%');
+        $query->orwhere('resolucion','like','%'.$buscar.'%');
+        $query->orwhere('objetivo','like','%'.$buscar.'%');
+        $query->orwhere('obligaciones','like','%'.$buscar.'%');
+        })
+     ->orderBy('id')->get();
+
+        foreach ($convenios as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':J'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           $dato->nombre,
+           $dato->descripcion,
+           $dato->institucion,
+           $dato->resolucion,
+           $dato->objetivo,
+           $dato->obligaciones,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           estadoConvenio($dato->estado)
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+
 }

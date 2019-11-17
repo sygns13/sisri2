@@ -15,6 +15,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use Excel;
+set_time_limit(600);
 
 class ModalidadadmisionController extends Controller
 {
@@ -282,4 +284,113 @@ class ModalidadadmisionController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+
+
+        Excel::create('Modalidades de Admisión de la UNASAM', function($excel) use($buscar)  {
+            $excel->sheet('Base de Datos Admisión', function($sheet) use($buscar){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:D3');
+                $sheet->cells('A3:D3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:D3', 'thin');
+                $sheet->cells('A3:D3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:D4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'50',
+                'C'=>'65',
+                'D'=>'20'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS MODALIDADES DE ADMISIÓN DE LA UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:D4', 'thin');
+                array_push($data, array('N°','MODALIDAD DE ADMISIÓN','DESCRIPCIÓN','ESTADO'));
+
+                $cont=5;
+                $cont2=5;
+
+				$modadmisions=Modalidadadmision::where('borrado','0')
+     ->where(function($query) use ($buscar){
+        $query->where('nombre','like','%'.$buscar.'%');
+        $query->orWhere('descripcion','like','%'.$buscar.'%');
+        })    
+     ->get();
+
+        foreach ($modadmisions as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':D'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+		   $dato->nombre,
+		   $dato->descripcion,
+		   activoInactivo($dato->activo)        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
 }

@@ -176,6 +176,33 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('revistaspublicaciones/exportarExcel','RevistapublicacionController@descargarExcel');
     Route::get('administrativos/exportarExcel','AdministrativoController@descargarExcel');
     Route::get('locacionservicios/exportarExcel','AdminlocacionController@descargarExcel');
+    Route::get('beneficiarioscomedor/exportarExcel','BeneficiarioscomedorController@descargarExcel');
+    Route::get('beneficiariosgym/exportarExcel','BeneficiariosgymController@descargarExcel');
+    Route::get('beneficiariostalleresdeportivos/exportarExcel','BeneficiariostalldeportivoController@descargarExcel');
+    Route::get('programassalud/exportarExcel','ProgramassaludController@descargarExcel');
+    Route::get('medicosR/exportarExcel','MedicoController@descargarExcel');
+    Route::get('beneficiariosR/exportarExcel','BeneficiarioController@descargarExcel');
+    Route::get('atencionsaludR/exportarExcel','AtencionController@descargarExcel');
+    Route::get('campadbu/exportarExcel','ProgramassaludController@descargarExcel2');
+    Route::get('proyectos/exportarExcel','ProyectoController@descargarExcel');
+    Route::get('eventosculturales/exportarExcel','EventoculturalController@descargarExcel');
+    Route::get('talleresparticipantesR/exportarExcel','TalleresparticipanteController@descargarExcel');
+    Route::get('talleres/exportarExcel','TallerController@descargarExcel');
+    Route::get('participantesR/exportarExcel','ParticipanteController@descargarExcel');
+    Route::get('presentacionesR/exportarExcel','PresentacionController@descargarExcel');
+    Route::get('conveniosmarco/exportarExcel','ConvenioController@descargarExcel');
+    Route::get('conveniosespecificos/exportarExcel2','ConvenioController@descargarExcel2');
+    Route::get('convenioscolaboracion/exportarExcel3','ConvenioController@descargarExcel3');
+    Route::get('pasantiasalumnos/exportarExcel','PasantiaController@descargarExcel');
+    Route::get('pasantiadocentes/exportarExcel2','PasantiaController@descargarExcel2');
+    Route::get('pasantiaadministrativos/exportarExcel3','PasantiaController@descargarExcel3');
+    Route::get('pasantiallegaron/exportarExcel4','PasantiaController@descargarExcel4');
+
+    Route::get('semestres/exportarExcel','SemestreController@descargarExcel');
+    Route::get('locales/exportarExcel','LocalController@descargarExcel');
+    Route::get('facultades/exportarExcel','FacultadController@descargarExcel');
+    Route::get('escuelas/exportarExcel','EscuelaController@descargarExcel');
+    Route::get('modalidadadmision/exportarExcel','ModalidadadmisionController@descargarExcel');
     
     
     

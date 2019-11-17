@@ -15,6 +15,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use Excel;
+set_time_limit(600);
 class AtencionController extends Controller
 {
     /**
@@ -293,5 +295,126 @@ class AtencionController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $programasalud=$request->programasalud;
+
+        $programas=Programassalud::find($programasalud);
+
+        Excel::create('Atenciones del Programa de Salud - '.$programas->nombre, function($excel) use($buscar,$programas)  {
+            $excel->sheet('BD Atenciones', function($sheet) use($buscar,$programas){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:F3');
+                $sheet->cells('A3:F3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:F3', 'thin');
+                $sheet->cells('A3:F3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:F4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE ATENCIONES DEL PROGRAMA DE SALUD '.$programas->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:F4', 'thin');
+                array_push($data, array('N°','AÑO', 'MES', 'CANTIDAD DE ATENCIONES', 'TIPO DE BENEFICIARIOS','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $atencions = DB::table('atencions')
+     ->join('programassaluds', 'programassaluds.id', '=', 'atencions.programassalud_id')
+
+     ->where('programassaluds.id',$programas->id)
+     ->where('atencions.borrado','0')
+
+     ->orderBy('atencions.anio','desc')
+     ->orderBy('atencions.mes')
+
+     ->select('atencions.id','atencions.anio','atencions.mes','atencions.cantidad','atencions.tipobeneficiario','atencions.observaciones','atencions.programassalud_id')
+     ->get();
+
+        foreach ($atencions as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':F'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+$sheet->setBorder('A4:S4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','PROGRAMA DE SALUD','TIPO DE BENEFICIARIO','CÓDIGO','FECHA DE ATENCIÓN','OBSERVACIONES'));
+ */
+           array_push($data, array($key+1,
+           $dato->anio,
+           strtoupper(nombremes($dato->mes)),
+           $dato->cantidad,
+           strtoupper(tipoBeneficiariosPlural($dato->tipobeneficiario)),
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+
+        
+
+        return response()->json(["buscar"=>$buscar,'programasalud'=>$programasalud]);
     }
 }

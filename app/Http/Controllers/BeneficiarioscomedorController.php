@@ -17,9 +17,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-use App\Exports\PlantillaPostulanteExport;
-use Maatwebsite\Excel\Facades\Excel;
-
+use Excel;
+set_time_limit(600);
 class BeneficiarioscomedorController extends Controller
 {
     /**
@@ -753,5 +752,163 @@ class BeneficiarioscomedorController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+        $semestre_id=$request->semestre_id;
+
+        $semestre=Semestre::find($semestre_id);
+
+
+        Excel::create('Alumnos Beneficiarios del Comedor Universitario - '.$semestre->nombre, function($excel) use($buscar,$tipo,$semestre)  {
+            $excel->sheet('BD Comensales', function($sheet) use($buscar,$tipo,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:S3');
+                $sheet->cells('A3:S3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:S3', 'thin');
+                $sheet->cells('A3:S3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:S4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'15',
+                'I'=>'20',
+                'J'=>'15',
+                'K'=>'22',
+                'L'=>'35',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'30',
+                'P'=>'30',
+                'Q'=>'30',
+                'R'=>'30',
+                'S'=>'65'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS ALUMNOS BENEFICIARIOS DEL COMEDOR UNIVERSITARIO - SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:S4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','PAÍS DE PROCEDENCIA','DEPARTAMENTO DE PROCEDENCIA','PROVINCIA DE PROCEDENCIA','DISTRITO DE PROCEDENCIA','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('beneficiarioscomedors')
+     ->join('personas', 'personas.id', '=', 'beneficiarioscomedors.persona_id')
+     ->join('semestres', 'semestres.id', '=', 'beneficiarioscomedors.semestre_id')
+     ->join('escuelas', 'escuelas.id', '=', 'beneficiarioscomedors.escuela_id')
+     ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+
+     ->where('beneficiarioscomedors.borrado','0')
+     ->where('semestres.id',$semestre->id)
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        $query->orWhere('beneficiarioscomedors.codigo','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono',
+     
+     'beneficiarioscomedors.id', 'beneficiarioscomedors.codigo','beneficiarioscomedors.escuela_id','beneficiarioscomedors.observaciones','beneficiarioscomedors.semestre_id','semestres.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','beneficiarioscomedors.persona_id')
+     ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':S'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+ array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','PAÍS DE PROCEDENCIA','DEPARTAMENTO DE PROCEDENCIA','PROVINCIA DE PROCEDENCIA','DISTRITO DE PROCEDENCIA','OBSERVACIONES'));
+ */
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           $dato->codigo,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->pais,
+           $dato->departamento,
+           $dato->provincia,
+           $dato->distrito,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

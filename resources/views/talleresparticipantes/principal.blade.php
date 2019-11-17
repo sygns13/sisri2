@@ -2,7 +2,7 @@
         <div class="box-header with-border" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
           <h3 class="box-title">
 
-              Gestión de Talleres Participantes del Evento Cultural: "{{$evento->nombre}}"
+              Gestión de Talleres y Participantes del Evento Cultural: "{{$evento->nombre}}"
 
           </h3>
 
@@ -18,7 +18,9 @@
 
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
 
-            <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Plantilla</button>
+            {{-- <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Plantilla</button> --}}
+
+            <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'/talleresparticipantesR/exportarExcel?busca='+buscar+'&evento='+evento" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
 
      
       
@@ -58,7 +60,7 @@
       
       <div class="box box-primary" style="border: 1px solid #3c8dbc;">
         <div class="box-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
-        <h3 class="box-title">Listado de Talleres Participantes del Evento Cultural "{{$evento->nombre}}"
+        <h3 class="box-title">Listado de Talleres y Participantes del Evento Cultural "{{$evento->nombre}}"
 
         </h3>
       

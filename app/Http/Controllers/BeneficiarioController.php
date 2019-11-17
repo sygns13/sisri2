@@ -15,6 +15,9 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use Excel;
+set_time_limit(600);
+
 class BeneficiarioController extends Controller
 {
     /**
@@ -690,5 +693,288 @@ class BeneficiarioController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $programasalud=$request->programasalud;
+
+        $programas=Programassalud::find($programasalud);
+
+        if(intval($programas->tipo)==1){
+
+        Excel::create('Beneficiarios del Programa de Salud - '.$programas->nombre, function($excel) use($buscar,$programas)  {
+            $excel->sheet('BD Beneficiarios', function($sheet) use($buscar,$programas){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:O3');
+                $sheet->cells('A3:O3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:O3', 'thin');
+                $sheet->cells('A3:O3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:O4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'20',
+                'O'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE BENEFICIARIOS DEL PROGRAMA DE SALUD '.$programas->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:O4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','PROGRAMA DE SALUD','TIPO DE BENEFICIARIO','FECHA DE ATENCIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $beneficiarios = DB::table('beneficiarios')
+                ->join('personas', 'personas.id', '=', 'beneficiarios.persona_id')
+                ->join('programassaluds', 'programassaluds.id', '=', 'beneficiarios.programassalud_id')
+           
+                ->where('programassaluds.id',$programas->id)
+                ->where('beneficiarios.borrado','0')
+                ->where(function($query) use ($buscar){
+                   $query->where('personas.nombres','like','%'.$buscar.'%');
+                   $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+                   $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+                   $query->orWhere('personas.doc','like','%'.$buscar.'%');
+                   })
+                ->orderBy('personas.apellidopat')
+                ->orderBy('personas.apellidomat')
+                ->orderBy('personas.nombres')
+           
+                ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','beneficiarios.id',
+                'beneficiarios.tipo','beneficiarios.persona_id','beneficiarios.codigo','beneficiarios.programassalud_id','beneficiarios.observaciones','beneficiarios.fechaatencion')
+                ->get();
+
+        foreach ($beneficiarios as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':O'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+$sheet->setBorder('A4:S4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','PROGRAMA DE SALUD','TIPO DE BENEFICIARIO','CÓDIGO','FECHA DE ATENCIÓN','OBSERVACIONES'));
+ */
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $programas->nombre,
+           tipoBeneficiario($dato->tipo),
+           pasFechaVista($dato->fechaatencion),
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+        }elseif(intval($programas->tipo)==2){
+
+            Excel::create('Beneficiarios de la Campaña de Salud - '.$programas->nombre, function($excel) use($buscar,$programas)  {
+                $excel->sheet('BD Beneficiarios', function($sheet) use($buscar,$programas){
+    
+                    $sheet->setAutoSize(true);
+                    /* $sheet->mergeCells('B1:D1');
+                    $sheet->mergeCells('B2:H2'); */
+    
+                    $sheet->mergeCells('A3:O3');
+                    $sheet->cells('A3:O3',function($cells)
+                    {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+                    $sheet->setBorder('A3:O3', 'thin');
+                    $sheet->cells('A3:O3', function($cells)
+                    {
+                        $cells->setBackground('#0C73E8');
+                        $cells->setFontColor('#FFFFFF');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                        $cells->setFontSize(15);
+    
+                        #Borders
+                    });
+                    
+                    $sheet->cells('A4:O4', function($cells)
+                    {
+                        $cells->setBackground('#B4B9E1');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+    
+                    });
+    
+                  
+    
+                    
+    
+                    $data=[];
+    
+                    $sheet->setWidth(array
+                    (
+                    'A'=>'7',
+                    'B'=>'20',
+                    'C'=>'25',
+                    'D'=>'25',
+                    'E'=>'20',
+                    'F'=>'30',
+                    'G'=>'20',
+                    'H'=>'20',
+                    'I'=>'20',
+                    'J'=>'20',
+                    'K'=>'35',
+                    'L'=>'45',
+                    'M'=>'45',
+                    'N'=>'20',
+                    'O'=>'65',
+                    )
+                    );
+    
+                    $sheet->setHeight(array
+                    (
+                    '3'=>'24'
+                    )
+                    );
+    
+                    $titulo='BASE DE DATOS DE BENEFICIARIOS DE LA CAMPAÑA DE SALUD '.$programas->nombre;
+    
+                    array_push($data, array(''));
+                    array_push($data, array(''));
+                    array_push($data, array($titulo));
+    
+                    $sheet->setBorder('A4:O4', 'thin');
+                    array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','CAMPAÑA DE SALUD','TIPO DE BENEFICIARIO','FECHA DE ATENCIÓN','OBSERVACIONES'));
+    
+                    $cont=5;
+                    $cont2=5;
+    
+                    $beneficiarios = DB::table('beneficiarios')
+                    ->join('personas', 'personas.id', '=', 'beneficiarios.persona_id')
+                    ->join('programassaluds', 'programassaluds.id', '=', 'beneficiarios.programassalud_id')
+               
+                    ->where('programassaluds.id',$programas->id)
+                    ->where('beneficiarios.borrado','0')
+                    ->where(function($query) use ($buscar){
+                       $query->where('personas.nombres','like','%'.$buscar.'%');
+                       $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+                       $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+                       $query->orWhere('personas.doc','like','%'.$buscar.'%');
+                       })
+                    ->orderBy('personas.apellidopat')
+                    ->orderBy('personas.apellidomat')
+                    ->orderBy('personas.nombres')
+               
+                    ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','beneficiarios.id',
+                    'beneficiarios.tipo','beneficiarios.persona_id','beneficiarios.codigo','beneficiarios.programassalud_id','beneficiarios.observaciones','beneficiarios.fechaatencion')
+                    ->get();
+    
+            foreach ($beneficiarios as $key => $dato) {
+                $rango='A'.strval((intval($cont)+intval($key))).':O'.strval((intval($cont)+intval($key)));
+                $sheet->setBorder($rango, 'thin');
+    
+    /*
+    $sheet->setBorder('A4:S4', 'thin');
+                    array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','PROGRAMA DE SALUD','TIPO DE BENEFICIARIO','CÓDIGO','FECHA DE ATENCIÓN','OBSERVACIONES'));
+     */
+               array_push($data, array($key+1,
+               tipoDoc($dato->tipodoc),
+               $dato->doc,
+               $dato->apellidopat,
+               $dato->apellidomat,
+               $dato->nombres,
+               genero(strval($dato->genero)),
+               pasFechaVista($dato->fechanac),
+               estadoCivil($dato->estadocivil,$dato->genero),
+               esDiscpacitado($dato->esdiscapacitado),
+               $dato->discapacidad,
+               $programas->nombre,
+               tipoBeneficiario($dato->tipo),
+               pasFechaVista($dato->fechaatencion),
+               $dato->observaciones
+            
+            ));
+                
+                $cont2++;
+            }
+    
+    
+    
+                    $sheet->fromArray($data, null, 'A1', false, false);
+                
+                });
+                })->download('xlsx');
+        }
+
+        
+
+        return response()->json(["buscar"=>$buscar,'programasalud'=>$programasalud]);
     }
 }

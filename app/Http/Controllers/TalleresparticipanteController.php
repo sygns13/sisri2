@@ -16,6 +16,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use Excel;
+set_time_limit(600);
 class TalleresparticipanteController extends Controller
 {
     /**
@@ -259,4 +261,121 @@ class TalleresparticipanteController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $evento=$request->evento;
+
+        $enventos=Eventocultural::find($evento);
+
+        Excel::create('Talleres y Participantes del Evento Cultural - '.$enventos->nombre, function($excel) use($buscar,$enventos)  {
+            $excel->sheet('BD Talleres', function($sheet) use($buscar,$enventos){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:E3');
+                $sheet->cells('A3:E3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:E3', 'thin');
+                $sheet->cells('A3:E3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:E4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE TALLERES Y PARTICIPANTES DEL EVENTO CULTURAL '.$enventos->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:E4', 'thin');
+                array_push($data, array('N°','TALLER', 'FECHA', 'CANTIDAD DE PARTICIPANTES','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $talleresparticipantes = DB::table('talleresparticipantes')
+     ->join('eventoculturals', 'eventoculturals.id', '=', 'talleresparticipantes.eventocultural_id')
+
+     ->where('eventoculturals.id',$enventos->id)
+     ->where('talleresparticipantes.borrado','0')
+
+     ->orderBy('talleresparticipantes.fecha')
+     ->orderBy('talleresparticipantes.nombre')
+     ->orderBy('talleresparticipantes.id')
+
+     ->select('talleresparticipantes.id','talleresparticipantes.nombre','talleresparticipantes.fecha','talleresparticipantes.participantes','talleresparticipantes.eventocultural_id','talleresparticipantes.observaciones')
+     ->get();
+
+
+        foreach ($talleresparticipantes as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':E'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+           array_push($data, array($key+1,
+           $dato->nombre,
+           pasFechaVista($dato->fecha),
+           $dato->participantes,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+
+      
+    }
+
+
 }

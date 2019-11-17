@@ -8,6 +8,11 @@
       <div class="box-body" style="border: 1px solid #3c8dbc;">
           <div class="form-group form-primary">
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Convenio de Colaboración</button>
+
+
+            <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'convenioscolaboracion/exportarExcel3?busca='+buscar+'&tipo='+tipogen" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
+
+
           </div>
       
       

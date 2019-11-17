@@ -20,8 +20,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-use App\Exports\PlantillaPostulanteExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+set_time_limit(600);
 
 class ProyectoController extends Controller
 {
@@ -861,5 +861,161 @@ class ProyectoController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $semestre_id=$request->semestre_id;
+
+        $semestre=Semestre::find($semestre_id);
+
+
+        Excel::create('Campañas Itinerantes y Proyectos - '.$semestre->nombre, function($excel) use($buscar,$semestre)  {
+            $excel->sheet('BD Proyectos', function($sheet) use($buscar,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:T3');
+                $sheet->cells('A3:T3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:T3', 'thin');
+                $sheet->cells('A3:T3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:T4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'65',
+                'D'=>'20',
+                'E'=>'21',
+                'F'=>'35',
+                'G'=>'30',
+                'H'=>'25',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'22',
+                'L'=>'65',
+                'M'=>'45',
+                'N'=>'20',
+                'O'=>'25',
+                'P'=>'15',
+                'Q'=>'20',
+                'R'=>'15',
+                'S'=>'19',
+                'T'=>'40',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS CAMPAÑAS ITINERANTES Y PROYECTOS - SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:T4', 'thin');
+                array_push($data, array('N°','PROYECTO','DESCRIPCIÓN','FECHA DE INICIO','FECHA DE FINALIZACIÓN','LUGAR DE EJECUCIÓN','FUENTE DE FINANCIAMIENTO','CANTIDAD DE BENEFICIADOS','SEMESTRE','TIPO','PRESUPUESTO','OBSERVACIONES', 'JEFE DE PROYECTO','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE'));
+
+                $cont=5;
+                $cont2=5;
+
+                $proyectos = DB::table('proyectos')
+     ->join('personas', 'personas.id', '=', 'proyectos.persona_id')
+     ->join('semestres as semestre', 'semestre.id', '=', 'proyectos.semestre_id')
+
+     ->where('proyectos.borrado','0')
+     ->where('semestre.id',$semestre->id)
+     ->where(function($query) use ($buscar){
+        $query->where('proyectos.nombre','like','%'.$buscar.'%');
+        $query->orwhere('proyectos.descripcion','like','%'.$buscar.'%');
+        $query->orwhere('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        })
+
+     ->orderBy('proyectos.fechainicio')
+     ->orderBy('proyectos.fechafinal')
+     ->orderBy('proyectos.id')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','proyectos.id',
+     'proyectos.nombre','proyectos.descripcion','proyectos.fechainicio','proyectos.fechafinal','proyectos.lugar','proyectos.jefeproyecto','proyectos.fuentefinanciamiento','proyectos.cantidadbeneficiarios','proyectos.semestre_id','proyectos.tipo','proyectos.persona_id','proyectos.presupuesto','proyectos.observaciones','semestre.nombre as semestre')
+     ->get();
+
+        foreach ($proyectos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':T'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+array_push($data, array('N°','PROYECTO','DESCRIPCIÓN','FECHA DE INICIO','FECHA DE FINALIZACIÓN','LUGAR DE EJECUCIÓN','FUENTE DE FINANCIAMIENTO','CANTIDAD DE BENEFICIADOS','SEMESTRE','TIPO','PRESUPUESTO','OBSERVACIONES', 'JEFE DE PROYECTO','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE'));
+ */
+           array_push($data, array($key+1,
+           $dato->nombre,
+           $dato->descripcion,
+           pasFechaVista($dato->fechainicio),
+           pasFechaVista($dato->fechafinal),
+           $dato->lugar,
+           $dato->fuentefinanciamiento,
+           $dato->cantidadbeneficiarios,
+           $semestre->nombre,
+           tipoProyecto($dato->tipo),
+           strval(number_format($dato->presupuesto,2)),
+           $dato->observaciones,
+           $dato->nombres.' '.$dato->apellidopat.' '.$dato->apellidomat,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

@@ -16,6 +16,9 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use Excel;
+set_time_limit(600);
+
 class ProgramassaludController extends Controller
 {
     /**
@@ -418,4 +421,229 @@ class ProgramassaludController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+
+        Excel::create('Programas de Salud', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('BD Programas Salud', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:C3');
+                $sheet->cells('A3:C3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:C3', 'thin');
+                $sheet->cells('A3:C3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:C4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'85'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS PROGRAMAS DE SALUD';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:C4', 'thin');
+                array_push($data, array('N°','NOMBRE', 'DESCRIPCIÓN'));
+
+                $cont=5;
+                $cont2=5;
+
+    $programassaluds = Programassalud::where('borrado','0')
+     ->where('tipo',$tipo)
+     ->where(function($query) use ($buscar){
+        $query->where('nombre','like','%'.$buscar.'%');
+        $query->orwhere('descripcion','like','%'.$buscar.'%');
+        })
+     ->orderBy('id')->get();
+
+        foreach ($programassaluds as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':C'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           $dato->nombre,
+           $dato->descripcion
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+
+
+
+
+    public function descargarExcel2(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+
+        Excel::create('Campañas de Salud', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('BD Campañas Salud', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:G3');
+                $sheet->cells('A3:G3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:G3', 'thin');
+                $sheet->cells('A3:G3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:G4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'45',
+                'D'=>'20',
+                'E'=>'20',
+                'F'=>'25',
+                'G'=>'65'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS CAMPAÑAS DE SALUD';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:G4', 'thin');
+                array_push($data, array('N°','NOMBRE','LUGAR','FECHA DE INICIO','FECHA FINAL','CANTIDAD DE ATENCIONES','DESCRIPCIÓN'));
+
+                $cont=5;
+                $cont2=5;
+
+    $programassaluds = Programassalud::where('borrado','0')
+     ->where('tipo',$tipo)
+     ->where(function($query) use ($buscar){
+        $query->where('nombre','like','%'.$buscar.'%');
+        $query->orwhere('descripcion','like','%'.$buscar.'%');
+        })
+     ->orderBy('id')->get();
+
+        foreach ($programassaluds as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':G'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           $dato->nombre,
+           $dato->lugar,
+           pasFechaVista($dato->fechaini),
+           pasFechaVista($dato->fechafin),
+           $dato->cantidadAtenciones,
+           $dato->descripcion
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
 }

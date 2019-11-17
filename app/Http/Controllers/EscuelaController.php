@@ -13,6 +13,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use Excel;
+set_time_limit(600);
 class EscuelaController extends Controller
 {
     /**
@@ -301,4 +303,116 @@ class EscuelaController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+
+
+        Excel::create('Escuelas Profesionales de la UNASAM', function($excel) use($buscar)  {
+            $excel->sheet('Base de Datos Escuelas', function($sheet) use($buscar){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:D3');
+                $sheet->cells('A3:D3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:D3', 'thin');
+                $sheet->cells('A3:D3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:D4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'50',
+                'C'=>'50',
+                'D'=>'20'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS ESCUELAS PROFESIONALES DE LA UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:D4', 'thin');
+                array_push($data, array('N°','ESCUELA PROFESIONAL','FACULTAD','ESTADO'));
+
+                $cont=5;
+                $cont2=5;
+
+				$escuelas = DB::table('escuelas')
+     ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+     ->where('escuelas.borrado','0')
+     ->where(function($query) use ($buscar){
+        $query->where('escuelas.nombre','like','%'.$buscar.'%');
+        $query->orWhere('facultads.nombre','like','%'.$buscar.'%');
+        })
+     ->orderBy('facultads.nombre')
+     ->orderBy('escuelas.nombre')
+     ->select('escuelas.id','escuelas.nombre','escuelas.activo','escuelas.borrado','escuelas.facultad_id','facultads.nombre as facultad')
+     ->get();
+
+        foreach ($escuelas as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':D'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+		   $dato->nombre,
+		   $dato->facultad,
+		   activoInactivo($dato->activo)        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
 }

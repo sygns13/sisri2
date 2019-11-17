@@ -15,6 +15,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use Excel;
+set_time_limit(600);
 class MedicoController extends Controller
 {
     /**
@@ -788,5 +790,305 @@ class MedicoController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+
+
+
+
+
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $programasalud=$request->programasalud;
+        $programas=Programassalud::find($programasalud);
+
+        $tituloMinus="";
+        $tituloMayus="";
+
+        if(intval($programas->tipo)==1){
+       
+
+        Excel::create('Medicos del Programa de Salud - '.$programas->nombre, function($excel) use($buscar,$programas)  {
+            $excel->sheet('BD Médicos', function($sheet) use($buscar,$programas){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:S3');
+                $sheet->cells('A3:S3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:S3', 'thin');
+                $sheet->cells('A3:S3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:S4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'20',
+                'O'=>'27',
+                'P'=>'23',
+                'Q'=>'30',
+                'R'=>'30',
+                'S'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE MÉDICOS DEL PROGRAMA DE SALUD '.$programas->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:S4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','PROGRAMA DE SALUD','ESPECIALIDAD','FECHA DE INGRESO','FECHA DE INICIO DE CONTRATO','FECHA FIN DEL CONTRATO','ACARGO DEL PROGRAMA DE SALUD','TIPO FUNCIONARIO','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $medicos = DB::table('medicos')
+     ->join('personas', 'personas.id', '=', 'medicos.persona_id')
+     ->join('programassaluds', 'programassaluds.id', '=', 'medicos.programassalud_id')
+
+     ->where('programassaluds.id',$programas->id)
+     ->where('medicos.borrado','0')
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','medicos.id',
+     'medicos.persona_id','medicos.especialidad','medicos.fechaingreso','medicos.fechainiciocontrato','medicos.fechafincontrato','medicos.acargo','medicos.programassalud_id','medicos.observaciones','medicos.tipo')
+     ->get();
+
+        foreach ($medicos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':S'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','PROGRAMA DE SALUD','ESPECIALIDAD','FECHA DE INGRESO','FECHA DE INICIO DE CONTRATO','FECHA FIN DEL CONTRATO','ACARGO DEL PROGRAMA DE SALUD','TIPO','OBSERVACIONES'));
+ */
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $programas->nombre,
+           $dato->especialidad,
+           pasFechaVista($dato->fechaingreso),
+           pasFechaVista($dato->fechainiciocontrato),
+           pasFechaVista($dato->fechafincontrato),
+           SiUnoNoCero($dato->acargo),
+           tipoMedico($dato->tipo),
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+        }elseif(intval($programas->tipo)==2){
+
+            Excel::create('Medicos de la Campaña de Salud - '.$programas->nombre, function($excel) use($buscar,$programas)  {
+                $excel->sheet('BD Médicos', function($sheet) use($buscar,$programas){
+    
+                    $sheet->setAutoSize(true);
+                    /* $sheet->mergeCells('B1:D1');
+                    $sheet->mergeCells('B2:H2'); */
+    
+                    $sheet->mergeCells('A3:P3');
+                    $sheet->cells('A3:P3',function($cells)
+                    {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+                    $sheet->setBorder('A3:P3', 'thin');
+                    $sheet->cells('A3:P3', function($cells)
+                    {
+                        $cells->setBackground('#0C73E8');
+                        $cells->setFontColor('#FFFFFF');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                        $cells->setFontSize(15);
+    
+                        #Borders
+                    });
+                    
+                    $sheet->cells('A4:P4', function($cells)
+                    {
+                        $cells->setBackground('#B4B9E1');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+    
+                    });
+    
+                  
+    
+                    
+    
+                    $data=[];
+    
+                    $sheet->setWidth(array
+                    (
+                    'A'=>'7',
+                    'B'=>'20',
+                    'C'=>'25',
+                    'D'=>'25',
+                    'E'=>'20',
+                    'F'=>'30',
+                    'G'=>'20',
+                    'H'=>'20',
+                    'I'=>'20',
+                    'J'=>'20',
+                    'K'=>'35',
+                    'L'=>'45',
+                    'M'=>'25',
+                    'N'=>'40',
+                    'O'=>'30',
+                    'P'=>'65',
+                    )
+                    );
+    
+                    $sheet->setHeight(array
+                    (
+                    '3'=>'24'
+                    )
+                    );
+    
+                    $titulo='BASE DE DATOS DE MÉDICOS DE LA CAMPAÑA DE SALUD '.$programas->nombre;
+    
+                    array_push($data, array(''));
+                    array_push($data, array(''));
+                    array_push($data, array($titulo));
+    
+                    $sheet->setBorder('A4:P4', 'thin');
+                    array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','CAMPAÑA DE SALUD','TIPO FUNCIONARIO','ESPECIALIDAD','ACARGO DEL PROGRAMA DE SALUD','OBSERVACIONES'));
+    
+                    $cont=5;
+                    $cont2=5;
+    
+                    $medicos = DB::table('medicos')
+         ->join('personas', 'personas.id', '=', 'medicos.persona_id')
+         ->join('programassaluds', 'programassaluds.id', '=', 'medicos.programassalud_id')
+    
+         ->where('programassaluds.id',$programas->id)
+         ->where('medicos.borrado','0')
+         ->where(function($query) use ($buscar){
+            $query->where('personas.nombres','like','%'.$buscar.'%');
+            $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+            $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+            $query->orWhere('personas.doc','like','%'.$buscar.'%');
+            })
+         ->orderBy('personas.apellidopat')
+         ->orderBy('personas.apellidomat')
+         ->orderBy('personas.nombres')
+    
+         ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','medicos.id',
+         'medicos.persona_id','medicos.especialidad','medicos.fechaingreso','medicos.fechainiciocontrato','medicos.fechafincontrato','medicos.acargo','medicos.programassalud_id','medicos.observaciones','medicos.tipo')
+         ->get();
+    
+            foreach ($medicos as $key => $dato) {
+                $rango='A'.strval((intval($cont)+intval($key))).':P'.strval((intval($cont)+intval($key)));
+                $sheet->setBorder($rango, 'thin');
+    
+    /*
+    array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','CAMPAÑA DE SALUD','TIPO FUNCIONARIO','ESPECIALIDAD','ACARGO DEL PROGRAMA DE SALUD','OBSERVACIONES'));
+     */
+               array_push($data, array($key+1,
+               tipoDoc($dato->tipodoc),
+               $dato->doc,
+               $dato->apellidopat,
+               $dato->apellidomat,
+               $dato->nombres,
+               genero(strval($dato->genero)),
+               pasFechaVista($dato->fechanac),
+               estadoCivil($dato->estadocivil,$dato->genero),
+               esDiscpacitado($dato->esdiscapacitado),
+               $dato->discapacidad,
+               $programas->nombre,
+               tipoMedico($dato->tipo),
+               $dato->especialidad,
+               SiUnoNoCero($dato->acargo),
+               $dato->observaciones
+            ));
+                
+                $cont2++;
+            }
+    
+    
+    
+                    $sheet->fromArray($data, null, 'A1', false, false);
+                
+                });
+                })->download('xlsx');  
+        }
+
+        
+
+        return response()->json(["buscar"=>$buscar,'programasalud'=>$programasalud]);
     }
 }

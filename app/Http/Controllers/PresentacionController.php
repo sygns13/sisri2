@@ -16,7 +16,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-
+use Excel;
+set_time_limit(600);
 class PresentacionController extends Controller
 {
     /**
@@ -245,5 +246,123 @@ class PresentacionController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $taller=$request->taller;
+
+        $talleres=Taller::find($taller);
+
+        Excel::create('Presentaciones del Taller - '.$talleres->nombre, function($excel) use($buscar,$talleres)  {
+            $excel->sheet('BD Talleres', function($sheet) use($buscar,$talleres){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:F3');
+                $sheet->cells('A3:F3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:F3', 'thin');
+                $sheet->cells('A3:F3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:F4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                    'A'=>'7',
+                    'B'=>'45',
+                    'C'=>'25',
+                    'D'=>'25',
+                    'E'=>'65',
+                    'F'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE PRESENTACIONES DEL TALLER '.$talleres->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:F4', 'thin');
+                array_push($data, array('N°','TALLER', 'FECHA', 'CANTIDAD DE ASISTENTES', 'DETALLES DE LA PRESENTACIÓN','OBSERVACIONES'));
+
+
+                $cont=5;
+                $cont2=5;
+
+                $presentacions = DB::table('presentacions')
+                ->join('tallers', 'tallers.id', '=', 'presentacions.taller_id')
+           
+                ->where('tallers.id',$talleres->id)
+                ->where('presentacions.borrado','0')
+           
+                ->orderBy('presentacions.fecha')
+                ->orderBy('presentacions.id')
+           
+                ->select('presentacions.id','presentacions.fecha','presentacions.asistentes','presentacions.detalle','presentacions.taller_id','presentacions.observaciones')
+                ->get();
+
+
+        foreach ($presentacions as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':F'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+            array_push($data, array($key+1,
+            $talleres->nombre,
+            pasFechaVista($dato->fecha),
+            $dato->asistentes,
+            $dato->detalle,
+            $dato->observaciones
+         
+         ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+
+      
     }
 }

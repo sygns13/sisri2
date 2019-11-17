@@ -22,8 +22,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-use App\Exports\PlantillaPostulanteExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+set_time_limit(600);
 
 
 class TallerController extends Controller
@@ -363,4 +363,131 @@ class TallerController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $semestre_id=$request->semestre_id;
+
+        $semestre=Semestre::find($semestre_id);
+
+
+        Excel::create('Talleres - '.$semestre->nombre, function($excel) use($buscar,$semestre)  {
+            $excel->sheet('BD Talleres', function($sheet) use($buscar,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:F3');
+                $sheet->cells('A3:F3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:F3', 'thin');
+                $sheet->cells('A3:F3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:F4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'65',
+                'D'=>'20',
+                'E'=>'45',
+                'F'=>'22'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS TALLERES - SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:F4', 'thin');
+                array_push($data, array('N°','TALLER','DESCRIPCIÓN','SEMESTRE','DOCENTE A CARGO','DNI DOCENTE'));
+
+                $cont=5;
+                $cont2=5;
+
+                $tallers = DB::table('tallers')
+     ->join('semestres as semestre', 'semestre.id', '=', 'tallers.semestre_id')
+
+     ->where('tallers.borrado','0')
+     ->where('semestre.id',$semestre->id)
+     ->where(function($query) use ($buscar){
+        $query->where('tallers.nombre','like','%'.$buscar.'%');
+        $query->orwhere('tallers.descripcion','like','%'.$buscar.'%');
+        $query->orwhere('tallers.docentecargo','like','%'.$buscar.'%');
+        $query->orwhere('tallers.dnidocente','like','%'.$buscar.'%');
+
+        })
+
+     ->orderBy('tallers.nombre')
+     ->orderBy('tallers.docentecargo')
+     ->orderBy('tallers.id')
+
+     ->select('tallers.id',
+     'tallers.nombre','tallers.descripcion','tallers.docentecargo','tallers.dnidocente','tallers.docente_id','tallers.semestre_id')
+     ->get();
+
+        foreach ($tallers as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':F'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           $dato->nombre,
+           $dato->descripcion,
+           $semestre->nombre,
+           $dato->docentecargo,
+           $dato->dnidocente
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
 }

@@ -14,6 +14,10 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+
+use Excel;
+set_time_limit(600);
+
 class SemestreController extends Controller
 {
     /**
@@ -295,5 +299,115 @@ class SemestreController extends Controller
     	}
 
     	return response()->json(["result"=>$result,'msj'=>$msj]);
+	}
+	
+
+
+
+
+
+	public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+
+
+        Excel::create('Semestres UNASAM', function($excel) use($buscar)  {
+            $excel->sheet('Base de Datos Semestres', function($sheet) use($buscar){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:E3');
+                $sheet->cells('A3:E3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:E3', 'thin');
+                $sheet->cells('A3:E3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:E4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS SEMESTRES UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:E4', 'thin');
+                array_push($data, array('N°','NOMBRE','FECHA DE INICIO','FECHA FINAL','ESTADO'));
+
+                $cont=5;
+                $cont2=5;
+
+				$semestres = Semestre::where('borrado','0')
+				->where(function($query) use ($buscar){
+				   $query->where('nombre','like','%'.$buscar.'%');
+				   })
+				->orderBy('fechafin','desc')->get();
+
+        foreach ($semestres as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':E'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+		   $dato->nombre,
+		   pasFechaVista($dato->fechainicio),
+		   pasFechaVista($dato->fechafin),
+           estadoConvenio($dato->estado)
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

@@ -18,7 +18,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-
+use Excel;
+set_time_limit(600);
 class ParticipanteController extends Controller
 {
     /**
@@ -683,4 +684,166 @@ class ParticipanteController extends Controller
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $taller=$request->taller;
+
+        $talleres=Taller::find($taller);
+
+        Excel::create('Participantes del Taller - '.$talleres->nombre, function($excel) use($buscar,$talleres)  {
+            $excel->sheet('BD Talleres', function($sheet) use($buscar,$talleres){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:S3');
+                $sheet->cells('A3:S3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:S3', 'thin');
+                $sheet->cells('A3:S3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:S4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                    'A'=>'7',
+                    'B'=>'20',
+                    'C'=>'25',
+                    'D'=>'25',
+                    'E'=>'20',
+                    'F'=>'30',
+                    'G'=>'20',
+                    'H'=>'21',
+                    'I'=>'20',
+                    'J'=>'22',
+                    'K'=>'35',
+                    'L'=>'45',
+                    'M'=>'45',
+                    'N'=>'45',
+                    'O'=>'30',
+                    'P'=>'30',
+                    'Q'=>'30',
+                    'R'=>'45',
+                    'S'=>'20'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE PARTICIPANTES DEL TALLER '.$talleres->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:S4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','PAÍS DE PROCEDENCIA','DEPARTAMENTO DE PROCEDENCIA','PROVINCIA DE PROCEDENCIA','DISTRITO DE PROCEDENCIA','DIRECCIÓN','TELÉFONO'));
+
+
+                $cont=5;
+                $cont2=5;
+
+               
+
+      
+     $participantes = DB::table('participantes')
+     ->join('personas', 'personas.id', '=', 'participantes.persona_id')
+     ->join('escuelas', 'escuelas.id', '=', 'participantes.escuela_id')
+     ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+     ->join('tallers', 'tallers.id', '=', 'participantes.taller_id')
+
+     ->where('tallers.id',$talleres->id)
+     ->where('participantes.borrado','0')
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','participantes.id',
+     'participantes.persona_id','participantes.escuela_id','participantes.taller_id','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad')
+     ->get();
+
+
+
+     /*
+     array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','PAÍS DE PROCEDENCIA','DEPARTAMENTO DE PROCEDENCIA','PROVINCIA DE PROCEDENCIA','DISTRITO DE PROCEDENCIA','DIRECCIÓN','TELÉFONO'));
+
+     */
+        foreach ($participantes as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':S'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+            array_push($data, array($key+1,
+            tipoDoc($dato->tipodoc),
+            $dato->doc,
+            $dato->apellidopat,
+            $dato->apellidomat,
+            $dato->nombres,
+            genero(strval($dato->genero)),
+            pasFechaVista($dato->fechanac),
+            estadoCivil($dato->estadocivil,$dato->genero),
+            esDiscpacitado($dato->esdiscapacitado),
+            $dato->discapacidad,
+            $dato->facultad,
+            $dato->escuela,
+            $dato->pais,
+            $dato->departamento,
+            $dato->provincia,
+            $dato->distrito,
+            $dato->direccion,
+            $dato->telefono
+         
+         ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+
+      
+    }
+
 }

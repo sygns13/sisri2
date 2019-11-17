@@ -329,6 +329,114 @@ function estadoContrato($var)
 }
 
 
+function tipoMedico($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Médico";
+    }else if(intval($var)==2)
+    {
+        $result="Participante";
+    }else if(intval($var)==3)
+    {
+        $result="Voluntario";
+    }
+    return $result;
+}
+
+function tipoBeneficiario($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Alumno";
+    }else if(intval($var)==2)
+    {
+        $result="Docente";
+    }else if(intval($var)==3)
+    {
+        $result="Personal Administrativo";
+    }
+    return $result;
+}
+
+function tipoBeneficiariosPlural($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Alumnos";
+    }else if(intval($var)==2)
+    {
+        $result="Docentes";
+    }else if(intval($var)==3)
+    {
+        $result="Personales Administrativos";
+    }
+    return $result;
+}
+
+function tipoProyecto($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Proyecto";
+    }else if(intval($var)==2)
+    {
+        $result="Campaña Itinerante";
+    }
+    return $result;
+}
+
+
+function estadoConvenio($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Vigente";
+    }else if(intval($var)==0)
+    {
+        $result="Finalizado";
+    }
+    return $result;
+}
+
+
+function activoInactivo($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Activo";
+    }else if(intval($var)==0)
+    {
+        $result="Inactivo";
+    }
+    return $result;
+}
+
+
+
+function tipoPersonaLlegaPasantia($var)
+{
+    $result="";
+    if(intval($var)==4)
+    {
+        $result="Alumno";
+    }else if(intval($var)==5)
+    {
+        $result="Docente";
+    }else if(intval($var)==6)
+    {
+        $result="Personal Administrativo";
+    }
+
+    return $result;
+}
+
 function numtoletras($xcifra)
 {
     $xarray = array(0 => "Cero",
