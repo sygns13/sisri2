@@ -201,6 +201,132 @@ function gestionColegio($var)
     return $result;
 }
 
+function SiUnoNoCero($var)
+{
+    $result="";
+    if(intval($var)==1)
+    {
+        $result="Si";
+    }else if(intval($var)==0)
+    {
+        $result="No";
+    }
+    return $result;
+}
+
+function grado($var)
+{
+    $result="";
+    if(intval($var)==3)
+    {
+        $result="Maestría";
+    }else if(intval($var)==4)
+    {
+        $result="Doctorado";
+    }
+    return $result;
+}
+
+function estadoInvestigacion($var)
+{
+    $result="";
+    if(intval($var)==0)
+    {
+        $result="Finalizado";
+    }else if(intval($var)==1)
+    {
+        $result="En Ejecución";
+    }else if(intval($var)==2)
+    {
+        $result="Cancelado";
+    }
+    return $result;
+}
+
+
+function tipoDependenciaAdmin($var)
+{
+    $result="";
+    if(intval($var)==0)
+    {
+        $result="Unidad orgánica";
+    }else if(intval($var)==1)
+    {
+        $result="Dirección general";
+    }else if(intval($var)==2)
+    {
+        $result="Consejo asesor";
+    }else if(intval($var)==3)
+    {
+        $result="Unidad académica";
+    }else if(intval($var)==4)
+    {
+        $result="Unidad de investigación";
+    }else if(intval($var)==5)
+    {
+        $result="Unidad de formación continua";
+    }else if(intval($var)==6)
+    {
+        $result="Área de administración";
+    }else if(intval($var)==7)
+    {
+        $result="Área de calidad o secretaria académica";
+    }else if(intval($var)==8)
+    {
+        $result="Unidad de bienestar y empleabilidad";
+    }else if(intval($var)==9)
+    {
+        $result="Facultad";
+    }else if(intval($var)==10)
+    {
+        $result="Escuela profesional";
+    }
+    return $result;
+}
+
+
+function gradoAdmin($var)
+{
+    $result="";
+    if(intval($var)==0)
+    {
+        $result="Sin grado";
+    }else if(intval($var)==1)
+    {
+        $result="Primaria completa";
+    }else if(intval($var)==2)
+    {
+        $result="Secundaria completa";
+    }else if(intval($var)==3)
+    {
+        $result="Técnico";
+    }else if(intval($var)==4)
+    {
+        $result="Bachiller";
+    }else if(intval($var)==5)
+    {
+        $result="Maestro";
+    }else if(intval($var)==6)
+    {
+        $result="Doctor";
+    }
+    return $result;
+}
+
+
+
+function estadoContrato($var)
+{
+    $result="";
+    if(intval($var)==0)
+    {
+        $result="Finalizado";
+    }else if(intval($var)==1)
+    {
+        $result="Activo";
+    }
+    return $result;
+}
 
 
 function numtoletras($xcifra)

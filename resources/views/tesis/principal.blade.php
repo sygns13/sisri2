@@ -8,7 +8,22 @@
       <div class="box-body" style="border: 1px solid #3c8dbc;">
           <div class="form-group form-primary">
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro de Tesis</button>
+
+
+            <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'tesisinfo/exportarExcel?busca='+buscar" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
+
+
+
+
+
+
+
+
+
+
           </div>
+
+         
       
       
       
@@ -184,7 +199,8 @@
               <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">@{{ tesi.facultad }}</td>
               <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">@{{ tesi.escuela }}</td>
               <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">@{{ tesi.nombreProyecto }}</td>
-              <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">@{{ tesi.autor }} <br> @{{ tesi.autor2 }}</td>
+              <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">- @{{ tesi.autor }} <br> 
+                <template v-if="String(tesi.autor2).trim().length>0 && String(tesi.autor2)!='null'">- @{{ tesi.autor2 }}</template></td>
               <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">@{{ tesi.fuenteFinanciamiento }}</td>
              <td style="border:1px solid #ddd;font-size: 13px; padding: 5px;">
       <center> 

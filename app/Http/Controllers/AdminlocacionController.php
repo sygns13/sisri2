@@ -18,8 +18,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-use App\Exports\PlantillaPostulanteExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+set_time_limit(600);
 
 
 class AdminlocacionController extends Controller
@@ -1052,5 +1052,180 @@ class AdminlocacionController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+
+     
+
+
+        Excel::create('Personal Locación de Servicios', function($excel) use($buscar)  {
+            $excel->sheet('BD Locación de Servicios', function($sheet) use($buscar){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:AB3');
+                $sheet->cells('A3:AB3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:AB3', 'thin');
+                $sheet->cells('A3:AB3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:AB4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'22',
+                'K'=>'40',
+                'L'=>'45',
+                'M'=>'35',
+                'N'=>'45',
+                'O'=>'45',
+                'P'=>'45',
+                'Q'=>'35',
+                'R'=>'45',
+                'S'=>'45',
+                'T'=>'30',
+                'U'=>'25',
+                'V'=>'45',
+                'W'=>'25',
+                'X'=>'25',
+                'Y'=>'32',
+                'Z'=>'28',
+                'AA'=>'33',
+                'AB'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS PERSONAL LOCADOR DE SERVICIOS UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:AB4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','TIPO DE DEPENDENCIA','DEPENDENCIA','CARGO GENERAL','DESCRIPCIÓN DEL CARGO','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO','LUGAR DEL MÁXIMO GRADO','PAÍS DEL MÁXIMO GRADO', 'TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','CONDICIÓN LABORAL','RÉGIMEN LABORAL', 'FECHA DE INGRESO A LA INSTITUCIÓN','FECHA DE INICIO DE CONTRATO','FECHA DE FINALIZACIÓN DE CONTRATO','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $adminlocacions = DB::table('adminlocacions')
+     ->join('personas', 'personas.id', '=', 'adminlocacions.persona_id')
+     ->join('locals', 'locals.id', '=', 'adminlocacions.local_id')
+
+     ->where('adminlocacions.borrado','0')
+     ->where('adminlocacions.activo','1')
+
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        })
+
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','adminlocacions.id',
+     
+     'adminlocacions.persona_id','adminlocacions.local_id','adminlocacions.tipoDependencia','adminlocacions.dependencia','adminlocacions.facultad','adminlocacions.escuela','adminlocacions.cargo','adminlocacions.descripcionCargo','adminlocacions.grado','adminlocacions.descripcionGrado','adminlocacions.esTitulado','adminlocacions.descripcionTitulo','adminlocacions.lugarGrado','adminlocacions.paisGrado','adminlocacions.fechaIngreso','adminlocacions.observaciones','adminlocacions.estado','adminlocacions.condicionLaboral','adminlocacions.fechaFinContrato','adminlocacions.id','locals.id as idlocal','locals.nombre as local','adminlocacions.fechaInicioContrato','adminlocacions.regimenLaboral')
+     ->get();
+
+        foreach ($adminlocacions as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':AB'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+/*
+array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','TIPO DE DEPENDENCIA','DEPENDENCIA','CARGO GENERAL','DESCRIPCIÓN DEL CARGO','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO','LUGAR DEL MÁXIMO GRADO','PAÍS DEL MÁXIMO GRADO', 'TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','CONDICIÓN LABORAL','RÉGIMEN LABORAL', 'FECHA DE INGRESO A LA INSTITUCIÓN','FECHA DE INICIO DE CONTRATO','FECHA DE FINALIZACIÓN DE CONTRATO','OBSERVACIONES'));
+ */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->local,
+           tipoDependenciaAdmin($dato->tipoDependencia),
+           $dato->dependencia,
+           $dato->cargo,
+           $dato->descripcionCargo,
+           gradoAdmin($dato->grado),
+           $dato->descripcionGrado,
+           $dato->lugarGrado,
+           $dato->paisGrado,
+           SiUnoNoCero($dato->esTitulado),
+           $dato->descripcionTitulo,
+           $dato->condicionLaboral,
+           $dato->regimenLaboral,
+           pasFechaVista($dato->fechaIngreso),
+           pasFechaVista($dato->fechaInicioContrato),
+           pasFechaVista($dato->fechaFinContrato),
+           $dato->observaciones,
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

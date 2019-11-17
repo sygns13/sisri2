@@ -18,8 +18,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-use App\Exports\PlantillaPostulanteExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+set_time_limit(600);
 
 class GraduadoController extends Controller
 {
@@ -1107,5 +1107,649 @@ class GraduadoController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+
+
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+        Excel::create('Bachilleres UNASAM', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('Base de Datos de Bachilleres', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:X3');
+                $sheet->cells('A3:X3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:X3', 'thin');
+                $sheet->cells('A3:X3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:X4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'45',
+                'P'=>'20',
+                'Q'=>'20',
+                'R'=>'35',
+                'S'=>'35',
+                'T'=>'22',
+                'U'=>'30',
+                'V'=>'35',
+                'W'=>'25',
+                'X'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS BACHILLERES UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:X4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','DENOMINACIÓN DEL GRADO','PROGRAMA DE ESTUDIOS','FECHA DE EGRESO','IDIOMA','MODALIDAD DE OBTENCIÓN','NÚMERO DE RESOLUCIÓN','FECHA DE RESOLUCIÓN','NÚMERO DE DIPLOMA','AUTORIDAD - RECTOR','FECHA DE EMISIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $graduados = DB::table('graduados')
+     ->join('personas', 'personas.id', '=', 'graduados.persona_id')
+     ->join('escuelas', 'escuelas.id', '=', 'graduados.escuela_id')
+     ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+
+     ->where('graduados.borrado','0')
+     ->where('graduados.tipo',$tipo)
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','graduados.id',
+     'graduados.escuela_id','graduados.nombreGrado','graduados.programaEstudios','graduados.fechaEgreso','graduados.idioma','graduados.modalidadObtencion','graduados.numResolucion','graduados.fechaResol','graduados.numeroDiploma','graduados.autoridadRector','graduados.fechaEmision','graduados.observaciones','graduados.persona_id','graduados.tipo','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','graduados.trabajoinvestigacion')
+     ->get();
+
+        foreach ($graduados as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':X'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','DENOMINACIÓN DEL GRADO','PROGRAMA DE ESTUDIOS','FECHA DE EGRESO','IDIOMA','MODALIDAD DE OBTENCIÓN','NÚMERO DE RESOLUCIÓN','FECHA DE RESOLUCIÓN','NÚMERO DE DIPLOMA','AUTORIDAD - RECTOR','FECHA DE EMISIÓN','OBSERVACIONES'));
+                */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->nombreGrado,
+           $dato->programaEstudios,
+           pasFechaVista($dato->fechaEgreso),
+           $dato->idioma,
+           $dato->modalidadObtencion,
+           $dato->numResolucion,
+           pasFechaVista($dato->fechaResol),
+           $dato->numeroDiploma,
+           $dato->autoridadRector,
+           pasFechaVista($dato->fechaEmision),
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+    public function descargarExcel2(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+        Excel::create('Titulados UNASAM', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('Base de Datos de Titulados', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:X3');
+                $sheet->cells('A3:X3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:X3', 'thin');
+                $sheet->cells('A3:X3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:X4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'45',
+                'P'=>'20',
+                'Q'=>'20',
+                'R'=>'35',
+                'S'=>'35',
+                'T'=>'22',
+                'U'=>'30',
+                'V'=>'35',
+                'W'=>'25',
+                'X'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS TITULADOS UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:X4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','DENOMINACIÓN DEL GRADO','PROGRAMA DE ESTUDIOS','FECHA DE EGRESO','IDIOMA','MODALIDAD DE OBTENCIÓN','NÚMERO DE RESOLUCIÓN','FECHA DE RESOLUCIÓN','NÚMERO DE DIPLOMA','AUTORIDAD - RECTOR','FECHA DE EMISIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $graduados = DB::table('graduados')
+     ->join('personas', 'personas.id', '=', 'graduados.persona_id')
+     ->join('escuelas', 'escuelas.id', '=', 'graduados.escuela_id')
+     ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+
+     ->where('graduados.borrado','0')
+     ->where('graduados.tipo',$tipo)
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','graduados.id',
+     'graduados.escuela_id','graduados.nombreGrado','graduados.programaEstudios','graduados.fechaEgreso','graduados.idioma','graduados.modalidadObtencion','graduados.numResolucion','graduados.fechaResol','graduados.numeroDiploma','graduados.autoridadRector','graduados.fechaEmision','graduados.observaciones','graduados.persona_id','graduados.tipo','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','graduados.trabajoinvestigacion')
+     ->get();
+
+        foreach ($graduados as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':X'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','DENOMINACIÓN DEL GRADO','PROGRAMA DE ESTUDIOS','FECHA DE EGRESO','IDIOMA','MODALIDAD DE OBTENCIÓN','NÚMERO DE RESOLUCIÓN','FECHA DE RESOLUCIÓN','NÚMERO DE DIPLOMA','AUTORIDAD - RECTOR','FECHA DE EMISIÓN','OBSERVACIONES'));
+                */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->nombreGrado,
+           $dato->programaEstudios,
+           pasFechaVista($dato->fechaEgreso),
+           $dato->idioma,
+           $dato->modalidadObtencion,
+           $dato->numResolucion,
+           pasFechaVista($dato->fechaResol),
+           $dato->numeroDiploma,
+           $dato->autoridadRector,
+           pasFechaVista($dato->fechaEmision),
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+    public function descargarExcel3(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+        Excel::create('Maestros UNASAM', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('Base de Datos de Maestros', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:W3');
+                $sheet->cells('A3:W3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:W3', 'thin');
+                $sheet->cells('A3:W3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:W4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'25',
+                'P'=>'40',
+                'Q'=>'45',
+                'R'=>'35',
+                'S'=>'35',
+                'T'=>'22',
+                'U'=>'40',
+                'V'=>'25',
+                'W'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS MAESTROS UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:W4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO','DENOMINACIÓN DEL GRADO','FECHA DE EGRESO','IDIOMA','MODALIDAD DE OBTENCIÓN','NOMBRE DEL TRABAJO DE INVESTIGACIÓN','NÚMERO DE RESOLUCIÓN','FECHA DE RESOLUCIÓN','NÚMERO DE DIPLOMA','AUTORIDAD - RECTOR','FECHA DE EMISIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $graduados = DB::table('graduados')
+        ->join('personas', 'personas.id', '=', 'graduados.persona_id')
+     
+        ->where('graduados.borrado','0')
+        ->where('graduados.tipo',$tipo)
+        ->where(function($query) use ($buscar){
+           $query->where('personas.nombres','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+           $query->orWhere('personas.doc','like','%'.$buscar.'%');
+           })
+        ->orderBy('personas.apellidopat')
+        ->orderBy('personas.apellidomat')
+        ->orderBy('personas.nombres')
+   
+        ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','graduados.id',
+        'graduados.escuela_id','graduados.nombreGrado','graduados.programaEstudios','graduados.fechaEgreso','graduados.idioma','graduados.modalidadObtencion','graduados.numResolucion','graduados.fechaResol','graduados.numeroDiploma','graduados.autoridadRector','graduados.fechaEmision','graduados.observaciones','graduados.persona_id','graduados.tipo','graduados.trabajoinvestigacion')
+        ->get();
+
+        foreach ($graduados as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':W'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO','DENOMINACIÓN DEL GRADO','FECHA DE EGRESO','IDIOMA','MODALIDAD DE OBTENCIÓN','NOMBRE DEL TRABAJO DE INVESTIGACIÓN','NÚMERO DE RESOLUCIÓN','FECHA DE RESOLUCIÓN','NÚMERO DE DIPLOMA','AUTORIDAD - RECTOR','FECHA DE EMISIÓN','OBSERVACIONES'));
+                */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->nombreGrado,
+           $dato->programaEstudios,
+           pasFechaVista($dato->fechaEgreso),
+           $dato->idioma,
+           $dato->modalidadObtencion,
+           $dato->trabajoinvestigacion,
+           $dato->numResolucion,
+           pasFechaVista($dato->fechaResol),
+           $dato->numeroDiploma,
+           $dato->autoridadRector,
+           pasFechaVista($dato->fechaEmision),
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+    public function descargarExcel4(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+
+        Excel::create('Doctores UNASAM', function($excel) use($buscar,$tipo)  {
+            $excel->sheet('Base de Datos de Doctores', function($sheet) use($buscar,$tipo){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:W3');
+                $sheet->cells('A3:W3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:W3', 'thin');
+                $sheet->cells('A3:W3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:W4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'25',
+                'P'=>'40',
+                'Q'=>'45',
+                'R'=>'35',
+                'S'=>'35',
+                'T'=>'22',
+                'U'=>'40',
+                'V'=>'25',
+                'W'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DOCTORES UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:W4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','DENOMINACIÓN DEL GRADO','PROGRAMA DE ESTUDIOS','FECHA DE EGRESO','IDIOMA','MODALIDAD DE OBTENCIÓN','NOMBRE DEL TRABAJO DE INVESTIGACIÓN','NÚMERO DE RESOLUCIÓN','FECHA DE RESOLUCIÓN','NÚMERO DE DIPLOMA','AUTORIDAD - RECTOR','FECHA DE EMISIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $graduados = DB::table('graduados')
+        ->join('personas', 'personas.id', '=', 'graduados.persona_id')
+     
+        ->where('graduados.borrado','0')
+        ->where('graduados.tipo',$tipo)
+        ->where(function($query) use ($buscar){
+           $query->where('personas.nombres','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+           $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+           $query->orWhere('personas.doc','like','%'.$buscar.'%');
+           })
+        ->orderBy('personas.apellidopat')
+        ->orderBy('personas.apellidomat')
+        ->orderBy('personas.nombres')
+   
+        ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','graduados.id',
+        'graduados.escuela_id','graduados.nombreGrado','graduados.programaEstudios','graduados.fechaEgreso','graduados.idioma','graduados.modalidadObtencion','graduados.numResolucion','graduados.fechaResol','graduados.numeroDiploma','graduados.autoridadRector','graduados.fechaEmision','graduados.observaciones','graduados.persona_id','graduados.tipo','graduados.trabajoinvestigacion')
+        ->get();
+
+        foreach ($graduados as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':W'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->nombreGrado,
+           $dato->programaEstudios,
+           pasFechaVista($dato->fechaEgreso),
+           $dato->idioma,
+           $dato->modalidadObtencion,
+           $dato->trabajoinvestigacion,
+           $dato->numResolucion,
+           pasFechaVista($dato->fechaResol),
+           $dato->numeroDiploma,
+           $dato->autoridadRector,
+           pasFechaVista($dato->fechaEmision),
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

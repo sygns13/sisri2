@@ -20,6 +20,9 @@ use App\Tipouser;
 use App\User;
 
 
+use Excel;
+set_time_limit(600);
+
 class InvestigadorController extends Controller
 {
     /**
@@ -63,7 +66,6 @@ class InvestigadorController extends Controller
     public function index(Request $request)
     {   
      $buscar=$request->busca;
-     $semestre_id=$request->semestre_id;
 
      $investigadors = DB::table('investigadors')
      ->join('personas', 'personas.id', '=', 'investigadors.persona_id')
@@ -740,6 +742,148 @@ class InvestigadorController extends Controller
      return [
         'investigadors'=>$investigadors
     ];
+    }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+
+
+        Excel::create('Investigadores UNASAM', function($excel) use($buscar)  {
+            $excel->sheet('Base de Datos de Investigadores', function($sheet) use($buscar){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:O3');
+                $sheet->cells('A3:O3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:O3', 'thin');
+                $sheet->cells('A3:O3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:O4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'20',
+                'I'=>'20',
+                'J'=>'20',
+                'K'=>'35',
+                'L'=>'45',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DOCENTES INVESTIGADORES UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:O4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','CLASIFICACIÓN','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $investigadors = DB::table('investigadors')
+     ->join('personas', 'personas.id', '=', 'investigadors.persona_id')
+     ->leftjoin('facultads', 'facultads.id', '=', 'investigadors.facultad_id')
+     ->leftjoin('escuelas', 'escuelas.id', '=', 'investigadors.escuela_id')
+     ->where('investigadors.borrado','0')
+
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        $query->orWhere('facultads.nombre','like','%'.$buscar.'%');
+        $query->orWhere('escuelas.nombre','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','investigadors.id',
+    'investigadors.persona_id','investigadors.escuela_id','investigadors.facultad_id','investigadors.observaciones','investigadors.clasificacion',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"))->get();
+
+        foreach ($investigadors as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':O'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','FACULTAD','ESCUELA PROFESIONAL','CLASIFICACIÓN','OBSERVACIONES'));
+                */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->clasificacion,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 
 

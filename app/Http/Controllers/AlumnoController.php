@@ -18,8 +18,8 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
-use App\Exports\PlantillaPostulanteExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+set_time_limit(600);
 
 class AlumnoController extends Controller
 {
@@ -217,7 +217,8 @@ class AlumnoController extends Controller
      ->join('semestres as semestre', 'semestre.id', '=', 'alumnos.semestre_id')
      ->join('escuelas', 'escuelas.id', '=', 'alumnos.escuela_id')
      ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
-     ->join('semestres as semestreingreso', 'semestreingreso.id', '=', 'alumnos.primerPeriodoMatricula')
+     ->join('semestres as semestreingreso', 'semestreingreso.id', '=', 'alumnos.periodoIngreso')
+     ->join('semestres as semestrematriculo', 'semestrematriculo.id', '=', 'alumnos.primerPeriodoMatricula')
 
      ->where('alumnos.borrado','0')
      ->where('alumnos.tipo',$tipo)
@@ -235,7 +236,7 @@ class AlumnoController extends Controller
 
      ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
      
-     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo')
+     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo','semestrematriculo.id as idsemestrematriculo','semestrematriculo.nombre as semestrematriculo')
      ->paginate(50);
 
     }
@@ -1319,5 +1320,675 @@ class AlumnoController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+        $semestre_id=$request->semestre_id;
+
+        $semestre=Semestre::find($semestre_id);
+
+
+        Excel::create('Alumnos Matriculados de Pregrado del '.$semestre->nombre, function($excel) use($buscar,$tipo,$semestre)  {
+            $excel->sheet('Base de Datos de Alumnos', function($sheet) use($buscar,$tipo,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:AE3');
+                $sheet->cells('A3:AE3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:AE3', 'thin');
+                $sheet->cells('A3:AE3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:AE4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'15',
+                'I'=>'20',
+                'J'=>'15',
+                'K'=>'22',
+                'L'=>'20',
+                'M'=>'30',
+                'N'=>'35',
+                'O'=>'45',
+                'P'=>'45',
+                'Q'=>'20',
+                'R'=>'35',
+                'S'=>'22',
+                'T'=>'22',
+                'U'=>'20',
+                'V'=>'30',
+                'W'=>'25',
+                'X'=>'32',
+                'Y'=>'30',
+                'Z'=>'37',
+                'AA'=>'20',
+                'AB'=>'25',
+                'AC'=>'35',
+                'AD'=>'15',
+                'AE'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS ALUMNOS MATRICULADOS DEL NIVEL PREGRADO - SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:AE4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','FACULTAD','ESCUELA PROFESIONAL','ESCALA DE PAGO','DESCRIPCIÓN DE LA ESCALA DE PAGO','PROMEDIO PONDERADO','PROMEDIO DEL SEMESTRE','PERIODO DE INGRESO','PRIMER PERIODO DE MATRÍCULA','MOVILIDAD NACIONAL','DESCRIPCION MOVILIDAD NACIONAL','MOVILIDAD INTERNACIONAL','DESCRIPCION MOVILIDAD INTERNACIONAL','ALUMNO EN RIESGO','N° DE CURSOS EN RIESGO','CORREO ELECTRÓNICO','TELÉFONO','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('alumnos')
+                ->join('personas', 'personas.id', '=', 'alumnos.persona_id')
+                ->join('semestres as semestre', 'semestre.id', '=', 'alumnos.semestre_id')
+                ->join('escuelas', 'escuelas.id', '=', 'alumnos.escuela_id')
+                ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+                ->join('locals', 'locals.id', '=', 'facultads.local_id')
+                ->join('semestres as semestreingreso', 'semestreingreso.id', '=', 'alumnos.periodoIngreso')
+                ->join('semestres as semestrematriculo', 'semestrematriculo.id', '=', 'alumnos.primerPeriodoMatricula')
+           
+                ->where('alumnos.borrado','0')
+                ->where('alumnos.tipo',$tipo)
+                ->where('semestre.id',$semestre->id)
+                ->where(function($query) use ($buscar){
+                   $query->where('personas.nombres','like','%'.$buscar.'%');
+                   $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+                   $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+                   $query->orWhere('personas.doc','like','%'.$buscar.'%');
+                   $query->orWhere('alumnos.codigo','like','%'.$buscar.'%');
+                   })
+                ->orderBy('personas.apellidopat')
+                ->orderBy('personas.apellidomat')
+                ->orderBy('personas.nombres')
+           
+                ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+                
+                'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo','locals.nombre as local','semestrematriculo.id as idsemestrematriculo','semestrematriculo.nombre as semestrematriculo')
+                ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':AE'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           $dato->codigo,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           $semestre->nombre,
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->local,
+           $dato->facultad,
+           $dato->escuela,
+           SiUnoNoCero($dato->escalaPago),
+           $dato->escalaPagodesc,
+           $dato->promedioPonderado,
+           $dato->promedioSemestre,
+           $dato->semestreingreso,
+           $dato->semestrematriculo,
+           SiUnoNoCero($dato->ismovnacional),
+           $dato->movinacional,
+           SiUnoNoCero($dato->ismovinternacional),
+           $dato->moviinternacional,
+           SiUnoNoCero($dato->alumnoRiesgo),
+           $dato->numCursosRiesgo,
+           $dato->email,
+           $dato->telefono,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+
+
+
+
+    public function descargarExcel2(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+        $semestre_id=$request->semestre_id;
+
+        $semestre=Semestre::find($semestre_id);
+
+
+        Excel::create('Alumnos Egresados de Pregrado en el '.$semestre->nombre, function($excel) use($buscar,$tipo,$semestre)  {
+            $excel->sheet('Base de Datos de Alumnos', function($sheet) use($buscar,$tipo,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:Y3');
+                $sheet->cells('A3:Y3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:Y3', 'thin');
+                $sheet->cells('A3:Y3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:Y4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'15',
+                'I'=>'20',
+                'J'=>'15',
+                'K'=>'22',
+                'L'=>'35',
+                'M'=>'45',
+                'N'=>'45',
+                'O'=>'45',
+                'P'=>'25',
+                'Q'=>'25',
+                'R'=>'30',
+                'S'=>'40',
+                'T'=>'30',
+                'U'=>'40',
+                'V'=>'30',
+                'W'=>'30',
+                'X'=>'20',
+                'Y'=>'65'
+
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS ALUMNOS EGRESADOS DEL NIVEL PREGRADO EN EL SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:Y4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','FACULTAD','ESCUELA PROFESIONAL','PROMEDIO PONDERADO','PROMEDIO DEL SEMESTRE','ES EGRESADO DE OTRA CARRERA','OTRA CARRERA DE EGRESO','ES TITULADO DE OTRA CARRERA','OTRA CARRERA TITULADA','PRIMER PERIODO DE MATRÍCULA','CORREO ELECTRÓNICO','TELÉFONO','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('alumnos')
+                ->join('personas', 'personas.id', '=', 'alumnos.persona_id')
+                ->join('semestres as semestre', 'semestre.id', '=', 'alumnos.semestre_id')
+                ->join('escuelas', 'escuelas.id', '=', 'alumnos.escuela_id')
+                ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+                ->join('locals', 'locals.id', '=', 'facultads.local_id')
+                ->join('semestres as semestreingreso', 'semestreingreso.id', '=', 'alumnos.periodoIngreso')
+                ->join('semestres as semestrematriculo', 'semestrematriculo.id', '=', 'alumnos.primerPeriodoMatricula')
+           
+                ->where('alumnos.borrado','0')
+                ->where('alumnos.tipo',$tipo)
+                ->where('semestre.id',$semestre->id)
+                ->where(function($query) use ($buscar){
+                   $query->where('personas.nombres','like','%'.$buscar.'%');
+                   $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+                   $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+                   $query->orWhere('personas.doc','like','%'.$buscar.'%');
+                   $query->orWhere('alumnos.codigo','like','%'.$buscar.'%');
+                   })
+                ->orderBy('personas.apellidopat')
+                ->orderBy('personas.apellidomat')
+                ->orderBy('personas.nombres')
+           
+                ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+                
+                'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo','locals.nombre as local','semestrematriculo.id as idsemestrematriculo','semestrematriculo.nombre as semestrematriculo')
+                ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':Y'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           $dato->codigo,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $dato->local,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->promedioPonderado,
+           $dato->promedioSemestre,
+           SiUnoNoCero($dato->egresadoOtraCarrera),
+           $dato->otraCarrera,
+           SiUnoNoCero($dato->tituladoOtraCarrera),
+           $dato->otrotitulo,
+           $dato->semestrematriculo,
+           $dato->email,
+           $dato->telefono,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+    public function descargarExcel3(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+        $semestre_id=$request->semestre_id;
+
+        $semestre=Semestre::find($semestre_id);
+
+
+        Excel::create('Alumnos Matriculados de Postgrado del '.$semestre->nombre, function($excel) use($buscar,$tipo,$semestre)  {
+            $excel->sheet('Base de Datos de Alumnos', function($sheet) use($buscar,$tipo,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:Q3');
+                $sheet->cells('A3:Q3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:Q3', 'thin');
+                $sheet->cells('A3:Q3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:Q4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'15',
+                'I'=>'20',
+                'J'=>'15',
+                'K'=>'22',
+                'L'=>'20',
+                'M'=>'30',
+                'N'=>'35',
+                'O'=>'45',
+                'P'=>'45',
+                'Q'=>'65',
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS ALUMNOS MATRICULADOS DEL NIVEL POSTGRADO - SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:Q4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO DE ESTUDIOS','DENOMINACIÓN DEL GRADO','ESCALA DE PAGO','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('alumnos')
+     ->join('personas', 'personas.id', '=', 'alumnos.persona_id')
+     ->join('semestres as semestre', 'semestre.id', '=', 'alumnos.semestre_id')
+
+
+     ->where('alumnos.borrado','0')
+     ->where('alumnos.tipo',$tipo)
+     ->where('semestre.id',$semestre->id)
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        $query->orWhere('alumnos.codigo','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+     
+     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo')
+     ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':Q'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+            /*
+array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO DE ESTUDIOS','DENOMINACIÓN DEL GRADO','ESCALA DE PAGO','OBSERVACIONES'));
+            */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           $dato->codigo,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           $semestre->nombre,
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           grado($dato->grado),
+           $dato->nombreGrado,
+           $dato->escalaPagodesc,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
+    }
+
+    public function descargarExcel4(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+        $semestre_id=$request->semestre_id;
+
+        $semestre=Semestre::find($semestre_id);
+
+
+        Excel::create('Alumnos Egresados de Postgrado del '.$semestre->nombre, function($excel) use($buscar,$tipo,$semestre)  {
+            $excel->sheet('Base de Datos de Alumnos', function($sheet) use($buscar,$tipo,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:R3');
+                $sheet->cells('A3:R3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:R3', 'thin');
+                $sheet->cells('A3:R3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:R4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'30',
+                'G'=>'20',
+                'H'=>'15',
+                'I'=>'20',
+                'J'=>'15',
+                'K'=>'22',
+                'L'=>'20',
+                'M'=>'30',
+                'N'=>'35',
+                'O'=>'45',
+                'P'=>'45',
+                'Q'=>'20',
+                'R'=>'65'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS ALUMNOS EGRESADOS DEL NIVEL POSTGRADO EN EL SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:R4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO DE ESTUDIOS','DENOMINACIÓN DEL GRADO','CORREO ELECTRÓNICO','TELÉFONO ','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $alumnos = DB::table('alumnos')
+     ->join('personas', 'personas.id', '=', 'alumnos.persona_id')
+     ->join('semestres as semestre', 'semestre.id', '=', 'alumnos.semestre_id')
+
+
+     ->where('alumnos.borrado','0')
+     ->where('alumnos.tipo',$tipo)
+     ->where('semestre.id',$semestre->id)
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        $query->orWhere('alumnos.codigo','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+     
+     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo')
+     ->get();
+
+        foreach ($alumnos as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':R'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+            /*
+$sheet->setBorder('A4:Q4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO DE ESTUDIOS','DENOMINACIÓN DEL GRADO','CORREO ELECTRÓNICO','TELÉFONO ','OBSERVACIONES'));
+            */
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           $dato->codigo,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           $semestre->nombre,
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           grado($dato->grado),
+           $dato->nombreGrado,
+           $dato->email,
+           $dato->telefono,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

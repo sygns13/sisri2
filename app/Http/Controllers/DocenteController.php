@@ -19,6 +19,8 @@ use App\Tipouser;
 use App\User;
 
 
+use Excel;
+set_time_limit(600);
 
 class DocenteController extends Controller
 {
@@ -1180,5 +1182,210 @@ class DocenteController extends Controller
    
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+    public function descargarExcel(Request $request)
+    {
+        $buscar=$request->busca;
+        $semestre_id=$request->semestre_id;   
+
+        $semestre=Semestre::find($semestre_id);
+
+        Excel::create('Docentes Registrados en el Semestre: '.$semestre->nombre, function($excel) use($buscar,$semestre)  {
+            $excel->sheet('Base de Datos de Docentes', function($sheet) use($buscar,$semestre){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:AT3');
+                $sheet->cells('A3:AT3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:AT3', 'thin');
+                $sheet->cells('A3:AT3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:AT4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'20',
+                'C'=>'25',
+                'D'=>'25',
+                'E'=>'20',
+                'F'=>'25',
+                'G'=>'12',
+                'H'=>'20',
+                'I'=>'14',
+                'J'=>'20',
+                'K'=>'30',
+                'L'=>'10',
+                'M'=>'35',
+                'N'=>'35',
+                'O'=>'35',
+                'P'=>'20',
+                'Q'=>'30',
+                'R'=>'30',
+                'S'=>'25',
+                'T'=>'35',
+                'U'=>'42',
+                'V'=>'40',
+                'W'=>'40',
+                'X'=>'30',
+                'Y'=>'37',
+                'Z'=>'40',
+                'AA'=>'42',
+                'AB'=>'40',
+                'AC'=>'20',
+                'AD'=>'40',
+                'AE'=>'35',
+                'AF'=>'25',
+                'AG'=>'25',
+                'AH'=>'20',
+                'AI'=>'23',
+                'AJ'=>'23',
+                'AK'=>'20',
+                'AL'=>'20',
+                'AM'=>'33',
+                'AN'=>'33',
+                'AO'=>'25',
+                'AP'=>'35',
+                'AQ'=>'25',
+                'AR'=>'33',
+                'AS'=>'15',
+                'AT'=>'65'
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DOCENTES - SEMESTRE '.$semestre->nombre;
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:AT4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL', 'SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','SEMESTRE','DEPENDENCIA','FACULTAD','ESCUELA PROFESIONAL','PERSONAL ACADÉMICO','CARGO GENERAL','DESCRIPCIÓN DEL CARGO','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO','UNIVERSIDAD DONDE OBTUVO EL MÁXIMO GRADO','LUGAR DONDE OBTUVO EL MÁXIMO GRADO','PAÍS DONDE OBTUVO EL MÁXIMO GRADO','OTRO GRADO ACADÉMICO','SITUACIÓN DEL OTRO GRADO ACADÉMICO','UNIVERSIDAD DONDE OBTUVO EL OTRO GRADO','LUGAR DONDE OBTUVO EL OTRO GRADO','PAÍS DONDE OBTUVO EL OTRO GRADO','TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','CLASE CONDICIÓN DE DOCENTE','CATEGORÍA DOCENTE','RÉGIMEN DE DEDICACIÓN','ES INGESTIGADOR','ES DOCENTE PREGRADO','ES DOCENTE POSTGRADO','HORAS LECTIVAS','HORAS NO LECTIVAS','HORAS DE INVESTIGACIÓN SEMANAL','HORAS DE DEDICACIÓN SEMANAL','ES DOCENTE DESTACADO','FECHA DE INGRESO A LA UNIVERSIDAD','MODALIDAD DE INGRESO','CORREO ELECTRÓNICO','TELÉFONO','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+                $docentes = DB::table('docentes')
+     ->join('personas', 'personas.id', '=', 'docentes.persona_id')
+     ->join('semestres', 'semestres.id', '=', 'docentes.semestre_id')
+     ->leftjoin('facultads', 'facultads.id', '=', 'docentes.facultad_id')
+     ->leftjoin('escuelas', 'escuelas.id', '=', 'docentes.escuela_id')
+     ->where('docentes.borrado','0')
+     ->where('semestres.id',$semestre->id)
+     ->where(function($query) use ($buscar){
+        $query->where('personas.nombres','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidopat','like','%'.$buscar.'%');
+        $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
+        $query->orWhere('personas.doc','like','%'.$buscar.'%');
+        $query->orWhere('facultads.nombre','like','%'.$buscar.'%');
+        $query->orWhere('escuelas.nombre','like','%'.$buscar.'%');
+        })
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','docentes.id',
+    'docentes.personalacademico','docentes.cargogeneral','docentes.descripcioncargo',DB::Raw("if(`docentes`.`maximogrado`='0','SIN GRADO REGISTRADO',`docentes`.`maximogrado`) as maximogrado") ,'docentes.descmaximogrado','docentes.universidadgrado','docentes.lugarmaximogrado','docentes.paismaximogrado','docentes.otrogrado','docentes.estadootrogrado','docentes.univotrogrado','docentes.lugarotrogrado','docentes.paisotrogrado','docentes.titulo','docentes.descripciontitulo','docentes.condicion','docentes.categoria','docentes.regimen','docentes.investigador','docentes.pregrado','docentes.postgrado','docentes.esdestacado','docentes.fechaingreso','docentes.modalidadingreso','docentes.observaciones','docentes.persona_id','docentes.horaslectivas','docentes.horasnolectivas','docentes.horasinvestigacion','docentes.horasdedicacion','docentes.escuela_id','docentes.facultad_id', 'docentes.dependencia','docentes.semestre_id','semestres.nombre as semestre',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"))->get();
+
+        foreach ($docentes as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':AT'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+
+
+           array_push($data, array($key+1,
+           tipoDoc($dato->tipodoc),
+           $dato->doc,
+           $dato->apellidopat,
+           $dato->apellidomat,
+           $dato->nombres,
+           genero(strval($dato->genero)),
+           pasFechaVista($dato->fechanac),
+           estadoCivil($dato->estadocivil,$dato->genero),
+           esDiscpacitado($dato->esdiscapacitado),
+           $dato->discapacidad,
+           $semestre->nombre,
+           $dato->dependencia,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->personalacademico,
+           $dato->cargogeneral,
+           $dato->descripcioncargo,
+           $dato->maximogrado,
+           $dato->descmaximogrado,
+           $dato->universidadgrado,
+           $dato->lugarmaximogrado,
+           $dato->paismaximogrado,
+           $dato->otrogrado,
+           $dato->estadootrogrado,
+           $dato->univotrogrado,
+           $dato->lugarotrogrado,
+           $dato->paisotrogrado,
+           $dato->titulo,
+           $dato->descripciontitulo,
+           $dato->condicion,
+           $dato->categoria,
+           $dato->regimen,
+           SiUnoNoCero($dato->investigador),
+           SiUnoNoCero($dato->pregrado),
+           SiUnoNoCero($dato->postgrado),
+           $dato->horaslectivas,
+           $dato->horasnolectivas,
+           $dato->horasinvestigacion,
+           $dato->horasdedicacion,
+           SiUnoNoCero($dato->esdestacado),
+           pasFechaVista($dato->fechaingreso),
+           $dato->modalidadingreso,
+           $dato->email,
+           $dato->telefono,
+           $dato->observaciones,
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

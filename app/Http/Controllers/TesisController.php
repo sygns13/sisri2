@@ -16,6 +16,9 @@ use App\Facultad;
 use App\Escuela;
 use Validator;
 
+use Excel;
+set_time_limit(600);
+
 class TesisController extends Controller
 {
     /**
@@ -57,7 +60,6 @@ class TesisController extends Controller
     public function index(Request $request)
     {   
      $buscar=$request->busca;
-     $semestre_id=$request->semestre_id;
 
      $tesis = DB::table('tesis')
      ->join('escuelas', 'escuelas.id', '=', 'tesis.escuela_id')
@@ -298,6 +300,130 @@ class TesisController extends Controller
         $msj='Tesis eliminada exitosamente';
 
         return response()->json(["result"=>$result,'msj'=>$msj]);
+    }
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+        Excel::create('Tesis UNASAM', function($excel) use($buscar)  {
+            $excel->sheet('BD de Tesis', function($sheet) use($buscar){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:G3');
+                $sheet->cells('A3:G3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:G3', 'thin');
+                $sheet->cells('A3:G3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:G4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'65',
+                'C'=>'65',
+                'D'=>'65',
+                'E'=>'65',
+                'F'=>'65',
+                'G'=>'65'
+
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE TESIS - UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:G4', 'thin');
+                array_push($data, array('N°','FACULTAD', 'ESCUELA PROFESIONAL','TÍTULO DEL PROYECTO','AUTOR 1','AUTOR 2','FUENTE DE FINANCIAMIENTO'));
+
+                $cont=5;
+                $cont2=5;
+
+                $tesis = DB::table('tesis')
+                ->join('escuelas', 'escuelas.id', '=', 'tesis.escuela_id')
+                ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+                ->where('tesis.borrado','0')
+                ->where(function($query) use ($buscar){
+                   $query->where('tesis.nombreProyecto','like','%'.$buscar.'%');
+                   $query->orWhere('tesis.autor','like','%'.$buscar.'%');
+                   $query->orWhere('tesis.autor2','like','%'.$buscar.'%');
+                   $query->orWhere('tesis.fuenteFinanciamiento','like','%'.$buscar.'%');
+                   })
+                ->orderBy('facultads.id')
+                ->orderBy('escuelas.id')
+                ->orderBy('tesis.nombreProyecto')
+                ->select('tesis.id','tesis.nombreProyecto','tesis.autor','tesis.fuenteFinanciamiento','tesis.autor2','tesis.escuela_id','escuelas.nombre as escuela','facultads.nombre as facultad', 'facultads.id as facultad_id')->get();
+
+        foreach ($tesis as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':G'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+array_push($data, array('N°','FACULTAD', 'ESCUELA PROFESIONAL','TÍTULO DEL PROYECTO','AUTORES','FUENTE DE FINANCIAMIENTO'));
+*/
+
+
+           array_push($data, array($key+1,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->nombreProyecto,
+           $dato->autor,
+           $dato->autor2,
+           $dato->fuenteFinanciamiento
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 
 }

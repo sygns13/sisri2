@@ -21,6 +21,9 @@ use App\User;
 use Storage;
 use stdClass;
 
+use Excel;
+set_time_limit(600);
+
 class InvestigacionController extends Controller
 {
     /**
@@ -831,5 +834,184 @@ return response()->json(["result"=>$result,'msj'=>$msj,'selector'=>$selector]);
      return [
         'publicacionRegis'=>$publicacionRegis
     ];
+    }
+
+
+
+
+
+
+
+
+
+    public function descargarExcel(Request $request)
+    {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
+
+        Excel::create('Investigaciones UNASAM', function($excel) use($buscar)  {
+            $excel->sheet('BD de Investigaciones', function($sheet) use($buscar){
+
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:T3');
+                $sheet->cells('A3:T3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:T3', 'thin');
+                $sheet->cells('A3:T3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:T4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'45',
+                'D'=>'65',
+                'E'=>'85',
+                'F'=>'65',
+                'G'=>'30',
+                'H'=>'40',
+                'I'=>'45',
+                'J'=>'45',
+                'K'=>'27',
+                'L'=>'27',
+                'M'=>'25',
+                'N'=>'25',
+                'O'=>'20',
+                'P'=>'15',
+                'Q'=>'20',
+                'R'=>'18',
+                'S'=>'65',
+                'T'=>'65',
+
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE INVESTIGACIONES - UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:T4', 'thin');
+                array_push($data, array('N°','FACULTAD', 'ESCUELA PROFESIONAL','TÍTULO DE INVESTIGACIÓN','AUTORES','DESCRIPCIÓN','RESOLUCIÓN DE APROBACIÓN','CLASIFICACIÓN','LÍNEA DE INVESTIGACIÓN','TIPO DE FINANCIAMIENTO','PRESUPUESTO ASIGNADO S/.','PRESUPUESTO EJECUTADO S/.','FECHA DE INICIO','FECHA DE TÉRMINO','HORAS DEDICADAS','PATENTADO','ESTADO','AVANCE %','DESCRIPCIÓN DEL AVANCE','OBSERVACIONES'));
+
+                $cont=5;
+                $cont2=5;
+
+    $investigacions = DB::table('investigacions')
+
+     ->leftjoin('escuelas', 'escuelas.id', '=', 'investigacions.escuela_id')
+     ->leftjoin('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+     ->where('investigacions.borrado','0')
+
+     ->where(function($query) use ($buscar){
+        $query->where('investigacions.titulo','like','%'.$buscar.'%');
+        $query->orWhere('investigacions.descripcion','like','%'.$buscar.'%');
+        $query->orWhere('investigacions.resolucionAprobacion','like','%'.$buscar.'%');
+        $query->orWhere('investigacions.clasificacion','like','%'.$buscar.'%');
+        $query->orWhere('investigacions.lineainvestigacion','like','%'.$buscar.'%');
+        $query->orWhere('escuelas.nombre','like','%'.$buscar.'%');
+        $query->orWhere('facultads.nombre','like','%'.$buscar.'%');
+        })
+     ->select('investigacions.id',
+    'investigacions.titulo','investigacions.descripcion','investigacions.resolucionAprobacion','investigacions.presupuestoAsignado','investigacions.presupuestoEjecutado','investigacions.horas','investigacions.fechaInicio','investigacions.fechaTermino','investigacions.clasificacion','investigacions.rutadocumento','investigacions.estado','investigacions.avance','investigacions.descripcionAvance','investigacions.escuela_id','investigacions.lineainvestigacion','investigacions.financiamiento','investigacions.patentado',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"), 'investigacions.observaciones','investigacions.archivonombre')->get(); 
+
+        foreach ($investigacions as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':T'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+array_push($data, array('N°','FACULTAD', 'ESCUELA PROFESIONAL','TÍTULO DE INVESTIGACIÓN','AUTORES','DESCRIPCIÓN','RESOLUCIÓN DE APROBACIÓN','CLASIFICACIÓN','LÍNEA DE INVESTIGACIÓN','TIPO DE FINANCIAMIENTO','PRESUPUESTO ASIGNADO S/.','PRESUPUESTO EJECUTADO S/.','FECHA DE INICIO','FECHA DE TÉRMINO','HORAS DEDICADAS','PATENTADO','ESTADO','AVANCE %','DESCRIPCIÓN DEL AVANCE'));
+*/
+
+$autores="";
+$investigadorsRegis = DB::table('investigadors')
+     ->join('personas', 'personas.id', '=', 'investigadors.persona_id')
+     ->join('detalleinvestigacions', 'investigadors.id', '=', 'detalleinvestigacions.investigador_id')
+     ->leftjoin('facultads', 'facultads.id', '=', 'investigadors.facultad_id')
+     ->leftjoin('escuelas', 'escuelas.id', '=', 'investigadors.escuela_id')
+     ->where('investigadors.borrado','0')
+     ->where('detalleinvestigacions.investigacion_id',$dato->id)
+
+     ->orderBy('personas.apellidopat')
+     ->orderBy('personas.apellidomat')
+     ->orderBy('personas.nombres')
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','investigadors.id',
+    'investigadors.persona_id','investigadors.escuela_id','investigadors.facultad_id','investigadors.observaciones','investigadors.clasificacion',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"),'detalleinvestigacions.cargo','detalleinvestigacions.tipoAutor','detalleinvestigacions.id as idDetalle')->get();
+
+
+    foreach ($investigadorsRegis as $keyAutor => $datoAutor) {
+        $autores.=$datoAutor->tipoAutor.' '.$datoAutor->doc.' '.$datoAutor->apellidopat.' '.$datoAutor->apellidomat.' '.$datoAutor->nombres.'. ';
+    }
+
+           array_push($data, array($key+1,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->titulo,
+           $autores,
+           $dato->descripcion,
+           $dato->resolucionAprobacion,
+           $dato->clasificacion,
+           $dato->lineainvestigacion,
+           $dato->financiamiento,
+           strval(number_format($dato->presupuestoAsignado,2)),
+           strval(number_format($dato->presupuestoEjecutado,2)),
+           pasFechaVista($dato->fechaInicio),
+           pasFechaVista($dato->fechaTermino),
+           $dato->horas,
+           SiUnoNoCero($dato->patentado),
+           estadoInvestigacion($dato->estado),
+           $dato->avance,
+           $dato->descripcionAvance,
+           $dato->observaciones
+        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

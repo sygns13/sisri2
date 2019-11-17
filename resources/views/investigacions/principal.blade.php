@@ -12,7 +12,9 @@
 
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
 
-            <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Plantilla</button>
+            {{-- <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Plantilla</button> --}}
+
+            <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'investigaciones/exportarExcel?busca='+buscar" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
 
           </div>     
           </div>
@@ -113,14 +115,21 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.clasificacion }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.lineainvestigacion }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.financiamiento }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.presupuestoAsignado }} </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.presupuestoEjecutado }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">S/. @{{ parseFloat(investigacion.presupuestoAsignado).toFixed(2) }} </td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">S/. @{{ parseFloat(investigacion.presupuestoEjecutado).toFixed(2) }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.fechaInicio }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.fechaTermino }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.horas }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.patentado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.estado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;width: 300px;">@{{ investigacion.avance }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
+                <template v-if="parseInt(investigacion.patentado)==0">No</template>
+                <template v-if="parseInt(investigacion.patentado)==1">Si</template>
+              </td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
+                <template v-if="parseInt(investigacion.estado)==0">Finalizado</template>
+                <template v-if="parseInt(investigacion.estado)==1">En Ejecución</template>
+                <template v-if="parseInt(investigacion.estado)==2">Cancelado</template>
+              </td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;width: 300px;">@{{ investigacion.avance }}%</td>
   
                 
       

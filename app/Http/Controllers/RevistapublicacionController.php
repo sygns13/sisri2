@@ -22,6 +22,8 @@ use App\User;
 use Storage;
 use stdClass;
 
+use Excel;
+set_time_limit(600);
 class RevistapublicacionController extends Controller
 {
     /**
@@ -580,27 +582,158 @@ class RevistapublicacionController extends Controller
         return response()->json(["result"=>$result,'msj'=>$msj]);
     }
 
-    public function obtenerAutors($id)
+  
+
+
+
+
+
+
+    public function descargarExcel(Request $request)
     {   
+        $buscar=$request->busca;
+        $tipo=$request->tipo;
 
+        Excel::create('Revistas Publicaciones UNASAM', function($excel) use($buscar)  {
+            $excel->sheet('BD de Publicaciones', function($sheet) use($buscar){
 
-     $investigadorsRegis = DB::table('investigadors')
-     ->join('personas', 'personas.id', '=', 'investigadors.persona_id')
-     ->join('detalleinvestigacions', 'investigadors.id', '=', 'detalleinvestigacions.investigador_id')
-     ->leftjoin('facultads', 'facultads.id', '=', 'investigadors.facultad_id')
-     ->leftjoin('escuelas', 'escuelas.id', '=', 'investigadors.escuela_id')
-     ->where('investigadors.borrado','0')
-     ->where('detalleinvestigacions.investigacion_id',$id)
+                $sheet->setAutoSize(true);
+                /* $sheet->mergeCells('B1:D1');
+                $sheet->mergeCells('B2:H2'); */
+
+                $sheet->mergeCells('A3:K3');
+                $sheet->cells('A3:K3',function($cells)
+                {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->setBorder('A3:k3', 'thin');
+                $sheet->cells('A3:k3', function($cells)
+                {
+                    $cells->setBackground('#0C73E8');
+                    $cells->setFontColor('#FFFFFF');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    $cells->setFontSize(15);
+
+                    #Borders
+                });
+                
+                $sheet->cells('A4:k4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+              
+
+                
+
+                $data=[];
+
+                $sheet->setWidth(array
+                (
+                'A'=>'7',
+                'B'=>'45',
+                'C'=>'45',
+                'D'=>'30',
+                'E'=>'55',
+                'F'=>'25',
+                'G'=>'85',
+                'H'=>'65',
+                'I'=>'25',
+                'J'=>'15',
+                'K'=>'45'
+
+                )
+                );
+
+                $sheet->setHeight(array
+                (
+                '3'=>'24'
+                )
+                );
+
+                $titulo='BASE DE DATOS DE REVISTAS Y PUBLICACIONES - UNASAM';
+
+                array_push($data, array(''));
+                array_push($data, array(''));
+                array_push($data, array($titulo));
+
+                $sheet->setBorder('A4:k4', 'thin');
+                array_push($data, array('N°','FACULTAD', 'ESCUELA PROFESIONAL','TIPO DE PUBLICACIÓN','TÍTULO','NÚMERO','AUTORES','DESCRIPCIÓN','FECHA DE PUBLICACIÓN','INDEXADA','LUGAR DE INDEXACIÓN'));
+
+                $cont=5;
+                $cont2=5;
+
+                $revistas = DB::table('revistaspublicacions')
+
+                ->join('escuelas', 'escuelas.id', '=', 'revistaspublicacions.escuela_id')
+                ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
+                ->where('revistaspublicacions.borrado','0')
+           
+                ->where(function($query) use ($buscar){
+                   $query->where('revistaspublicacions.titulo','like','%'.$buscar.'%');
+                   $query->orWhere('revistaspublicacions.descripcion','like','%'.$buscar.'%');
+                   $query->orWhere('revistaspublicacions.tipoPublicacion','like','%'.$buscar.'%');
+                   $query->orWhere('revistaspublicacions.numero','like','%'.$buscar.'%');
+                   $query->orWhere('escuelas.nombre','like','%'.$buscar.'%');
+                   $query->orWhere('facultads.nombre','like','%'.$buscar.'%');
+                   })
+                ->select('revistaspublicacions.id',
+               'revistaspublicacions.tipoPublicacion','revistaspublicacions.titulo','revistaspublicacions.descripcion','revistaspublicacions.escuela_id','revistaspublicacions.fechaPublicado','revistaspublicacions.indexada','revistaspublicacions.lugarIndexada','revistaspublicacions.numero','revistaspublicacions.rutadoc','revistaspublicacions.archivonombre',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"))->get(); 
+
+        foreach ($revistas as $key => $dato) {
+            $rango='A'.strval((intval($cont)+intval($key))).':k'.strval((intval($cont)+intval($key)));
+            $sheet->setBorder($rango, 'thin');
+
+/*
+array_push($data, array('N°','FACULTAD', 'ESCUELA PROFESIONAL','TIPO DE PUBLICACIÓN','TÍTULO','NÚMERO','AUTORES','DESCRIPCIÓN','FECHA DE PUBLICACIÓN','INDEXADA','LUGAR DE INDEXACIÓN'));
+*/
+
+$autores="";
+$autoresRegis = DB::table('personas')
+     ->join('autors', 'personas.id', '=', 'autors.persona_id')
+     ->join('revistaspublicacions', 'revistaspublicacions.id', '=', 'autors.revistaspublicacion_id')
+     ->where('autors.borrado','0')
+     ->where('revistaspublicacions.id',$dato->id)
 
      ->orderBy('personas.apellidopat')
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','investigadors.id',
-    'investigadors.persona_id','investigadors.escuela_id','investigadors.facultad_id','investigadors.observaciones','investigadors.clasificacion',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"),'detalleinvestigacions.cargo','detalleinvestigacions.tipoAutor','detalleinvestigacions.id as idDetalle')->get();
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','autors.id','autors.cargo','autors.persona_id','autors.revistaspublicacion_id')->get();
 
 
-     return [
-        'investigadorsRegis'=>$investigadorsRegis
-    ];
+    foreach ($autoresRegis as $keyAutor => $datoAutor) {
+        $autores.=$datoAutor->cargo.' '.$datoAutor->doc.' '.$datoAutor->apellidopat.' '.$datoAutor->apellidomat.' '.$datoAutor->nombres.'. ';
+    }
+
+           array_push($data, array($key+1,
+           $dato->facultad,
+           $dato->escuela,
+           $dato->tipoPublicacion,
+           $dato->titulo,
+           $dato->numero,
+           $autores,
+           $dato->descripcion,
+           pasFechaVista($dato->fechaPublicado),
+           SiUnoNoCero($dato->indexada),
+           $dato->lugarIndexada        
+        ));
+            
+            $cont2++;
+        }
+
+
+
+                $sheet->fromArray($data, null, 'A1', false, false);
+            
+            });
+            })->download('xlsx');  
+   
+
+        return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
 }

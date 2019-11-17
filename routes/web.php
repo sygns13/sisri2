@@ -160,7 +160,24 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::get('postulantespregrado/exportarExcel','PostulanteController@descargarExcel');
- 
+    Route::get('docentes/exportarExcel','DocenteController@descargarExcel');
+    Route::get('alumnopregradoR/exportarExcel','AlumnoController@descargarExcel');
+    Route::get('alumnopregradoR/exportarExcel2','AlumnoController@descargarExcel2');
+    Route::get('postulantesR/exportarExcel','PostulanteController@descargarExcel2');
+    Route::get('alumnopostgradoR/exportarExcel','AlumnoController@descargarExcel3');
+    Route::get('alumnopostgradoR/exportarExcel2','AlumnoController@descargarExcel4');
+    Route::get('bachilleres/exportarExcel','GraduadoController@descargarExcel');
+    Route::get('titulados/exportarExcel2','GraduadoController@descargarExcel2');
+    Route::get('maestros/exportarExcel3','GraduadoController@descargarExcel3');
+    Route::get('doctores/exportarExcel4','GraduadoController@descargarExcel4');
+    Route::get('investigadores/exportarExcel','InvestigadorController@descargarExcel');
+    Route::get('investigaciones/exportarExcel','InvestigacionController@descargarExcel');
+    Route::get('tesisinfo/exportarExcel','TesisController@descargarExcel');
+    Route::get('revistaspublicaciones/exportarExcel','RevistapublicacionController@descargarExcel');
+    Route::get('administrativos/exportarExcel','AdministrativoController@descargarExcel');
+    Route::get('locacionservicios/exportarExcel','AdminlocacionController@descargarExcel');
+    
+    
     
  /*    
     Route::get('entidades','EntidadController@index1');
