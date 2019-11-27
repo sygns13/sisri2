@@ -43,6 +43,12 @@ return [
 
     'disks' => [
 
+        'infoFile' => [
+            'driver' => 'local',
+            'root' => public_path('archivosExcel'), // miproyecto.com/public/defaults/
+            'visibility' => 'public',
+         ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
@@ -83,6 +89,7 @@ return [
             'root' => public_path('revistas'), // miproyecto.com/public/defaults/
             'visibility' => 'public',
          ],
+         
 
     ],
 

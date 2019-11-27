@@ -155,6 +155,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('usuario/modificarclave','UserController@modificarclave');
 
 
+    Route::post('postulantespregrado/importardata','PostulanteController@importarArchivo');
+
+
 
 
 

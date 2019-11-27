@@ -12,9 +12,15 @@
             <template v-if="contse!='0'">
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
 
-           {{--  <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</button>
-             --}}
+           
             <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'postulantespregrado/exportarExcel?busca='+buscar+'&semestre_id='+semestre_id+'&tipo='+tipoGen" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
+
+            {{--  <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</button>
+             --}}
+
+             <a download="Postulantes_Pregrado_Plantilla_Carga_Datos.xlsx" type="button" class="btn btn-warning" id="btnDescargarPlantilla" href="{{URL::to('plantillas/Postulantes_Pregrado_Plantilla_Carga_Datos.xlsx')}}" data-placement="top" data-toggle="tooltip" title="Descargar Plantilla de Carga de Datos"><i class="fa fa-file-text" aria-hidden="true" ></i> Descargar Plantilla</a>
+
+             <button type="button" class="btn btn-primary" id="btncrearArea" @click.prevent="nuevaExportación()"><i class="fa fa-cloud-upload" aria-hidden="true" ></i> Realizar Nueva Importación de Data</button>
 
             <label for="cbusemestre" class="col-sm-2 control-label" style="width: auto;">Semestre:*</label>
                     <div class="col-sm-3">
@@ -51,6 +57,94 @@
           </div>
       
 </div>
+
+
+
+
+
+
+<div class="box box-success" v-if="divNuevoImporte">
+  <div class="box-header with-border" >
+    <h3 class="box-title" id="tituloAgregarImporte">Importar Archivo Mensual de Avance de Expedientes - Formato CSV</h3>
+  </div>
+
+   <form v-on:submit.prevent="createImportacion">
+
+    {{--  <form action="/" method="POST" accept-charset="UTF-8" enctype="multipart/form-data" id="pruebaCreate">--}}
+   <div class="box-body">
+
+
+
+
+                  {{ csrf_field() }}
+                  
+                        <div class="col-sm-12" style="padding-left: 0px;">
+                      <div class="form-group">
+
+                        
+                          <span class="pull-left label label-default" style="margin-right: 5px; font-size: 12px;">
+                           {{--    {!! Form::file('formatoexcel',['id'=>'formatoexcel','accept'=>'.xls,.xlsx','required']) !!}  --}}  
+
+                                <input v-if="uploadReady" name="archivo2" type="file" id="archivo" class="archivo form-control" required @change="getArchivo" 
+        accept=".xls, .XLS, .xlsx, .XLSX "/>
+
+                              </span>
+                        </div>
+
+                      </div>
+
+
+
+
+  </div>
+
+  <!-- /.box-body -->
+  <div class="box-footer">
+    <button type="submit" class="btn btn-info" id="btnGuardarImporte" >Guardar Datos</button>
+
+     {{-- <button type="submit" class="btn btn-primary" id="guardar" style="margin-right: 15px;">Guardar</button>--}}
+
+    <button type="reset" class="btn btn-warning" id="btnCancelImporte" @click="cancelFormImporteForm()">Cancelar</button>
+
+    <button type="button" class="btn btn-default" id="btnCloseImporte" @click.prevent="cerrarFormImportacion()">Cerrar</button>
+
+    <div v-show="divloaderNuevoImporte">
+      
+    
+    <div class="sk-circle" >
+      <div style="color:red;" class="sk-circle1 sk-child"></div>
+      <div style="color:red;" class="sk-circle2 sk-child"></div>
+      <div style="color:red;" class="sk-circle3 sk-child"></div>
+      <div style="color:red;" class="sk-circle4 sk-child"></div>
+      <div style="color:red;" class="sk-circle5 sk-child"></div>
+      <div style="color:red;" class="sk-circle6 sk-child"></div>
+      <div style="color:red;" class="sk-circle7 sk-child"></div>
+      <div style="color:red;" class="sk-circle8 sk-child"></div>
+      <div style="color:red;" class="sk-circle9 sk-child"></div>
+      <div style="color:red;" class="sk-circle10 sk-child"></div>
+      <div style="color:red;" class="sk-circle11 sk-child"></div>
+      <div style="color:red;" class="sk-circle12 sk-child"></div>
+    </div>
+    <center>
+    <h3 style="color:red;">Importando Datos del Archivo CSV, espere por favor y no ejecute ninguna acción hasta que el proceso haya finalizado</h3></center>
+    </div>
+
+  </div>
+  <!-- /.box-footer -->
+
+</form>
+
+
+
+</div>
+
+
+
+
+
+
+
+
       
 <div class="box box-success" v-if="divNuevo">
   <div class="box-header with-border" style="border: 1px solid rgb(0, 166, 90); background-color: rgb(0, 166, 90); color: white;">

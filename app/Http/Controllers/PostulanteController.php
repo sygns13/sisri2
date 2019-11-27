@@ -23,6 +23,9 @@ use App\User;
 use Excel;
 set_time_limit(600);
 
+use Storage;
+use DateTime;
+
 class PostulanteController extends Controller
 {
     /**
@@ -1491,4 +1494,758 @@ class PostulanteController extends Controller
 
         return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function importarArchivo(Request $request)
+    {
+        ini_set('memory_limit','256M');
+
+        ini_set('upload_max_filesize','128M');
+
+        $archivo="";
+        $file = $request->archivo;
+        $segureFile=0;
+
+       // $nombreArchivo="";
+
+        $result='1';
+         $msj='';
+         $selector='';
+
+        if($request->hasFile('archivo')){
+
+
+
+           /* $nombreArchivo=$request->nombreArchivo;*/
+
+            $aux2='postulantePregrado'.date('d-m-Y').'-'.date('H-i-s');
+            $input2  = array('archivo' => $file) ;
+            $reglas2 = array('archivo' => 'required|file:1,51200');
+            $validatorF = Validator::make($input2, $reglas2);
+
+          /*  $inputNA  = array('archivonombre' => $nombreArchivo);
+            $reglasNA = array('archivonombre' => 'required');
+            $validatorNA = Validator::make($inputNA, $reglasNA);*/
+
+          
+
+            if ($validatorF->fails())
+            {
+
+            $segureFile=1;
+            $msj="El archivo adjunto ingresado tiene un tamaño no válido superior a los 5 MB, ingrese otro archivo o limpie el formulario";
+            $result='0';
+            $selector='archivo';
+            }
+          /*  elseif($validatorNA->fails()){
+                $segureFile=1;
+                $msj="Si va a registrar un archivo adjunto, debe de ingresar un nombre válido con el que se verá en el sistema";
+                $result='0';
+                $selector='txtArchivoAdjunto';
+            }*/
+            else
+            {
+                $nombre2=$file->getClientOriginalName();
+                $extension2=$file->getClientOriginalExtension();
+                $nuevoNombre2=$aux2.".".$extension2;
+                //$subir2=Storage::disk('revistas')->put($nuevoNombre2, \File::get($file));
+                $subir2=Storage::disk('infoFile')->put($nuevoNombre2, \File::get($file));
+
+               
+
+                if($extension2=="xls" || $extension2=="xlsx"  || $extension2=="XLS" || $extension2=="XLSX" )
+                {
+
+                if($subir2){
+                    $archivo=$nuevoNombre2;
+                }
+                else{
+                    $msj="Error al subir el archivo adjunto, intentelo nuevamente luego";
+                    $segureFile=1;
+                    $result='0';
+                    $selector='archivo';
+                }
+                }
+                else {
+                    $segureFile=1;
+                    $msj="El archivo adjunto ingresado tiene una extensión no válida, ingrese otro archivo o limpie el formulario";
+                    $result='0';
+                    $selector='archivo';
+                }
+            }
+
+        }
+
+        if($segureFile==1){
+            Storage::disk('infoFile')->delete($archivo);
+
+            
+        }
+        else
+        {
+
+             $variablePrueba = "hola"; //si quieres meter una variable exterma al recorrido del excel
+
+
+
+                $errorFila="";
+                $errorColumna="";
+                $detError="";
+                $error=0;
+    
+    
+                $semestres=Semestre::where('activo','1')->where('borrado','0')->get();
+                $escuelas=Escuela::where('activo','1')->where('borrado','0')->get();
+                $modalidadAdmisions=Modalidadadmision::where('activo','1')->where('borrado','0')->get();
+
+
+                 Excel::load(public_path().'/archivosExcel/'.$archivo, function ($reader) use (&$errorFila,  &$errorColumna,  &$detError, &$error, $archivo, &$msj, $semestres, $escuelas, $modalidadAdmisions, &$result) { 
+
+                   $resultado=$reader->skipRows(4)->get();
+
+
+                   $error=0;
+
+                   foreach ($resultado as $key => $row) {
+
+                    $bandera01=false;
+
+                    foreach ($semestres as $key3 => $dato) {
+                        if(intval($row->c_sem)==$dato->id)
+                        {
+                            $bandera01=true;
+                        }
+                    }
+
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna SEMESTRE DE POSTULACIÓN";
+                        $detError="El Identificador de Semestre no corresponde a ninguno ingresado en la base de datos";
+                        $error=1;
+                        break 1;
+
+                    }
+
+                    $bandera01=false;
+                    foreach ($escuelas as $key4 => $dato) {
+                        if(intval($row->c_carr1)==$dato->id)
+                        {
+                            $bandera01=true;
+                        }
+                    }
+
+                    if($bandera01==false){
+        
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna CARRERA PRIMERA OPCIÓN";
+                        $detError="El Identificador de Carrera Primera Opción no corresponde a ninguna Escuela Profesional registrada en la base de datos";
+                        $error=1;
+                        break 1;
+
+                    }
+
+
+                    if(intval($row->c_segop)==1){ 
+                    $bandera01=false;
+                    foreach ($escuelas as $key5 => $dato) {
+                        if(intval($row->c_carr2)==$dato->id)
+                        {
+                            $bandera01=true;
+                        }
+                    }
+
+                }
+                    
+
+                    if($bandera01==false){
+        
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna CARRERA SEGUNDA OPCIÓN";
+                        $detError="El Identificador de Carrera Segunda Opción no corresponde a ninguna Escuela Profesional registrada en la base de datos. De no haber habido segunda Opción, deje en blanco o con valor de 0 la Columna Hubo Segunda Opcion";
+                        $error=1;
+                        break 1;
+
+                    }
+
+
+                    $bandera01=false;
+                    foreach ($modalidadAdmisions as $key => $dato) {
+                        if(intval($row->c_modadmi)==$dato->id)
+                        {
+                            $bandera01=true;
+                        }
+                    }
+
+                    if($bandera01==false){
+        
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna MODALIDAD DE ADMISIÓN";
+                        $detError="El Identificador de Modalidad de Admisión no corresponde a ninguna Modalidad de Admisión registrada en la base de datos";
+                        $error=1;
+                        break 1;
+
+                    }
+
+
+                    $bandera01=false;
+                    if(intval($row->c_modestu)==1 || intval($row->c_modestu)==2 || intval($row->c_modestu)==3){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna MODALIDAD DE ESTUDIOS";
+                            $detError="El código de Modalidad de Estudios Ingresada no corresponde a los valores posibles de ser consignados";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+                        $bandera01=false;
+                    if(intval($row->c_estado)==1 || intval($row->c_estado)==0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna ESTADO DE INGRESO";
+                            $detError="El código del Estado de Ingreso no corresponde a los valores posibles de ser consignados";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+                        $bandera01=false;
+                        if(intval($row->c_opcion)==intval($row->c_carr1) || intval($row->c_opcion)==intval($row->c_carr2)){
+                            $bandera01=true;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna OPCIÓN DE INGRESO";
+                                $detError="El código de la Opción no corresponde a los valores posibles de ser consignados";
+                                $error=1;
+                                break 1;
+        
+                            }
+
+
+                        $bandera01=false;
+                        if(intval($row->c_tipodoc)==1 || intval($row->c_tipodoc)==2 || intval($row->c_tipodoc)==3 || intval($row->c_tipodoc)==4){
+                            $bandera01=true;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna TIPO DE DOCUMENTO";
+                                $detError="El código del Tipo de Documento no corresponde a los valores posibles de ser consignados";
+                                $error=1;
+                                break 1;
+        
+                            }
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_numdoc))>0){
+                            $bandera01=true;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna NÚMERO DE DOCUMENTO";
+                                $detError="El Número de Documento de Indentidad ingresado se encuentran en blanco";
+                                $error=1;
+                                break 1;
+        
+                            }
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_codpos))>0){
+                            $bandera01=true;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna CÓDIGO DE POSTULANTE";
+                                $detError="El código ingresado se encuentran en blanco";
+                                $error=1;
+                                break 1;
+        
+                            }
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_apepat))>0){
+                            $bandera01=true;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna APELLIDO PATERNO";
+                                $detError="El Apellido ingresado se encuentran en blanco";
+                                $error=1;
+                                break 1;
+        
+                            }
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_noms))>0){
+                            $bandera01=true;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna NOMBRES";
+                                $detError="Los Nombres ingresados se encuentran en blanco";
+                                $error=1;
+                                break 1;
+        
+                            }
+
+                        $bandera01=false;
+                        if((trim($row->c_genero)=="M") || (trim($row->c_genero)=="F")){
+                            $bandera01=true;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+11);
+                                $errorColumna="Error en la Columna GÉNERO";
+                                $detError="Consideró un dato no identificado, solo indique M para másculino y F para femenino, sin espacios en blanco";
+                                $error=1;
+                                break 1;
+        
+                            }
+
+                        if(strlen(trim($row->c_fechanac))==10){
+
+                        //$dateTime = new DateTime::createFromFormat('d/m/Y',$row->c_fechanac);   //pasar a datetime
+
+                        $var=pasFechaBD($row->c_fechanac);
+                        $dateTime = new DateTime($var);
+                        $fechanac=$dateTime->format('Y-m-d'); 
+
+                        $bandera01=false;
+                        if(strlen(trim($row->$fechanac))>0){
+                            $bandera01=true;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
+                                $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto";
+                                $error=1;
+                                break 1;
+        
+                            }
+                        }
+
+
+                        $bandera01=false;
+                    if(intval($row->c_estadociv)==1 || intval($row->c_estadociv)==2 || intval($row->c_estadociv)==3 || intval($row->c_estadociv)==4){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna ESTADO CIVIL";
+                            $detError="El código del Estado CIvil no corresponde a los valores posibles de ser consignados";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+
+                        $bandera01=false;
+                    if(intval($row->c_esdisca)==1 || intval($row->c_esdisca)==0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna SUFRE DISCAPACIDAD";
+                            $detError="El código de Condiciónd de Discapacidad no corresponde a los valores posibles de ser consignados";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+                
+                    if( intval($row->c_esdisca)==1){
+                    $bandera01=false;
+                    if(strlen(trim($row->c_disca))>0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna DISCAPACIDAD QUE PADECE";
+                            $detError="Si ha ingresado que el Alumno es Discapacitado, ingrese la Discapacidad que padece, no puede dejar el registro en blanco";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+                    }
+
+                
+                        $bandera01=true;
+                        if(floatval($row->c_puntaje)<0){
+                            $bandera01=false;
+                            }
+                            if($bandera01==false){
+        
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna PUNTAJE OBTENIDO";
+                                $detError="Ha consignado un valor no válido";
+                                $error=1;
+                                break 1;
+        
+                            }
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_pais))>0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna PAÍS DE PROCEDENCIA";
+                            $detError="El País de Procedencia ingresado se encuentran en blanco";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_depar))>0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna DEPARTAMENTO DE PROCEDENCIA";
+                            $detError="El Departamento de Procedencia ingresado se encuentran en blanco";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_prov))>0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna PROVINCIA DE PROCEDENCIA";
+                            $detError="La Provincia de Procedencia ingresado se encuentran en blanco";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_dist))>0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna DISTRITO DE PROCEDENCIA";
+                            $detError="El Distrito de Procedencia ingresado se encuentran en blanco";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_termino5))>0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna COLEGIO DONDE TERMINÓ EL 5° GRADO DE SECUNADARIA";
+                            $detError="El Valor ingresado se encuentran en blanco";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+
+                        $bandera01=false;
+                    if(intval($row->c_gestcolegio)==1 || intval($row->c_gestcolegio)==2){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna GESTIÓN DEL COLEGIO";
+                            $detError="El código de Tipo de Gestión del Colegio no corresponde a los valores posibles de ser consignados";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_direc))>0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna DIRECCIÓN DEL POSTULANTE";
+                            $detError="El Valor ingresado se encuentran en blanco";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+                        $bandera01=false;
+                        if(strlen(trim($row->c_email))>0){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna CORREO ELECTRÓNICO";
+                            $detError="El Valor ingresado se encuentran en blanco";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+                    }
+
+                    if($error==1){
+                    Storage::disk('infoFile')->delete($archivo);
+                    $msj=$detError.'. '.$errorFila.'. '.$errorColumna. ' Por lo Que no se realizó la Importación de Datos.';
+                    $result='0';
+                    }
+                    else{
+
+                    $msj="Datos Importados Exitosamente";
+                    
+                    foreach ($resultado as $key => $row) {
+
+                        $persona_id="0";
+                        $idPostulante="0";
+
+                        $persona=Persona::where('doc',(trim($row->c_numdoc)))->where('tipodoc',intval($row->c_tipodoc))->get();
+
+                        foreach ($persona as $key => $dato) {
+                            $persona_id=$dato->id;
+                        }
+
+                        if(trim($row->c_genero)=="M")
+                        {
+                            $newGenero=1;
+                        }elseif(trim($row->c_genero)=="F")
+                        {
+                            $newGenero=0;
+                        }
+                    
+                        $dateTime = new DateTime(pasFechaBD($row->c_fechanac));   //pasar a datetime
+                        $fechanac=$dateTime->format('Y-m-d');
+
+                        if(intval($persona_id)!=0)
+                        {
+                            $editPersona =Persona::find($persona_id);
+                            $editPersona->tipodoc=intval($row->c_tipodoc);
+                            $editPersona->doc=trim($row->c_numdoc);
+                            $editPersona->nombres=trim($row->c_noms);
+                            $editPersona->apellidopat=trim($row->c_apepat);
+                            $editPersona->apellidomat=trim($row->c_apemat);
+                            $editPersona->genero=$newGenero;
+                            $editPersona->estadocivil=intval($row->c_estadociv);
+                            $editPersona->fechanac=$fechanac;
+                            $editPersona->esdiscapacitado=intval($row->c_esdisca);
+                            $editPersona->discapacidad=trim($row->c_disca);
+                            $editPersona->pais=trim($row->c_pais);
+                            $editPersona->departamento=trim($row->c_depar);
+                            $editPersona->provincia=trim($row->c_prov);
+                            $editPersona->distrito=trim($row->c_dist);
+                            $editPersona->direccion=trim($row->c_direc);
+                            $editPersona->email=trim($row->c_email);
+                            $editPersona->telefono=trim($row->c_telf);
+                
+                            $editPersona->save();
+                        }
+                        else{
+                            $newPersona = new Persona();
+                            $newPersona->tipodoc=intval($row->c_tipodoc);
+                            $newPersona->doc=trim($row->c_numdoc);
+                            $newPersona->nombres=trim($row->c_noms);
+                            $newPersona->apellidopat=trim($row->c_apepat);
+                            $newPersona->apellidomat=trim($row->c_apemat);
+                            $newPersona->genero=$newGenero;
+                            $newPersona->estadocivil=intval($row->c_estadociv);
+                            $newPersona->fechanac=$fechanac;
+                            $newPersona->esdiscapacitado=intval($row->c_esdisca);
+                            $newPersona->discapacidad=trim($row->c_disca);
+                            $newPersona->pais=trim($row->c_pais);
+                            $newPersona->departamento=trim($row->c_depar);
+                            $newPersona->provincia=trim($row->c_prov);
+                            $newPersona->distrito=trim($row->c_dist);
+                            $newPersona->direccion=trim($row->c_direc);
+                            $newPersona->email=trim($row->c_email);
+                            $newPersona->telefono=trim($row->c_telf);
+                            $newPersona->activo='1';
+                            $newPersona->borrado='0';
+                
+                            $newPersona->save();
+                
+                            $persona_id=$newPersona->id;
+                        }
+
+                        $postulantes=Postulante::where('persona_id',$persona_id)->where('semestre_id',intval($row->c_sem))->where('tipo','1')->get();
+
+                        foreach ($postulantes as $key => $dato) {
+                            $idPostulante=$dato->id;
+                        }
+                
+                        if(intval($idPostulante)==0)
+                        {
+                            $newPostulante = new Postulante();
+                        $newPostulante->codigo=trim($row->c_codpos);
+                        $newPostulante->semestre_id=intval($row->c_sem);
+                        $newPostulante->escuela_id=intval($row->c_carr1);
+                        $newPostulante->colegio=trim($row->c_termino5);
+                        $newPostulante->modalidadadmision_id=intval($row->c_modadmi);
+                        $newPostulante->modalidadestudios=intval($row->c_modestu);
+                        $newPostulante->puntaje=floatval($row->c_puntaje);
+                        $newPostulante->estado=intval($row->c_estado);
+                        $newPostulante->opcioningreso=intval($row->c_opcion);
+                        $newPostulante->persona_id=$persona_id;
+                        $newPostulante->observaciones=trim($row->c_obs);
+                        $newPostulante->tipo='1';
+                        $newPostulante->email=trim($row->c_email);
+                        $newPostulante->escuela_id2=intval($row->c_segop);
+                        $newPostulante->tipogestioncolegio=intval($row->c_gestcolegio);
+                
+                        $newPostulante->activo='1';
+                        $newPostulante->borrado='0';
+                
+                        $newPostulante->save();
+                        } 
+                        else
+                        {
+
+                            $editPostulante =Postulante::find($idPostulante);
+                            $editPostulante->codigo=trim($row->c_codpos);
+                            $editPostulante->semestre_id=intval($row->c_sem);
+                            $editPostulante->escuela_id=intval($row->c_carr1);
+                            $editPostulante->colegio=trim($row->c_termino5);
+                            $editPostulante->modalidadadmision_id=intval($row->c_modadmi);
+                            $editPostulante->modalidadestudios=intval($row->c_modestu);
+                            $editPostulante->puntaje=floatval($row->c_puntaje);
+                            $editPostulante->estado=intval($row->c_estado);
+                            $editPostulante->opcioningreso=intval($row->c_opcion);
+                            $editPostulante->persona_id=$persona_id;
+                            $editPostulante->observaciones=trim($row->c_obs);
+
+                            $editPostulante->email=trim($row->c_email);
+                            $editPostulante->escuela_id2=intval($row->c_segop);
+                            $editPostulante->tipogestioncolegio=intval($row->c_gestcolegio);
+
+
+                            $editPostulante->save();
+
+                        }               
+                  
+
+
+               
+  
+                    }
+
+                }
+                   
+
+            })->get(); 
+        
+    }
+        return response()->json(["result"=>$result,'msj'=>$msj,'selector'=>$selector]);
+   
+    }
+
+
 }
