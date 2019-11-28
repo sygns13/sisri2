@@ -10,6 +10,28 @@
 
 
             <template v-if="contse!='0'">
+
+                <label for="cbusemestre" class="col-sm-1 control-label" style="width: auto;">Semestre:*</label>
+                <div class="col-sm-2">
+                    <select class="form-control" id="cbusemestre" name="cbusemestre" v-model="semestre_id" @change="cambiarSemestre">
+                      <option value="0" disabled>Seleccione un Semestre...</option>
+                      @foreach ($semestres as $dato)
+                      @if($dato->estado=="1")
+                      <option value="{{$dato->id}}" selected>{{$dato->nombre}}</option>                        
+                      @else
+                      <option value="{{$dato->id}}">{{$dato->nombre}}</option>    
+                      @endif
+                      @endforeach
+                    </select>
+
+                    @foreach ($semestres as $dato)
+                      <input type="hidden" id="txtseme{{$dato->id}}" value="{{$dato->nombre}}">
+                      @endforeach
+
+
+                  </div>
+
+              <div class="col-sm-9">
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
 
            
@@ -18,26 +40,25 @@
             {{--  <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</button>
              --}}
 
-             <a download="Postulantes_Pregrado_Plantilla_Carga_Datos.xlsx" type="button" class="btn btn-warning" id="btnDescargarPlantilla" href="{{URL::to('plantillas/Postulantes_Pregrado_Plantilla_Carga_Datos.xlsx')}}" data-placement="top" data-toggle="tooltip" title="Descargar Plantilla de Carga de Datos"><i class="fa fa-file-text" aria-hidden="true" ></i> Descargar Plantilla</a>
+             <a download="Postulantes_Pregrado_Plantilla_Carga_Datos.xlsx" type="button" class="btn btn-warning" id="btnDescargarPlantilla" href="{{URL::to('plantillas/Postulantes_Pregrado_Plantilla_Carga_Datos.xlsx')}}" data-placement="top" data-toggle="tooltip" title="Descargar Plantilla de Carga de Datos"><i class="fa fa-file-text" aria-hidden="true" ></i> Descargar Plantilla Para Carga de Data</a>
 
              <button type="button" class="btn btn-primary" id="btncrearArea" @click.prevent="nuevaExportación()"><i class="fa fa-cloud-upload" aria-hidden="true" ></i> Realizar Nueva Importación de Data</button>
 
-            <label for="cbusemestre" class="col-sm-2 control-label" style="width: auto;">Semestre:*</label>
-                    <div class="col-sm-3">
-                        <select class="form-control" id="cbusemestre" name="cbusemestre" v-model="semestre_id" @change="cambiarSemestre">
-                          <option value="0" disabled>Seleccione un Semestre...</option>
-                          @foreach ($semestres as $dato)
-                          @if($dato->estado=="1")
-                          <option value="{{$dato->id}}" selected>{{$dato->nombre}}</option>                        
-                          @else
-                          <option value="{{$dato->id}}">{{$dato->nombre}}</option>    
-                          @endif
-                          @endforeach
-                        </select>
-                      </div>
-                      @foreach ($semestres as $dato)
-                      <input type="hidden" id="txtseme{{$dato->id}}" value="{{$dato->nombre}}">
-                      @endforeach
+            </div>
+
+            <div class="col-sm-12" style="padding-top:15px;">
+
+                <a download="instructivoImportarDataPostulantesPregrado.xlsx" type="button" class="btn btn-info" id="btnDescargarPlantilla" href="{{URL::to('instructivos/instructivoImportarDataPostulantesPregrado.xlsx')}}" data-placement="top" data-toggle="tooltip" title="Descargar Instructivo Para Importar Data"><i class="fa fa-search" aria-hidden="true" ></i> Ver Instructivo Para Carga de Data</a>
+
+                <a type="button" class="btn btn-default" id="btnDescargarPlantilla" v-bind:href="'semestres/exportarExcel?busca='+buscar" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Semestres</a>
+
+                <a type="button" class="btn btn-default" id="btnDescargarPlantilla" v-bind:href="'escuelas/exportarExcel?busca='+buscar" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Escuelas Profesionales</a>
+
+                <a type="button" class="btn btn-default" id="btnDescargarPlantilla" v-bind:href="'modalidadadmision/exportarExcel?busca='+buscar" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Modalidades de Admisión</a>
+
+            </div>
+            
+                      
             </template>
 
             <template v-if="contse=='0'">

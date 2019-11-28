@@ -300,14 +300,14 @@ class ModalidadadmisionController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:D3');
-                $sheet->cells('A3:D3',function($cells)
+                $sheet->mergeCells('A3:E3');
+                $sheet->cells('A3:E3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:D3', 'thin');
-                $sheet->cells('A3:D3', function($cells)
+                $sheet->setBorder('A3:E3', 'thin');
+                $sheet->cells('A3:E3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -326,6 +326,14 @@ class ModalidadadmisionController extends Controller
 
                 });
 
+                $sheet->cells('E4:E4', function($cells)
+                {
+                    $cells->setBackground('#E02F2F');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
               
 
                 
@@ -337,7 +345,8 @@ class ModalidadadmisionController extends Controller
                 'A'=>'7',
                 'B'=>'50',
                 'C'=>'65',
-                'D'=>'20'
+                'D'=>'20',
+                'E'=>'40'
                 )
                 );
 
@@ -354,7 +363,7 @@ class ModalidadadmisionController extends Controller
                 array_push($data, array($titulo));
 
                 $sheet->setBorder('A4:D4', 'thin');
-                array_push($data, array('N°','MODALIDAD DE ADMISIÓN','DESCRIPCIÓN','ESTADO'));
+                array_push($data, array('N°','MODALIDAD DE ADMISIÓN','DESCRIPCIÓN','ESTADO','CÓDIGO PARA IMPORTACIÓN DE DATOS'));
 
                 $cont=5;
                 $cont2=5;
@@ -367,14 +376,15 @@ class ModalidadadmisionController extends Controller
      ->get();
 
         foreach ($modadmisions as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':D'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':E'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
 
 
            array_push($data, array($key+1,
 		   $dato->nombre,
 		   $dato->descripcion,
-		   activoInactivo($dato->activo)        
+           activoInactivo($dato->activo),
+           $dato->id 
         ));
             
             $cont2++;

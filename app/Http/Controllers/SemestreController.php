@@ -318,14 +318,14 @@ class SemestreController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:E3');
-                $sheet->cells('A3:E3',function($cells)
+                $sheet->mergeCells('A3:F3');
+                $sheet->cells('A3:F3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:E3', 'thin');
-                $sheet->cells('A3:E3', function($cells)
+                $sheet->setBorder('A3:F3', 'thin');
+                $sheet->cells('A3:F3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -344,6 +344,14 @@ class SemestreController extends Controller
 
                 });
 
+                $sheet->cells('F4:F4', function($cells)
+                {
+                    $cells->setBackground('#E02F2F');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
               
 
                 
@@ -357,6 +365,7 @@ class SemestreController extends Controller
                 'C'=>'25',
                 'D'=>'25',
                 'E'=>'20',
+                'F'=>'40',
                 )
                 );
 
@@ -373,7 +382,7 @@ class SemestreController extends Controller
                 array_push($data, array($titulo));
 
                 $sheet->setBorder('A4:E4', 'thin');
-                array_push($data, array('N°','NOMBRE','FECHA DE INICIO','FECHA FINAL','ESTADO'));
+                array_push($data, array('N°','NOMBRE','FECHA DE INICIO','FECHA FINAL','ESTADO','CÓDIGO PARA IMPORTACIÓN DE DATOS'));
 
                 $cont=5;
                 $cont2=5;
@@ -385,7 +394,7 @@ class SemestreController extends Controller
 				->orderBy('fechafin','desc')->get();
 
         foreach ($semestres as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':E'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':F'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
 
 
@@ -393,7 +402,8 @@ class SemestreController extends Controller
 		   $dato->nombre,
 		   pasFechaVista($dato->fechainicio),
 		   pasFechaVista($dato->fechafin),
-           estadoConvenio($dato->estado)
+           estadoConvenio($dato->estado),
+           $dato->id
         
         ));
             

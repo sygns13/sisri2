@@ -1706,6 +1706,22 @@ class PostulanteController extends Controller
 
                     }
 
+                    $bandera01=false;
+                    if(intval($row->c_segop)==0 || intval($row->c_segop)==1){
+                        $bandera01=true;
+                        }
+                        if($bandera01==false){
+    
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna HUBO SEGUNDA OPCIÓN";
+                            $detError="El código de Hubo Segunda Opción solo debe de llevar valores de 0 para NO o 1 para SI";
+                            $error=1;
+                            break 1;
+    
+                        }
+
+
+
 
                     if(intval($row->c_segop)==1){ 
                     $bandera01=false;
@@ -1771,7 +1787,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna ESTADO DE INGRESO";
-                            $detError="El código del Estado de Ingreso no corresponde a los valores posibles de ser consignados";
+                            $detError="El código del Estado de Ingreso no corresponde a los valores posibles de ser consignados. Solo debe de llevar valores de 0 para No Ingresó o 1 para Si Ingresó";
                             $error=1;
                             break 1;
     
@@ -1786,7 +1802,7 @@ class PostulanteController extends Controller
         
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna OPCIÓN DE INGRESO";
-                                $detError="El código de la Opción no corresponde a los valores posibles de ser consignados";
+                                $detError="El código de la Opción no corresponde a los valores posibles de ser consignados. Debe consignar el código de la Primera o Segunda Opción a la que postuló";
                                 $error=1;
                                 break 1;
         
@@ -1928,7 +1944,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna SUFRE DISCAPACIDAD";
-                            $detError="El código de Condiciónd de Discapacidad no corresponde a los valores posibles de ser consignados";
+                            $detError="El código de Condiciónd de Discapacidad no corresponde a los valores posibles de ser consignados. Consigne 1 para SI o 0 para NO";
                             $error=1;
                             break 1;
     
@@ -1991,7 +2007,7 @@ class PostulanteController extends Controller
                         if($bandera01==false){
     
                             $errorFila="Error en la Fila ".($key+6);
-                            $errorColumna="Error en la Columna DEPARTAMENTO DE PROCEDENCIA";
+                            $errorColumna="c";
                             $detError="El Departamento de Procedencia ingresado se encuentran en blanco";
                             $error=1;
                             break 1;
@@ -2056,7 +2072,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna GESTIÓN DEL COLEGIO";
-                            $detError="El código de Tipo de Gestión del Colegio no corresponde a los valores posibles de ser consignados";
+                            $detError="El código de Tipo de Gestión del Colegio no corresponde a los valores posibles de ser consignados. Indique 1 para Estatalo 2 para Particular";
                             $error=1;
                             break 1;
     
