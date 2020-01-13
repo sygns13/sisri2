@@ -171,7 +171,7 @@ class UserController extends Controller
     {
         //$buscar=$request->busca;
 
-        $usuario = DB::table('users')
+      /*  $usuario = DB::table('users')
         ->join('tipousers', 'tipousers.id', '=', 'users.tipouser_id')
         ->join('personas', 'personas.id', '=', 'users.persona_id')
         ->join('tipopersonas', 'tipopersonas.id', '=', 'personas.tipopersona_id')
@@ -180,6 +180,21 @@ class UserController extends Controller
 
         ->orderBy('users.id')
         ->select('users.id as idUser','users.name as username','users.email','users.activo','users.borrado','personas.id as idPer','personas.nombre','personas.dni_ruc','personas.direccion','tipousers.id as idtipouser','tipousers.tipo as tipouser','tipousers.codigo','tipopersonas.tipo as tipoPer','tipopersonas.id as idtipoPer','entidads.id as entidad_id', 'entidads.descripcion as entidad','entidads.code as codeentidad')
+        ->first();*/
+
+        $usuario = DB::table('users')
+        ->join('tipousers', 'tipousers.id', '=', 'users.tipouser_id')
+        ->join('personas', 'personas.id', '=', 'users.persona_id')
+
+        ->where('users.borrado','0')
+        ->where('users.id',Auth::user()->id)
+
+        ->orderBy('tipousers.id')
+        ->orderBy('personas.apellidopat')
+        ->orderBy('personas.apellidomat')
+        ->orderBy('personas.nombres')
+        ->select('users.id as id','users.name','users.email','users.activo','users.borrado','users.token2','users.persona_id','users.tipouser_id',
+        'personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.telefono','tipousers.id as idtipouser','tipousers.nombre as tipouser')
         ->first();
 
 

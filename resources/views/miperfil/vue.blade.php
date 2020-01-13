@@ -32,10 +32,11 @@
            classMenu2:'',
            classMenu3:'',
            classMenu4:'',
-           classMenu5:'active',
+           classMenu5:'',
            classMenu6:'',
            classMenu7:'',
            classMenu8:'',
+           classMenu9:'active',
    
    
            usuarios: [],
@@ -147,20 +148,21 @@
                var url = 'usuario/miperfil'
    
                axios.post(url).then(response=>{
+
+                console.log(response);
    
                this.fillPersona.id=response.data.usuario.idPer;
-               this.fillPersona.dni_ruc=response.data.usuario.dni_ruc;
-               this.fillPersona.nombre=response.data.usuario.nombre;
+               this.fillPersona.dni_ruc=response.data.usuario.doc;
+               this.fillPersona.nombre=response.data.usuario.nombres+' '+response.data.usuario.apellidopat+' '+response.data.usuario.apellidomat;
                this.fillPersona.direccion=response.data.usuario.direccion;
-               this.fillPersona.tipopersona=response.data.usuario.tipoPer;
+               this.fillPersona.tipopersona='Usuario del Sistema';
    
-               this.filluser.id=response.data.usuario.idUser;
-               this.filluser.name=response.data.usuario.username;
+               this.filluser.id=response.data.usuario.id;
+               this.filluser.name=response.data.usuario.name;
                this.filluser.email=response.data.usuario.email;
    
                this.filluser.tipouser=response.data.usuario.tipouser;
                this.filluser.activo=response.data.usuario.activo;
-               this.filluser.entidad=response.data.usuario.entidad;
                this.filluser.idtipouser=response.data.usuario.idtipouser;
                })
            },

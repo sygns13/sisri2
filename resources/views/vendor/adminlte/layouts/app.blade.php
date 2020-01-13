@@ -201,6 +201,9 @@ desired effect
 @elseif($modulo=="revistas")
 @include('revistas.vue')
 
+@elseif($modulo=="miperfil")
+@include('miperfil.vue')
+
 @endif
 
 <script type="text/javascript">
