@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('locales','LocalController@index1');
     Route::get('facultades','FacultadController@index1');
     Route::get('escuelas','EscuelaController@index1');
+    Route::get('departamentoacademicos','DepartamentoacademicoController@index1');
     Route::get('datosfacultad/{id}','DatosfacultadController@index1');
     Route::get('modalidadadmision','ModalidadadmisionController@index1');
     Route::get('postulantespregrado','PostulanteController@index1');
@@ -84,6 +85,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('pais','PaiseController');
     Route::resource('facultad','FacultadController');
     Route::resource('escuela','EscuelaController');
+    Route::resource('departamentoacademico','DepartamentoacademicoController');
     Route::resource('datosfacultad','DatosfacultadController');
     Route::resource('modadmision','ModalidadadmisionController');
     Route::resource('postulantes','PostulanteController');
@@ -134,6 +136,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('local/cambiarProvincia/{var}','LocalController@cambiarProvincia');
     Route::get('facultad/altabaja/{id}/{var}','FacultadController@altabaja');
     Route::get('escuela/altabaja/{id}/{var}','EscuelaController@altabaja');
+    Route::get('departamentoacademico/altabaja/{id}/{var}','DepartamentoacademicoController@altabaja');
     Route::get('modadmision/altabaja/{id}/{var}','ModalidadadmisionController@altabaja');
     Route::get('permisoDelete/{id1}/{id2}/{var}/{var2}','PermisoController@delete');
 
@@ -205,6 +208,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('locales/exportarExcel','LocalController@descargarExcel');
     Route::get('facultades/exportarExcel','FacultadController@descargarExcel');
     Route::get('escuelas/exportarExcel','EscuelaController@descargarExcel');
+    Route::get('departamentoacademico/exportarExcel','DepartamentoacademicoController@descargarExcel');
     Route::get('modalidadadmision/exportarExcel','ModalidadadmisionController@descargarExcel');
     
     

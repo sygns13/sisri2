@@ -204,6 +204,9 @@ desired effect
 @elseif($modulo=="miperfil")
 @include('miperfil.vue')
 
+@elseif($modulo=="departamentoacademico")
+@include('departamentoacademico.vue')
+
 @endif
 
 <script type="text/javascript">

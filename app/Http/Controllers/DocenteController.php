@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use App\Facultad;
 use App\Escuela;
+use App\Departamentoacademico;
 use App\Modalidadadmision;
 use App\Semestre;
 use Validator;
@@ -38,13 +39,13 @@ class DocenteController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
-            $escuelas = DB::table('escuelas')
-            ->join('facultads', 'facultads.id', '=', 'escuelas.facultad_id')
-            ->where('escuelas.borrado','0')
+            $departamentoacademicos = DB::table('departamentoacademicos')
+            ->join('facultads', 'facultads.id', '=', 'departamentoacademicos.facultad_id')
+            ->where('departamentoacademicos.borrado','0')
   
             ->orderBy('facultads.nombre')
-            ->orderBy('escuelas.nombre')
-            ->select('escuelas.id','escuelas.nombre','escuelas.activo','escuelas.borrado','escuelas.facultad_id','facultads.nombre as facultad')
+            ->orderBy('departamentoacademicos.nombre')
+            ->select('departamentoacademicos.id','departamentoacademicos.nombre','departamentoacademicos.activo','departamentoacademicos.borrado','departamentoacademicos.facultad_id','facultads.nombre as facultad')
             ->get();
 
             $semestres=Semestre::where('activo','1')->where('borrado','0')->orderBy('fechafin','desc')->get();
@@ -64,7 +65,7 @@ class DocenteController extends Controller
 
 
             $modulo="docentes";
-            return view('docentes.index',compact('tipouser','modulo','escuelas','semestres','facultads','semestresel','contse','semestreNombre'));
+            return view('docentes.index',compact('tipouser','modulo','departamentoacademicos','semestres','facultads','semestresel','contse','semestreNombre'));
         }
         else
         {
@@ -82,7 +83,7 @@ class DocenteController extends Controller
      ->join('personas', 'personas.id', '=', 'docentes.persona_id')
      ->join('semestres', 'semestres.id', '=', 'docentes.semestre_id')
      ->leftjoin('facultads', 'facultads.id', '=', 'docentes.facultad_id')
-     ->leftjoin('escuelas', 'escuelas.id', '=', 'docentes.escuela_id')
+     ->leftjoin('departamentoacademicos', 'departamentoacademicos.id', '=', 'docentes.departamentoacademico_id')
      ->where('docentes.borrado','0')
      ->where('semestres.id',$semestre_id)
      ->where(function($query) use ($buscar){
@@ -91,13 +92,13 @@ class DocenteController extends Controller
         $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
         $query->orWhere('personas.doc','like','%'.$buscar.'%');
         $query->orWhere('facultads.nombre','like','%'.$buscar.'%');
-        $query->orWhere('escuelas.nombre','like','%'.$buscar.'%');
+        $query->orWhere('departamentoacademicos.nombre','like','%'.$buscar.'%');
         })
      ->orderBy('personas.apellidopat')
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','docentes.id',
-    'docentes.personalacademico','docentes.cargogeneral','docentes.descripcioncargo','docentes.maximogrado','docentes.descmaximogrado','docentes.universidadgrado','docentes.lugarmaximogrado','docentes.paismaximogrado','docentes.otrogrado','docentes.estadootrogrado','docentes.univotrogrado','docentes.lugarotrogrado','docentes.paisotrogrado','docentes.titulo','docentes.descripciontitulo','docentes.condicion','docentes.categoria','docentes.regimen','docentes.investigador','docentes.pregrado','docentes.postgrado','docentes.esdestacado','docentes.fechaingreso','docentes.modalidadingreso','docentes.observaciones','docentes.persona_id','docentes.horaslectivas','docentes.horasnolectivas','docentes.horasinvestigacion','docentes.horasdedicacion','docentes.escuela_id','docentes.facultad_id', 'docentes.dependencia','docentes.semestre_id','semestres.nombre as semestre',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"))->paginate(50);
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion', 'personas.identidadetnica', 'personas.correoinstitucional',  'personas.email','personas.telefono','docentes.id',
+    'docentes.personalacademico','docentes.cargogeneral','docentes.descripcioncargo','docentes.maximogrado','docentes.descmaximogrado','docentes.universidadgrado','docentes.lugarmaximogrado','docentes.paismaximogrado','docentes.otrogrado','docentes.estadootrogrado','docentes.univotrogrado','docentes.lugarotrogrado','docentes.paisotrogrado','docentes.titulo','docentes.descripciontitulo','docentes.condicion','docentes.categoria','docentes.regimen','docentes.investigador','docentes.pregrado','docentes.postgrado','docentes.esdestacado','docentes.fechaingreso','docentes.modalidadingreso','docentes.observaciones','docentes.persona_id','docentes.horaslectivas','docentes.horasnolectivas','docentes.horasinvestigacion','docentes.horasdedicacion','docentes.departamentoacademico_id','docentes.facultad_id', 'docentes.dependencia','docentes.semestre_id','semestres.nombre as semestre',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `departamentoacademicos`.`nombre` , '' ) as departamentoacademico"), 'docentes.hizointercambio', 'docentes.universidadintercambio', 'docentes.eslicencia')->paginate(50);
 
 
      return [
@@ -148,6 +149,8 @@ class DocenteController extends Controller
         $direccion=$request->direccion;
         $email=$request->email;
         $telefono=$request->telefono;
+        $identidadetnica=$request->identidadetnica;
+        $correoinstitucional=$request->correoinstitucional;
         
         $personalacademico=$request->personalacademico;
         $semestre_id=$request->semestre_id;
@@ -179,9 +182,12 @@ class DocenteController extends Controller
         $horasnolectivas=$request->horasnolectivas;
         $horasinvestigacion=$request->horasinvestigacion;
         $horasdedicacion=$request->horasdedicacion;
-        $escuela_id=$request->escuela_id;
+        $departamentoacademico_id=$request->departamentoacademico_id;
         $facultad_id=$request->facultad_id;
         $dependencia=$request->dependencia;
+        $hizointercambio=$request->hizointercambio;
+        $universidadintercambio=$request->universidadintercambio;
+        $eslicencia=$request->eslicencia;
 
 
         $persona_id=$request->persona_id;
@@ -213,6 +219,11 @@ class DocenteController extends Controller
         if($tituloUniv=="No")
         {
             $descripciontitulo="";
+        }
+
+        if(intval($hizointercambio)==0)
+        {
+            $universidadintercambio="";
         }
 
 
@@ -291,6 +302,14 @@ class DocenteController extends Controller
         $input21  = array('horasdedicacion' => $horasdedicacion);
         $reglas21 = array('horasdedicacion' => 'required');
 
+        $input22  = array('correoinstitucional' => $correoinstitucional);
+        $reglas22 = array('correoinstitucional' => 'required');
+
+        $input23  = array('eslicencia' => $eslicencia);
+        $reglas23 = array('eslicencia' => 'required');
+
+        $input24  = array('departamentoacademico_id' => $departamentoacademico_id);
+        $reglas24 = array('departamentoacademico_id' => 'required');
 
 
 
@@ -315,6 +334,9 @@ class DocenteController extends Controller
         $validator19 = Validator::make($input19, $reglas19);
         $validator20 = Validator::make($input20, $reglas20);
         $validator21 = Validator::make($input21, $reglas21);
+        $validator22 = Validator::make($input22, $reglas22);
+        $validator23 = Validator::make($input23, $reglas23);
+        $validator24 = Validator::make($input24, $reglas24);
 
 
         if($regla0>0){
@@ -407,10 +429,25 @@ class DocenteController extends Controller
             $msj='Ingrese la Dirección del Docente';
             $selector='txtDir';
         }
+        elseif ($validator22->fails()) {
+            $result='0';
+            $msj='ingrese el correo institucional del Docente';
+            $selector='txtcorreoinstitucional';
+        }
         elseif ($validator15->fails() || intval($facultad_id)==0) {
             $result='0';
             $msj='Seleccione una Facultad Válida';
             $selector='facultad_id';
+        }
+        elseif ($validator24->fails() || intval($departamentoacademico_id)==0) {
+            $result='0';
+            $msj='Seleccione un Departaménto Académico Válido';
+            $selector='cbudepartamentoacademico';
+        }
+        elseif ($validator23->fails() || intval($eslicencia) < 0 || intval($eslicencia) > 1 ) {
+            $result='0';
+            $msj='ingrese un valor válido de Licencia';
+            $selector='cbueslicencia';
         }
         elseif($cargogeneral!='0' && strlen($dependencia)==0){
             $result='0';
@@ -499,47 +536,15 @@ class DocenteController extends Controller
             $selector='txtmodalidadingreso';
         }
 
+        elseif($hizointercambio!='0' && strlen($universidadintercambio)==0){
+            $result='0';
+            $msj='Si Seleccionó que realizó intercambio, ingrese la Universidad en la que lo realizó';
+            $selector='txtuniversidadintercambio';
+        }
+
       
         else{
 
-
-
-            /*        
-        $personalacademico=$request->personalacademico;
-        $semestre_id=$request->semestre_id;
-        $cargogeneral=$request->cargogeneral;
-        $descripcioncargo=$request->descripcioncargo;
-        $maximogrado=$request->maximogrado;
-        $descmaximogrado=$request->descmaximogrado;
-        $universidadgrado=$request->universidadgrado;
-        $lugarmaximogrado=$request->lugarmaximogrado;
-        $paismaximogrado=$request->paismaximogrado;
-        $otrogrado=$request->otrogrado;
-        $estadootrogrado=$request->estadootrogrado;
-        $univotrogrado=$request->univotrogrado;
-        $lugarotrogrado=$request->lugarotrogrado;
-        $paisotrogrado=$request->paisotrogrado;
-        $tituloUniv=$request->tituloUniv;
-        $descripciontitulo=$request->descripciontitulo;
-        $condicion=$request->condicion;
-        $categoria=$request->categoria;
-        $regimen=$request->regimen;
-        $investigador=$request->investigador;
-        $pregrado=$request->pregrado;
-        $postgrado=$request->postgrado;
-        $esdestacado=$request->esdestacado;
-        $fechaingreso=$request->fechaingreso;
-        $modalidadingreso=$request->modalidadingreso;
-        $observaciones=$request->observaciones;
-        $horaslectivas=$request->horaslectivas;
-        $horasnolectivas=$request->horasnolectivas;
-        $horasinvestigacion=$request->horasinvestigacion;
-        $horasdedicacion=$request->horasdedicacion;
-        $escuela_id=$request->escuela_id;
-        $facultad_id=$request->facultad_id;
-        $dependencia=$request->dependencia;
-        
-        */
 
         if(intval($persona_id)!=0)
         {
@@ -561,6 +566,8 @@ class DocenteController extends Controller
             $editPersona->direccion=$direccion;
             $editPersona->email=$email;
             $editPersona->telefono=$telefono;
+            $editPersona->correoinstitucional=$correoinstitucional;
+            $editPersona->identidadetnica=$identidadetnica;
 
             $editPersona->save();
         }
@@ -583,6 +590,8 @@ class DocenteController extends Controller
             $newPersona->direccion=$direccion;
             $newPersona->email=$email;
             $newPersona->telefono=$telefono;
+            $newPersona->correoinstitucional=$correoinstitucional;
+            $newPersona->identidadetnica=$identidadetnica;
             $newPersona->activo='1';
             $newPersona->borrado='0';
 
@@ -624,10 +633,13 @@ class DocenteController extends Controller
         $newDocente->horasinvestigacion=$horasinvestigacion;
         $newDocente->horasdedicacion=$horasdedicacion;
         $newDocente->dependencia=$dependencia;
-        $newDocente->escuela_id=$escuela_id;
+        $newDocente->departamentoacademico_id=$departamentoacademico_id;
         $newDocente->facultad_id=$facultad_id;
         $newDocente->semestre_id=$semestre_id;
         $newDocente->email=$email;
+        $newDocente->hizointercambio=$hizointercambio;
+        $newDocente->universidadintercambio=$universidadintercambio;
+        $newDocente->eslicencia=$eslicencia;
         $newDocente->activo='1';
         $newDocente->borrado='0';
         $newDocente->save();
@@ -693,6 +705,8 @@ class DocenteController extends Controller
         $direccion=$request->direccion;
         $email=$request->email;
         $telefono=$request->telefono;
+        $identidadetnica=$request->identidadetnica;
+        $correoinstitucional=$request->correoinstitucional;
         
         $personalacademico=$request->personalacademico;
         $semestre_id=$request->semestre_id;
@@ -724,9 +738,12 @@ class DocenteController extends Controller
         $horasnolectivas=$request->horasnolectivas;
         $horasinvestigacion=$request->horasinvestigacion;
         $horasdedicacion=$request->horasdedicacion;
-        $escuela_id=$request->escuela_id;
+        $departamentoacademico_id=$request->departamentoacademico_id;
         $facultad_id=$request->facultad_id;
         $dependencia=$request->dependencia;
+        $hizointercambio=$request->hizointercambio;
+        $universidadintercambio=$request->universidadintercambio;
+        $eslicencia=$request->eslicencia;
 
 
         $persona_id=$request->persona_id;
@@ -758,6 +775,11 @@ class DocenteController extends Controller
         if($titulo=="No")
         {
             $descripciontitulo="";
+        }
+
+        if(intval($hizointercambio)==0)
+        {
+            $universidadintercambio="";
         }
 
 
@@ -837,6 +859,15 @@ class DocenteController extends Controller
         $input21  = array('horasdedicacion' => $horasdedicacion);
         $reglas21 = array('horasdedicacion' => 'required');
 
+        $input22  = array('correoinstitucional' => $correoinstitucional);
+        $reglas22 = array('correoinstitucional' => 'required');
+
+        $input23  = array('eslicencia' => $eslicencia);
+        $reglas23 = array('eslicencia' => 'required');
+
+        $input24  = array('departamentoacademico_id' => $departamentoacademico_id);
+        $reglas24 = array('departamentoacademico_id' => 'required');
+
 
 
 
@@ -861,6 +892,9 @@ class DocenteController extends Controller
         $validator19 = Validator::make($input19, $reglas19);
         $validator20 = Validator::make($input20, $reglas20);
         $validator21 = Validator::make($input21, $reglas21);
+        $validator22 = Validator::make($input22, $reglas22);
+        $validator23 = Validator::make($input23, $reglas23);
+        $validator24 = Validator::make($input24, $reglas24);
 
 
         if($regla0>0){
@@ -953,10 +987,25 @@ class DocenteController extends Controller
             $msj='Ingrese la Dirección del Docente';
             $selector='txtDirE';
         }
+        elseif ($validator22->fails()) {
+            $result='0';
+            $msj='ingrese el correo institucional del Docente';
+            $selector='txtcorreoinstitucionalE';
+        }
         elseif ($validator15->fails() || intval($facultad_id)==0) {
             $result='0';
             $msj='Seleccione una Facultad Válida';
             $selector='facultad_idE';
+        }
+        elseif ($validator24->fails() || intval($departamentoacademico_id)==0) {
+            $result='0';
+            $msj='Seleccione un Departaménto Académico Válido';
+            $selector='cbudepartamentoacademicoE';
+        }
+        elseif ($validator23->fails() || intval($eslicencia) < 0 || intval($eslicencia) > 1 ) {
+            $result='0';
+            $msj='ingrese un valor válido de Licencia';
+            $selector='cbueslicenciaE';
         }
         elseif($cargogeneral!='0' && strlen($dependencia)==0){
             $result='0';
@@ -1045,49 +1094,15 @@ class DocenteController extends Controller
             $selector='txtmodalidadingresoE';
         }
 
+        elseif($hizointercambio!='0' && strlen($universidadintercambio)==0){
+            $result='0';
+            $msj='Si Seleccionó que realizó intercambio, ingrese la Universidad en la que lo realizó';
+            $selector='txtuniversidadintercambioE';
+        }
+
       
         else{
 
-
-
-            /*        
-        $personalacademico=$request->personalacademico;
-        $semestre_id=$request->semestre_id;
-        $cargogeneral=$request->cargogeneral;
-        $descripcioncargo=$request->descripcioncargo;
-        $maximogrado=$request->maximogrado;
-        $descmaximogrado=$request->descmaximogrado;
-        $universidadgrado=$request->universidadgrado;
-        $lugarmaximogrado=$request->lugarmaximogrado;
-        $paismaximogrado=$request->paismaximogrado;
-        $otrogrado=$request->otrogrado;
-        $estadootrogrado=$request->estadootrogrado;
-        $univotrogrado=$request->univotrogrado;
-        $lugarotrogrado=$request->lugarotrogrado;
-        $paisotrogrado=$request->paisotrogrado;
-        $titulo=$request->tituloUniv;
-        $descripciontitulo=$request->descripciontitulo;
-        $condicion=$request->condicion;
-        $categoria=$request->categoria;
-        $regimen=$request->regimen;
-        $investigador=$request->investigador;
-        $pregrado=$request->pregrado;
-        $postgrado=$request->postgrado;
-        $esdestacado=$request->esdestacado;
-        $fechaingreso=$request->fechaingreso;
-        $modalidadingreso=$request->modalidadingreso;
-        $observaciones=$request->observaciones;
-        $horaslectivas=$request->horaslectivas;
-        $horasnolectivas=$request->horasnolectivas;
-        $horasinvestigacion=$request->horasinvestigacion;
-        $horasdedicacion=$request->horasdedicacion;
-        $escuela_id=$request->escuela_id;
-        $facultad_id=$request->facultad_id;
-        $dependencia=$request->dependencia;
-        
-        */
-
-     
             $editPersona =Persona::find($persona_id);
             $editPersona->tipodoc=$tipodoc;
             $editPersona->doc=$doc;
@@ -1106,52 +1121,57 @@ class DocenteController extends Controller
             $editPersona->direccion=$direccion;
             $editPersona->email=$email;
             $editPersona->telefono=$telefono;
+            $editPersona->correoinstitucional=$correoinstitucional;
+            $editPersona->identidadetnica=$identidadetnica;
 
             $editPersona->save();
         
-        $newDocente = Docente::find($id);
+        $editDocente = Docente::find($id);
 
-        $newDocente->personalacademico=$personalacademico;
-        $newDocente->cargogeneral=$cargogeneral;
-        $newDocente->descripcioncargo=$descripcioncargo;
-        $newDocente->maximogrado=$maximogrado;
-        $newDocente->descmaximogrado=$descmaximogrado;
-        $newDocente->universidadgrado=$universidadgrado;
-        $newDocente->lugarmaximogrado=$lugarmaximogrado;
-        $newDocente->paismaximogrado=$paismaximogrado;
-        $newDocente->otrogrado=$otrogrado;
-        $newDocente->estadootrogrado=$estadootrogrado;
-        $newDocente->univotrogrado=$univotrogrado;
-        $newDocente->lugarotrogrado=$lugarotrogrado;
-        $newDocente->paisotrogrado=$paisotrogrado;
-        $newDocente->titulo=$titulo;
-        $newDocente->descripciontitulo=$descripciontitulo;
-        $newDocente->condicion=$condicion;
-        $newDocente->categoria=$categoria;
-        $newDocente->regimen=$regimen;
-        $newDocente->investigador=$investigador;
-        $newDocente->pregrado=$pregrado;
-        $newDocente->postgrado=$postgrado;
-        $newDocente->esdestacado=$esdestacado;
-        $newDocente->fechaingreso=$fechaingreso;
-        $newDocente->modalidadingreso=$modalidadingreso;
-        $newDocente->observaciones=$observaciones;
-        $newDocente->persona_id=$persona_id;
-        $newDocente->horaslectivas=$horaslectivas;
-        $newDocente->horasnolectivas=$horasnolectivas;
-        $newDocente->horasinvestigacion=$horasinvestigacion;
-        $newDocente->horasdedicacion=$horasdedicacion;
-        $newDocente->dependencia=$dependencia;
-        $newDocente->escuela_id=$escuela_id;
-        $newDocente->facultad_id=$facultad_id;
-        $newDocente->semestre_id=$semestre_id;
-        $newDocente->email=$email;
+        $editDocente->personalacademico=$personalacademico;
+        $editDocente->cargogeneral=$cargogeneral;
+        $editDocente->descripcioncargo=$descripcioncargo;
+        $editDocente->maximogrado=$maximogrado;
+        $editDocente->descmaximogrado=$descmaximogrado;
+        $editDocente->universidadgrado=$universidadgrado;
+        $editDocente->lugarmaximogrado=$lugarmaximogrado;
+        $editDocente->paismaximogrado=$paismaximogrado;
+        $editDocente->otrogrado=$otrogrado;
+        $editDocente->estadootrogrado=$estadootrogrado;
+        $editDocente->univotrogrado=$univotrogrado;
+        $editDocente->lugarotrogrado=$lugarotrogrado;
+        $editDocente->paisotrogrado=$paisotrogrado;
+        $editDocente->titulo=$titulo;
+        $editDocente->descripciontitulo=$descripciontitulo;
+        $editDocente->condicion=$condicion;
+        $editDocente->categoria=$categoria;
+        $editDocente->regimen=$regimen;
+        $editDocente->investigador=$investigador;
+        $editDocente->pregrado=$pregrado;
+        $editDocente->postgrado=$postgrado;
+        $editDocente->esdestacado=$esdestacado;
+        $editDocente->fechaingreso=$fechaingreso;
+        $editDocente->modalidadingreso=$modalidadingreso;
+        $editDocente->observaciones=$observaciones;
+        $editDocente->persona_id=$persona_id;
+        $editDocente->horaslectivas=$horaslectivas;
+        $editDocente->horasnolectivas=$horasnolectivas;
+        $editDocente->horasinvestigacion=$horasinvestigacion;
+        $editDocente->horasdedicacion=$horasdedicacion;
+        $editDocente->dependencia=$dependencia;
+        $editDocente->departamentoacademico_id=$departamentoacademico_id;
+        $editDocente->facultad_id=$facultad_id;
+        $editDocente->semestre_id=$semestre_id;
+        $editDocente->email=$email;
+        $editDocente->hizointercambio=$hizointercambio;
+        $editDocente->universidadintercambio=$universidadintercambio;
+        $editDocente->eslicencia=$eslicencia;
 
-        $newDocente->save();
+        $editDocente->save();
 
            
 
-            $msj='Nuevo Docente registrado con éxito';
+            $msj='Docente modificado con éxito';
         }
 
 
@@ -1198,14 +1218,14 @@ class DocenteController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:AT3');
-                $sheet->cells('A3:AT3',function($cells)
+                $sheet->mergeCells('A3:AY3');
+                $sheet->cells('A3:AY3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:AT3', 'thin');
-                $sheet->cells('A3:AT3', function($cells)
+                $sheet->setBorder('A3:AY3', 'thin');
+                $sheet->cells('A3:AY3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -1216,7 +1236,7 @@ class DocenteController extends Controller
                     #Borders
                 });
                 
-                $sheet->cells('A4:AT4', function($cells)
+                $sheet->cells('A4:AY4', function($cells)
                 {
                     $cells->setBackground('#B4B9E1');
                     $cells->setAlignment('center');
@@ -1277,7 +1297,12 @@ class DocenteController extends Controller
                 'AQ'=>'25',
                 'AR'=>'33',
                 'AS'=>'15',
-                'AT'=>'65'
+                'AT'=>'33', //correo institucional
+                'AU'=>'33',  //identidad etnica
+                'AV'=>'25',  //hizo intercambio
+                'AW'=>'40',  //universidad donde hizo el intercambio
+                'AX'=>'25',  // esta de licencia
+                'AY'=>'65'
                 )
                 );
 
@@ -1294,7 +1319,7 @@ class DocenteController extends Controller
                 array_push($data, array($titulo));
 
                 $sheet->setBorder('A4:AT4', 'thin');
-                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL', 'SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','SEMESTRE','DEPENDENCIA','FACULTAD','ESCUELA PROFESIONAL','PERSONAL ACADÉMICO','CARGO GENERAL','DESCRIPCIÓN DEL CARGO','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO','UNIVERSIDAD DONDE OBTUVO EL MÁXIMO GRADO','LUGAR DONDE OBTUVO EL MÁXIMO GRADO','PAÍS DONDE OBTUVO EL MÁXIMO GRADO','OTRO GRADO ACADÉMICO','SITUACIÓN DEL OTRO GRADO ACADÉMICO','UNIVERSIDAD DONDE OBTUVO EL OTRO GRADO','LUGAR DONDE OBTUVO EL OTRO GRADO','PAÍS DONDE OBTUVO EL OTRO GRADO','TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','CLASE CONDICIÓN DE DOCENTE','CATEGORÍA DOCENTE','RÉGIMEN DE DEDICACIÓN','ES INGESTIGADOR','ES DOCENTE PREGRADO','ES DOCENTE POSTGRADO','HORAS LECTIVAS','HORAS NO LECTIVAS','HORAS DE INVESTIGACIÓN SEMANAL','HORAS DE DEDICACIÓN SEMANAL','ES DOCENTE DESTACADO','FECHA DE INGRESO A LA UNIVERSIDAD','MODALIDAD DE INGRESO','CORREO ELECTRÓNICO','TELÉFONO','OBSERVACIONES'));
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL', 'SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','SEMESTRE','DEPENDENCIA','FACULTAD','DEPARTAMENTO ACADEMICO','PERSONAL ACADÉMICO','CARGO GENERAL','DESCRIPCIÓN DEL CARGO','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO','UNIVERSIDAD DONDE OBTUVO EL MÁXIMO GRADO','LUGAR DONDE OBTUVO EL MÁXIMO GRADO','PAÍS DONDE OBTUVO EL MÁXIMO GRADO','OTRO GRADO ACADÉMICO','SITUACIÓN DEL OTRO GRADO ACADÉMICO','UNIVERSIDAD DONDE OBTUVO EL OTRO GRADO','LUGAR DONDE OBTUVO EL OTRO GRADO','PAÍS DONDE OBTUVO EL OTRO GRADO','TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','CLASE CONDICIÓN DE DOCENTE','CATEGORÍA DOCENTE','RÉGIMEN DE DEDICACIÓN','ES INGESTIGADOR','ES DOCENTE PREGRADO','ES DOCENTE POSTGRADO','HORAS LECTIVAS','HORAS NO LECTIVAS','HORAS DE INVESTIGACIÓN SEMANAL','HORAS DE DEDICACIÓN SEMANAL','ES DOCENTE DESTACADO','FECHA DE INGRESO A LA UNIVERSIDAD','MODALIDAD DE INGRESO','CORREO PERSONAL','TELÉFONO', 'CORREO INSTITUCIONAL','IDENTIDAD ETNICA', 'HIZO INTERCAMBIO','UNIVERSIDAD DONDE HIZO INTERCAMBIO','ESTA DE LICENCIA', 'OBSERVACIONES'));
 
                 $cont=5;
                 $cont2=5;
@@ -1303,7 +1328,7 @@ class DocenteController extends Controller
      ->join('personas', 'personas.id', '=', 'docentes.persona_id')
      ->join('semestres', 'semestres.id', '=', 'docentes.semestre_id')
      ->leftjoin('facultads', 'facultads.id', '=', 'docentes.facultad_id')
-     ->leftjoin('escuelas', 'escuelas.id', '=', 'docentes.escuela_id')
+     ->leftjoin('departamentoacademicos', 'departamentoacademicos.id', '=', 'docentes.departamentoacademico_id')
      ->where('docentes.borrado','0')
      ->where('semestres.id',$semestre->id)
      ->where(function($query) use ($buscar){
@@ -1312,13 +1337,14 @@ class DocenteController extends Controller
         $query->orWhere('personas.apellidomat','like','%'.$buscar.'%');
         $query->orWhere('personas.doc','like','%'.$buscar.'%');
         $query->orWhere('facultads.nombre','like','%'.$buscar.'%');
-        $query->orWhere('escuelas.nombre','like','%'.$buscar.'%');
+        $query->orWhere('departamentoacademicos.nombre','like','%'.$buscar.'%');
         })
      ->orderBy('personas.apellidopat')
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','docentes.id',
-    'docentes.personalacademico','docentes.cargogeneral','docentes.descripcioncargo',DB::Raw("if(`docentes`.`maximogrado`='0','SIN GRADO REGISTRADO',`docentes`.`maximogrado`) as maximogrado") ,'docentes.descmaximogrado','docentes.universidadgrado','docentes.lugarmaximogrado','docentes.paismaximogrado','docentes.otrogrado','docentes.estadootrogrado','docentes.univotrogrado','docentes.lugarotrogrado','docentes.paisotrogrado','docentes.titulo','docentes.descripciontitulo','docentes.condicion','docentes.categoria','docentes.regimen','docentes.investigador','docentes.pregrado','docentes.postgrado','docentes.esdestacado','docentes.fechaingreso','docentes.modalidadingreso','docentes.observaciones','docentes.persona_id','docentes.horaslectivas','docentes.horasnolectivas','docentes.horasinvestigacion','docentes.horasdedicacion','docentes.escuela_id','docentes.facultad_id', 'docentes.dependencia','docentes.semestre_id','semestres.nombre as semestre',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `escuelas`.`nombre` , '' ) as escuela"))->get();
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono', 'personas.correoinstitucional', 'personas.identidadetnica',
+     'docentes.id',
+    'docentes.personalacademico','docentes.cargogeneral','docentes.descripcioncargo',DB::Raw("if(`docentes`.`maximogrado`='0','SIN GRADO REGISTRADO',`docentes`.`maximogrado`) as maximogrado") ,'docentes.descmaximogrado','docentes.universidadgrado','docentes.lugarmaximogrado','docentes.paismaximogrado','docentes.otrogrado','docentes.estadootrogrado','docentes.univotrogrado','docentes.lugarotrogrado','docentes.paisotrogrado','docentes.titulo','docentes.descripciontitulo','docentes.condicion','docentes.categoria','docentes.regimen','docentes.investigador','docentes.pregrado','docentes.postgrado','docentes.esdestacado','docentes.fechaingreso','docentes.modalidadingreso','docentes.observaciones','docentes.persona_id','docentes.horaslectivas','docentes.horasnolectivas','docentes.horasinvestigacion','docentes.horasdedicacion','docentes.departamentoacademico_id','docentes.facultad_id', 'docentes.dependencia','docentes.semestre_id','semestres.nombre as semestre',DB::Raw("IFNULL( `facultads`.`nombre` , '' ) as facultad"),DB::Raw("IFNULL( `departamentoacademicos`.`nombre` , '' ) as departamentoacademico"), 'docentes.hizointercambio', 'docentes.universidadintercambio', 'docentes.eslicencia')->get();
 
         foreach ($docentes as $key => $dato) {
             $rango='A'.strval((intval($cont)+intval($key))).':AT'.strval((intval($cont)+intval($key)));
@@ -1340,7 +1366,7 @@ class DocenteController extends Controller
            $semestre->nombre,
            $dato->dependencia,
            $dato->facultad,
-           $dato->escuela,
+           $dato->departamentoacademico,
            $dato->personalacademico,
            $dato->cargogeneral,
            $dato->descripcioncargo,
@@ -1371,7 +1397,12 @@ class DocenteController extends Controller
            $dato->modalidadingreso,
            $dato->email,
            $dato->telefono,
-           $dato->observaciones,
+           $dato->correoinstitucional,
+           $dato->identidadetnica,
+           SiUnoNoCero($dato->hizointercambio),
+           $dato->universidadintercambio,
+           SiUnoNoCero($dato->eslicencia),
+           $dato->observaciones
         
         ));
             

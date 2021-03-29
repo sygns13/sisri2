@@ -103,7 +103,7 @@
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 13%;">Apellidos y Nombres</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 7%;">DNI</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Facultad</th>
-              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Escuela</th>
+              <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 12%;">Departamento Académico</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 11%;">Máximo Grado</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 10%;">Personal Académico</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 11%;">Condición</th>
@@ -117,9 +117,9 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.doc }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.facultad }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
-                @{{ docente.escuela }}
+                @{{ docente.departamentoacademico }}
                 
-                <template v-if="parseInt(docente.escuela_id)==0">No Adscrito a una Escuela Profesional</template>
+                <template v-if="parseInt(docente.departamentoacademico_id)==0">No Adscrito a una Escuela Profesional</template>
 
               
               </td>

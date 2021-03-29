@@ -47,7 +47,7 @@ data:{
    docentes: [],
    errors:[],
 
-   filldocente:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','personalacademico':'','cargogeneral':'','descripcioncargo':'','maximogrado':'','descmaximogrado':'','universidadgrado':'','lugarmaximogrado':'','paismaximogrado':'','otrogrado':'','estadootrogrado':'','univotrogrado':'','lugarotrogrado':'','paisotrogrado':'','titulo':'','descripciontitulo':'','condicion':'','categoria':'','regimen':'','investigador':'','pregrado':'','postgrado':'','esdestacado':'','fechaingreso':'','modalidadingreso':'','observaciones':'','persona_id':'','horaslectivas':'','horasnolectivas':'','horasinvestigacion':'','horasdedicacion':'','escuela_id':'','facultad_id':'','dependencia':'','semestre_id':'','id':''},
+   filldocente:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','personalacademico':'','cargogeneral':'','descripcioncargo':'','maximogrado':'','descmaximogrado':'','universidadgrado':'','lugarmaximogrado':'','paismaximogrado':'','otrogrado':'','estadootrogrado':'','univotrogrado':'','lugarotrogrado':'','paisotrogrado':'','titulo':'','descripciontitulo':'','condicion':'','categoria':'','regimen':'','investigador':'','pregrado':'','postgrado':'','esdestacado':'','fechaingreso':'','modalidadingreso':'','observaciones':'','persona_id':'','horaslectivas':'','horasnolectivas':'','horasinvestigacion':'','horasdedicacion':'','departamentoacademico_id':'','facultad_id':'','dependencia':'','semestre_id':'','id':'', 'correoinstitucional':'', 'hizointercambio':'', 'universidadintercambio':'', 'eslicencia':'', 'identidadetnica':''},
 
    pagination: {
    'total': 0,
@@ -117,9 +117,16 @@ data:{
     horasnolectivas:'',
     horasinvestigacion:'',
     horasdedicacion:'',
-    escuela_id:0,
+    departamentoacademico_id:0,
     facultad_id:0,
     dependencia:'',
+
+    correoinstitucional : '',
+    hizointercambio : 0,
+    universidadintercambio : '',
+    eslicencia : 0,
+    identidadetnica : '',
+
 
  
     
@@ -282,9 +289,15 @@ methods: {
     this.horasnolectivas='';
     this.horasinvestigacion='';
     this.horasdedicacion='';
-    this.escuela_id=0;
+    this.departamentoacademico_id=0;
     this.facultad_id=0;
     this.dependencia='';
+
+    this.correoinstitucional = '';
+    this.hizointercambio = 0;
+    this.universidadintercambio = '';
+    this.eslicencia = 0;
+    this.identidadetnica ='';
 
     this.persona_id='0';
 
@@ -318,6 +331,8 @@ var url='persona/buscarDNI';
             this.direccion='';
             this.email='';
             this.telefono='';
+            this.correoinstitucional='';
+            this.identidadetnica='';
 
             this.persona_id='0';
 
@@ -334,58 +349,62 @@ var url='persona/buscarDNI';
         this.persona_id=response.data.idPer;
 
         this.nombres=response.data.persona.nombres;
-    this.apellidopat=response.data.persona.apellidopat;
-    this.apellidomat=response.data.persona.apellidomat;
-    this.genero=response.data.persona.genero;
-    this.estadocivil=response.data.persona.estadocivil;
-    this.fechanac=response.data.persona.fechanac;
-    this.esdiscapacitado=response.data.persona.esdiscapacitado;
-    this.discapacidad=response.data.persona.discapacidad;
-    this.pais=response.data.persona.pais;
-    this.departamento=response.data.persona.departamento;
-    this.provincia=response.data.persona.provincia;
-    this.distrito=response.data.persona.distrito;
-    this.direccion=response.data.persona.direccion;
-    this.email=response.data.persona.email;
-    this.telefono=response.data.persona.telefono;
+        this.apellidopat=response.data.persona.apellidopat;
+        this.apellidomat=response.data.persona.apellidomat;
+        this.genero=response.data.persona.genero;
+        this.estadocivil=response.data.persona.estadocivil;
+        this.fechanac=response.data.persona.fechanac;
+        this.esdiscapacitado=response.data.persona.esdiscapacitado;
+        this.discapacidad=response.data.persona.discapacidad;
+        this.pais=response.data.persona.pais;
+        this.departamento=response.data.persona.departamento;
+        this.provincia=response.data.persona.provincia;
+        this.distrito=response.data.persona.distrito;
+        this.direccion=response.data.persona.direccion;
+        this.email=response.data.persona.email;
+        this.telefono=response.data.persona.telefono;
+        this.correoinstitucional =response.data.persona.correoinstitucional;
+        this.identidadetnica =response.data.persona.identidadetnica;
 
 
         this.formularioCrear=true;
 
         this.$nextTick(function () {
                 $("#txtapepat").focus();
-            });
+        });
 
-        }else{
+    }else{
 
-            this.nombres='';
-            this.apellidopat='';
-            this.apellidomat='';
-            this.genero='M';
-            this.estadocivil=1;
-            this.fechanac='';
-            this.esdiscapacitado=0;
-            this.discapacidad='';
-            this.pais='PERÚ';
-            this.departamento='ANCASH';
-            this.provincia='HUARAZ';
-            this.distrito='HUARAZ';
-            this.direccion='';
-            this.email='';
-            this.telefono='';
+        this.nombres='';
+        this.apellidopat='';
+        this.apellidomat='';
+        this.genero='M';
+        this.estadocivil=1;
+        this.fechanac='';
+        this.esdiscapacitado=0;
+        this.discapacidad='';
+        this.pais='PERÚ';
+        this.departamento='ANCASH';
+        this.provincia='HUARAZ';
+        this.distrito='HUARAZ';
+        this.direccion='';
+        this.email='';
+        this.telefono='';
+        this.correoinstitucional='';
+        this.identidadetnica='';
 
-            this.persona_id='0';
+        this.persona_id='0';
 
-            this.formularioCrear=false;
+        this.formularioCrear=false;
 
 
-           $('#'+response.data.selector).focus();
-           $('#'+response.data.selector).css( "border", "1px solid red" );
-           toastr.error(response.data.msj);
-       }
-   }).catch(error=>{
-       //this.errors=error.response.data
-   })
+        $('#'+response.data.selector).focus();
+        $('#'+response.data.selector).css( "border", "1px solid red" );
+        toastr.error(response.data.msj);
+        }
+    }).catch(error=>{
+        //this.errors=error.response.data
+    })
 
 },
 
@@ -400,7 +419,7 @@ var url='persona/buscarDNI';
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, personalacademico:this.personalacademico, semestre_id:this.semestre_id, cargogeneral:this.cargogeneral, descripcioncargo:this.descripcioncargo, maximogrado:this.maximogrado, descmaximogrado:this.descmaximogrado, universidadgrado:this.universidadgrado, lugarmaximogrado:this.lugarmaximogrado, paismaximogrado:this.paismaximogrado, otrogrado:this.otrogrado, estadootrogrado:this.estadootrogrado, univotrogrado:this.univotrogrado, lugarotrogrado:this.lugarotrogrado, paisotrogrado:this.paisotrogrado, tituloUniv:this.tituloUniv, descripciontitulo:this.descripciontitulo, condicion:this.condicion, categoria:this.categoria, regimen:this.regimen, investigador:this.investigador, pregrado:this.pregrado, postgrado:this.postgrado, esdestacado:this.esdestacado, fechaingreso:this.fechaingreso, modalidadingreso:this.modalidadingreso, observaciones:this.observaciones, horaslectivas:this.horaslectivas, horasnolectivas:this.horasnolectivas, horasinvestigacion:this.horasinvestigacion, horasdedicacion:this.horasdedicacion, escuela_id:this.escuela_id, facultad_id:this.facultad_id, dependencia:this.dependencia, persona_id:this.persona_id  }).then(response=>{
+       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, personalacademico:this.personalacademico, semestre_id:this.semestre_id, cargogeneral:this.cargogeneral, descripcioncargo:this.descripcioncargo, maximogrado:this.maximogrado, descmaximogrado:this.descmaximogrado, universidadgrado:this.universidadgrado, lugarmaximogrado:this.lugarmaximogrado, paismaximogrado:this.paismaximogrado, otrogrado:this.otrogrado, estadootrogrado:this.estadootrogrado, univotrogrado:this.univotrogrado, lugarotrogrado:this.lugarotrogrado, paisotrogrado:this.paisotrogrado, tituloUniv:this.tituloUniv, descripciontitulo:this.descripciontitulo, condicion:this.condicion, categoria:this.categoria, regimen:this.regimen, investigador:this.investigador, pregrado:this.pregrado, postgrado:this.postgrado, esdestacado:this.esdestacado, fechaingreso:this.fechaingreso, modalidadingreso:this.modalidadingreso, observaciones:this.observaciones, horaslectivas:this.horaslectivas, horasnolectivas:this.horasnolectivas, horasinvestigacion:this.horasinvestigacion, horasdedicacion:this.horasdedicacion, departamentoacademico_id:this.departamentoacademico_id, facultad_id:this.facultad_id, dependencia:this.dependencia, persona_id:this.persona_id, correoinstitucional:this.correoinstitucional, hizointercambio:this.hizointercambio, universidadintercambio:this.universidadintercambio, eslicencia:this.eslicencia,  identidadetnica:this.identidadetnica  }).then(response=>{
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -431,33 +450,33 @@ var url='persona/buscarDNI';
 
 
     
-        swal.fire({
-             title: '¿Estás seguro?',
-             text: "¿Desea eliminar el Docente Seleccionado? -- Nota: este proceso no se podrá revertir.",
-             type: 'info',
-             showCancelButton: true,
-             confirmButtonColor: '#3085d6',
-             cancelButtonColor: '#d33',
-             confirmButtonText: 'Si, eliminar'
-           }).then((result) => {
+    swal.fire({
+            title: '¿Estás seguro?',
+            text: "¿Desea eliminar el Docente Seleccionado? -- Nota: este proceso no se podrá revertir.",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar'
+        }).then((result) => {
 
-            if (result.value) {
+        if (result.value) {
 
-                var url = 'docente/'+docente.id;
-                axios.delete(url).then(response=>{//eliminamos
+            var url = 'docente/'+docente.id;
+            axios.delete(url).then(response=>{//eliminamos
 
-                if(response.data.result=='1'){
-                    app.getDocentes(app.thispage);//listamos
-                    toastr.success(response.data.msj);//mostramos mensaje
-                }else{
-                    // $('#'+response.data.selector).focus();
-                    toastr.error(response.data.msj);
-                }
-                })
-                }
+            if(response.data.result=='1'){
+                app.getDocentes(app.thispage);//listamos
+                toastr.success(response.data.msj);//mostramos mensaje
+            }else{
+                // $('#'+response.data.selector).focus();
+                toastr.error(response.data.msj);
+            }
+            })
+            }
 
-                   
-               }).catch(swal.noop);  
+                
+            }).catch(swal.noop);  
    },
 
 
@@ -486,6 +505,8 @@ var url='persona/buscarDNI';
        this.filldocente.direccion=docente.direccion;
        this.filldocente.email=docente.email;
        this.filldocente.telefono=docente.telefono;
+       this.filldocente.correoinstitucional=docente.correoinstitucional;
+       this.filldocente.identidadetnica=docente.identidadetnica;
 
        this.filldocente.personalacademico=docente.personalacademico;
        this.filldocente.cargogeneral=docente.cargogeneral;
@@ -517,11 +538,14 @@ var url='persona/buscarDNI';
        this.filldocente.horasnolectivas=docente.horasnolectivas;
        this.filldocente.horasinvestigacion=docente.horasinvestigacion;
        this.filldocente.horasdedicacion=docente.horasdedicacion;
-       this.filldocente.escuela_id=docente.escuela_id;
+       this.filldocente.departamentoacademico_id=docente.departamentoacademico_id;
        this.filldocente.facultad_id=docente.facultad_id;
        this.filldocente.dependencia=docente.dependencia;
        this.filldocente.semestre_id=docente.semestre_id;
 
+       this.filldocente.hizointercambio=docente.hizointercambio;
+       this.filldocente.universidadintercambio=docente.universidadintercambio;
+       this.filldocente.eslicencia=docente.eslicencia;
 
 
         this.divEdit=true;
@@ -552,7 +576,7 @@ var url='persona/buscarDNI';
            
            if(response.data.result=='1'){   
            this.getDocentes(this.thispage);
-           this.filldocente={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','personalacademico':'','cargogeneral':'','descripcioncargo':'','maximogrado':'','descmaximogrado':'','universidadgrado':'','lugarmaximogrado':'','paismaximogrado':'','otrogrado':'','estadootrogrado':'','univotrogrado':'','lugarotrogrado':'','paisotrogrado':'','titulo':'','descripciontitulo':'','condicion':'','categoria':'','regimen':'','investigador':'','pregrado':'','postgrado':'','esdestacado':'','fechaingreso':'','modalidadingreso':'','observaciones':'','persona_id':'','horaslectivas':'','horasnolectivas':'','horasinvestigacion':'','horasdedicacion':'','escuela_id':'','facultad_id':'','dependencia':'','semestre_id':'','id':''};
+           this.filldocente={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','personalacademico':'','cargogeneral':'','descripcioncargo':'','maximogrado':'','descmaximogrado':'','universidadgrado':'','lugarmaximogrado':'','paismaximogrado':'','otrogrado':'','estadootrogrado':'','univotrogrado':'','lugarotrogrado':'','paisotrogrado':'','titulo':'','descripciontitulo':'','condicion':'','categoria':'','regimen':'','investigador':'','pregrado':'','postgrado':'','esdestacado':'','fechaingreso':'','modalidadingreso':'','observaciones':'','persona_id':'','horaslectivas':'','horasnolectivas':'','horasinvestigacion':'','horasdedicacion':'','departamentoacademico_id':'','facultad_id':'','dependencia':'','semestre_id':'','id':'', 'correoinstitucional':'', 'hizointercambio':'', 'universidadintercambio':'', 'eslicencia':'', 'identidadetnica':''};
            this.errors=[];
 
            this.cerrarFormE();
@@ -565,6 +589,14 @@ var url='persona/buscarDNI';
        }).catch(error=>{
            this.errors=error.response.data
        })
+   },
+
+   changeFacultad:function(){
+       this.departamentoacademico_id = 0;
+   },
+
+   changeFacultadE:function(){
+       this.filldocente.departamentoacademico_id = 0;
    },
 
 

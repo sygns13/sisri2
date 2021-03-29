@@ -23,6 +23,7 @@
           {{--   <li><a href="entidades"><i class='fa fa-gg'></i> Gestión de Entidades</a></li> --}}
             <li><a href="{{URL::to('facultades')}}"><i class='fa fa-gg'></i> Gestión de Facultades</a></li>
             <li><a href="{{URL::to('escuelas')}}"><i class='fa fa-gg'></i> Gestión de Escuelas</a></li> 
+            <li><a href="{{URL::to('departamentoacademicos')}}"><i class='fa fa-gg'></i> Gestión de Departamentos Académicos</a></li> 
             <li><a href="{{URL::to('modalidadadmision')}}"><i class='fa fa-gg'></i> Modalidades de Admisión</a></li> 
          {{--    <li><a href="bancos"><i class='fa fa-gg'></i> Gestión de Bancos</a></li>  --}}{{-- Anio - proveido - prioridad --}}
             {{-- Anio - proveido - prioridad --}}
@@ -150,6 +151,7 @@
             <li><a href="{{URL::to('locales')}}"><i class='fa fa-gg'></i> Gestión de Locales</a></li>
             <li><a href="{{URL::to('facultades')}}"><i class='fa fa-gg'></i> Gestión de Facultades</a></li>
             <li><a href="{{URL::to('escuelas')}}"><i class='fa fa-gg'></i> Gestión de Escuelas</a></li> 
+            <li><a href="{{URL::to('departamentoacademicos')}}"><i class='fa fa-gg'></i> Gestión de Departamentos Académicos</a></li> 
             <li><a href="{{URL::to('modalidadadmision')}}"><i class='fa fa-gg'></i> Modalidades de Admisión</a></li> 
             @else
 
@@ -168,6 +170,10 @@
 
                 @if($permiso2->submodulo_id==4)
                 <li><a href="{{URL::to('escuelas')}}"><i class='fa fa-gg'></i> Gestión de Escuelas</a></li> 
+                @endif
+
+                @if($permiso2->submodulo_id==6)
+                <li><a href="{{URL::to('departamentoacademicos')}}"><i class='fa fa-gg'></i> Gestión de Departamentos Académicos</a></li> 
                 @endif
 
                 @if($permiso2->submodulo_id==5)
