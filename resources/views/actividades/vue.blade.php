@@ -2,8 +2,8 @@
     let app = new Vue({
 el: '#app',
 data:{
-       titulo:"Bienestar Universitario",
-       subtitulo: "Condición Económica de los Estudiantes",
+       titulo:"Bioseguridad y Defensa Civil",
+       subtitulo: "Registro de Actividades",
        subtitulo2: "Principal",
 
    subtitle2:false,
@@ -26,28 +26,28 @@ data:{
    divloader9:false,
    divloader10:false,
    divtitulo:true,
-   classTitle:'fa fa-users',
+   classTitle:'fa fa-empire',
    classMenu0:'',
    classMenu1:'',
    classMenu2:'',
    classMenu3:'',
    classMenu4:'',
    classMenu5:'',
-   classMenu6:'active',
+   classMenu6:'',
    classMenu7:'',
    classMenu8:'',
    classMenu9:'',
-   classMenu10:'',
+   classMenu10:'active',
    classMenu11:'',
    classMenu12:'',
 
 
-   divprincipal:false,
+   divprincipal:true,
 
-   alumnos: [],
+   actividades: [],
    errors:[],
 
-   fillalumnos:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','codigo':'','numhermanos':'','numhermanosunasam':'','puestopadre':'','puestomadre':'','ingresomensualfamiliar':'','condicionviivienda':'','tieneseguro':'','nombreseguro':'','estalaborando':'','semestre_id':'','id':'', 'persona_id':''},
+   fillactividaddes:{'actividad':'', 'descripcion':'', 'oficinas':'','lugar':'','beneficiarios':'','organizadores':'','fecha':''},
 
    pagination: {
    'total': 0,
@@ -67,37 +67,22 @@ data:{
    thispage:'1',
 
    validated:'0',
-   formularioCrear:false,
+   formularioCrear:true,
 
   
-    tipodoc:1,
-    doc:'',
-    nombres:'',
-    apellidopat:'',
-    apellidomat:'',
-
-    semestre_id:{{$semestresel}},
-    
-    codigo:'',
-    numhermanos:'',
-    numhermanosunasam:'',
-    puestopadre:'',
-    puestomadre:'',
-    ingresomensualfamiliar:'',
-    condicionviivienda:'',
-    tieneseguro:'1',
-    nombreseguro:'',
-    estalaborando:'0',
- 
-    contse:{{$contse}},
-    semestreNombre:'{{$semestreNombre}}',
-
-    persona_id:'0',       
+   actividad:'',
+   descripcion:'',
+   oficinas:'',
+   lugar:'',
+   beneficiarios:'',
+   organizadores:'',
+   fecha:'',
 
 
 },
 created:function () {
-   this.getAlumno(this.thispage);
+   this.getActividades(this.thispage);
+   
 
 },
 mounted: function () {
@@ -163,29 +148,17 @@ computed:{
 
 methods: {
 
-    cambiarSemestre:function(){
-
-        this.semestreNombre=$("#txtseme"+this.semestre_id).val();
-
-        this.$nextTick(function () {
-            this.buscarBtn();
-            });
-
-    },
-
-
-
-   getAlumno: function (page) {
+   getActividades: function (page) {
        var busca=this.buscar;
-       var url = 'condicioneconomica?page='+page+'&busca='+busca+'&semestre_id='+this.semestre_id;
+       var url = 'actividad?page='+page+'&busca='+busca;
 
        axios.get(url).then(response=>{
-           this.alumnos= response.data.alumnos.data;
+           this.actividades= response.data.actividades.data;
            this.pagination= response.data.pagination;
 
            
 
-           if(this.alumnos.length==0 && this.thispage!='1'){
+           if(this.actividades.length==0 && this.thispage!='1'){
                var a = parseInt(this.thispage) ;
                a--;
                this.thispage=a.toString();
@@ -196,11 +169,11 @@ methods: {
 
    changePage:function (page) {
        this.pagination.current_page=page;
-       this.getAlumno(page);
+       this.getActividades(page);
        this.thispage=page;
    },
    buscarBtn: function () {
-       this.getAlumno();
+       this.getActividades();
        this.thispage='1';
    },
 
@@ -224,104 +197,24 @@ methods: {
    cancelFormNuevo: function () {
 
 
-    this.tipodoc=1;
-    this.doc='';
-    this.nombres='';
-    this.apellidopat='';
-    this.apellidomat='';
+    this.actividad='';
+    this.descripcion='';
+    this.oficinas='';
+    this.lugar='';
+    this.beneficiarios='';
+    this.organizadores='';
+    this.fecha='';
 
-    this.codigo='';
-    this.numhermanos='';
-    this.numhermanosunasam='';
-    this.puestopadre='';
-    this.puestomadre='';
-    this.ingresomensualfamiliar='';
-    this.condicionviivienda='';
-    this.tieneseguro='1';
-    this.nombreseguro='';
-    this.estalaborando='0';
-
-    this.persona_id='0';
-
-    this.formularioCrear=false;
+    this.formularioCrear=true;
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       $('#txtDNI').focus();
+       $('#txtactividad').focus();
    },
 
-   pressNuevoDNI: function() {
-
-var url='persona/buscarDNI';
-
-   axios.post(url,{doc:this.doc,tipodoc:this.tipodoc}).then(response=>{
-
-       if(String(response.data.result)=='1'){
-
-
-    this.nombres='';
-    this.apellidopat='';
-    this.apellidomat='';
-
-    this.persona_id='0';
-
-    
-
-           this.formularioCrear=true;
-
-           this.$nextTick(function () {
-                $("#txtapepat").focus();
-            });
-
-           toastr.success(response.data.msj);
-       }else if (String(response.data.result)=='2') {
-
-        this.persona_id=response.data.idPer;
-
-        this.nombres=response.data.persona.nombres;
-        this.apellidopat=response.data.persona.apellidopat;
-        this.apellidomat=response.data.persona.apellidomat;
-
-        this.formularioCrear=true;
-
-        this.$nextTick(function () {
-                $("#txtapepat").focus();
-            });
-
-        }else{
-
-            this.nombres='';
-            this.apellidopat='';
-            this.apellidomat='';
-
-            this.persona_id='0';
-
-            this.formularioCrear=false;
-
-            
-           $('#'+response.data.selector).focus();
-           $('#'+response.data.selector).css( "border", "1px solid red" );
-           toastr.error(response.data.msj);
-       }
-   }).catch(error=>{
-       //this.errors=error.response.data
-   })
-
-},
-
-
-/*
-
-    semestre_id:{{$semestresel}},
-    
-    codigo:'',
-    escuela_id:0,
-    observaciones:'',
-
-    */
 
    create:function () {
-       var url='condicioneconomica';
+       var url='actividad';
        $("#btnGuardar").attr('disabled', true);
        $("#btnCancel").attr('disabled', true);
        $("#btnClose").attr('disabled', true);
@@ -329,7 +222,7 @@ var url='persona/buscarDNI';
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, codigo:this.codigo, numhermanos:this.numhermanos, numhermanosunasam:this.numhermanosunasam,puestopadre:this.puestopadre, puestomadre:this.puestomadre, ingresomensualfamiliar:this.ingresomensualfamiliar, condicionviivienda:this.condicionviivienda, tieneseguro:this.tieneseguro, nombreseguro:this.nombreseguro, estalaborando:this.estalaborando, semestre_id:this.semestre_id, persona_id:this.persona_id  }).then(response=>{
+       axios.post(url,{actividad:this.actividad, descripcion:this.descripcion, oficinas:this.oficinas, lugar:this.lugar, beneficiarios:this.beneficiarios, organizadores:this.organizadores, fecha:this.fecha}).then(response=>{
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -339,7 +232,7 @@ var url='persona/buscarDNI';
 
    
            if(String(response.data.result)=='1'){
-               this.getAlumno(this.thispage);
+               this.getActividades(this.thispage);
                this.errors=[];
                this.cerrarFormNuevo();
                toastr.success(response.data.msj);
@@ -356,7 +249,7 @@ var url='persona/buscarDNI';
 
 
 
-   borrar:function (alumno) {
+   borrar:function (actividad) {
 
 
     
@@ -372,11 +265,11 @@ var url='persona/buscarDNI';
 
             if (result.value) {
 
-                var url = 'condicioneconomica/'+alumno.id;
+                var url = 'actividad/'+actividad.id;
                 axios.delete(url).then(response=>{//eliminamos
 
                 if(response.data.result=='1'){
-                    app.getAlumno(app.thispage);//listamos
+                    app.getActividades(app.thispage);//listamos
                     toastr.success(response.data.msj);//mostramos mensaje
                 }else{
                     // $('#'+response.data.selector).focus();
@@ -400,37 +293,25 @@ var url='persona/buscarDNI';
 
     */
 
-   edit:function (alumno) {
+   edit:function (actividad) {
 
        this.cerrarFormNuevo();
 
 
-       this.fillalumnos.id=alumno.id;
-       this.fillalumnos.tipodoc=alumno.tipodoc;
-       this.fillalumnos.doc=alumno.doc;
-       this.fillalumnos.nombres=alumno.nombres;
-       this.fillalumnos.apellidopat=alumno.apellidopat;
-       this.fillalumnos.apellidomat=alumno.apellidomat;
-
-       this.fillalumnos.semestre_id=alumno.semestre_id;
-       this.fillalumnos.persona_id=alumno.persona_id;
-
-       this.fillalumnos.codigo=alumno.codigo;
-       this.fillalumnos.numhermanos=alumno.numhermanos;
-       this.fillalumnos.numhermanosunasam=alumno.numhermanosunasam;
-       this.fillalumnos.puestopadre=alumno.puestopadre;
-       this.fillalumnos.puestomadre=alumno.puestomadre;
-       this.fillalumnos.ingresomensualfamiliar=alumno.ingresomensualfamiliar;
-       this.fillalumnos.condicionviivienda=alumno.condicionviivienda;
-       this.fillalumnos.tieneseguro=alumno.tieneseguro;
-       this.fillalumnos.nombreseguro=alumno.nombreseguro;
-       this.fillalumnos.estalaborando=alumno.estalaborando;
+       this.fillactividaddes.id=actividad.id;
+       this.fillactividaddes.actividad=actividad.actividad;
+       this.fillactividaddes.descripcion=actividad.descripcion;
+       this.fillactividaddes.oficinas=actividad.oficinas;
+       this.fillactividaddes.lugar=actividad.lugar;
+       this.fillactividaddes.beneficiarios=actividad.beneficiarios;
+       this.fillactividaddes.organizadores=actividad.organizadores;
+       this.fillactividaddes.fecha=actividad.fecha;
 
 
         this.divEdit=true;
 
         this.$nextTick(function () {
-            $("#txtDNIE").focus();
+            $("#txtactividadE").focus();
         });
        
 
@@ -442,20 +323,20 @@ var url='persona/buscarDNI';
    },
 
    update:function (id) {
-       var url="condicioneconomica/"+id;
+       var url="actividad/"+id;
        $("#btnSaveE").attr('disabled', true);
        $("#btnCloseE").attr('disabled', true);
        this.divloaderEdit=true;
 
-       axios.put(url, this.fillalumnos).then(response=>{
+       axios.put(url, this.fillactividaddes).then(response=>{
 
            $("#btnSaveE").removeAttr("disabled");
            $("#btnCloseE").removeAttr("disabled");
            this.divloaderEdit=false;
            
            if(response.data.result=='1'){   
-           this.getAlumno(this.thispage);
-           this.fillalumnos={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','codigo':'','numhermanos':'','numhermanosunasam':'','puestopadre':'','puestomadre':'','ingresomensualfamiliar':'','condicionviivienda':'','tieneseguro':'','nombreseguro':'','estalaborando':'','semestre_id':'','id':'', 'persona_id':''};
+           this.getActividades(this.thispage);
+           this.fillactividaddes={'actividad':'', 'descripcion':'', 'oficinas':'','lugar':'','beneficiarios':'','organizadores':'','fecha':''};
            this.errors=[];
 
            this.cerrarFormE();
@@ -472,8 +353,8 @@ var url='persona/buscarDNI';
 
 
    descargarPlantilla:function(){
-    //window.location="alumnos/imprimirExcel/"+buscar+"/"+fech+"/"+fec1+"/"+fec2+"/"+tipoP+"";
-    window.location="condicioneconomica/imprimirExcel/";
+    //window.location="actividades/imprimirExcel/"+buscar+"/"+fech+"/"+fec1+"/"+fec2+"/"+tipoP+"";
+    window.location="actividad/imprimirExcel/";
    },
 }
 });

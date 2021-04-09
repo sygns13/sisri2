@@ -210,6 +210,9 @@ desired effect
 @elseif($modulo=="condicioneconomicaestudiante")
 @include('condicioneconomicaestudiante.vue')
 
+@elseif($modulo=="actividades")
+@include('actividades.vue')
+
 @endif
 
 <script type="text/javascript">

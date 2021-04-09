@@ -127,6 +127,15 @@
     </li>
     @endif
 
+    @if(accesoUser([1]))
+      <li class="treeview" v-bind:class="classMenu8">
+          <a href="#"><i class='fa fa-empire'></i> <span>Bioseguridad y Defensa Civil</span> <i class="fa fa-angle-left pull-right"></i></a>
+          <ul class="treeview-menu">
+              <li><a href="{{URL::to('actividades')}}"><i class='fa fa-gg'></i> Registro de Actividades</a></li>
+          </ul>
+      </li>
+      @endif
+
 
 
 
@@ -499,6 +508,24 @@
             </ul>
         </li>
     @endif
+
+    @if($permisoMod->modulo_id==10)
+            <li class="treeview" v-bind:class="classMenu10">
+                <a href="#"><i class='fa fa-empire'></i> <span>Bioseguridad y Defensa Civil</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+
+                    @if($permisoMod->tipo==2)
+                        <li><a href="{{URL::to('actividades')}}"><i class='fa fa-gg'></i> Registro de Actividades</a></li>
+                    @else
+                        @foreach ($permisoSubModulos as $permiso2)
+                            @if($permiso2->submodulo_id==41)
+                            <li><a href="{{URL::to('actividades')}}"><i class='fa fa-gg'></i> Registro de Actividades</a></li>
+                            @endif
+                        @endforeach
+                    @endif
+                </ul>
+            </li>
+            @endif
 
         
     @endforeach

@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('usuarios','UserController@index1');
     Route::get('miperfil','UserController@index2');
     Route::get('condicion','CondicionsocioeconomicaController@index1');
+    Route::get('actividades','ActividadesController@index1');
     
     
     Route::resource('semestre','SemestreController');
@@ -127,6 +128,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('autor','AutorController');
 
     Route::resource('condicioneconomica','CondicionsocioeconomicaController');
+    Route::resource('actividad','ActividadesController');
     
     
     
@@ -214,6 +216,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('departamentoacademico/exportarExcel','DepartamentoacademicoController@descargarExcel');
     Route::get('modalidadadmision/exportarExcel','ModalidadadmisionController@descargarExcel');
     Route::get('condicion/exportarExcel','CondicionsocioeconomicaController@descargarExcel');
+    Route::get('actividades/exportarExcel','ActividadesController@descargarExcel');
     
     
     
