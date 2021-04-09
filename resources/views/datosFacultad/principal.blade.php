@@ -131,7 +131,7 @@
         <div class="box-body table-responsive">
           <table class="table table-hover table-bordered table-dark table-condensed table-striped" >
             <tbody><tr>
-              <th style="border:1px solid #ddd;padding: 5px; width: 5%;">#</th>
+              {{-- <th style="border:1px solid #ddd;padding: 5px; width: 5%;">#</th> --}}
               <th style="border:1px solid #ddd;padding: 5px; width: 25%;">Semestre</th>
               <th style="border:1px solid #ddd;padding: 5px; width: 25;">Descripción</th>
               <th style="border:1px solid #ddd;padding: 5px; width: 20%;">Cantidad</th>
@@ -176,7 +176,7 @@
         <div class="box-body table-responsive">
           <table class="table table-hover table-bordered table-dark table-condensed table-striped" >
             <tbody><tr>
-              <th style="border:1px solid #ddd;padding: 5px; width: 5%;">#</th>
+            {{-- <th style="border:1px solid #ddd;padding: 5px; width: 5%;">#</th> --}}
               <th style="border:1px solid #ddd;padding: 5px; width: 25%;">Semestre</th>
               <th style="border:1px solid #ddd;padding: 5px; width: 45;">Descripción</th>
               <th style="border:1px solid #ddd;padding: 5px; width: 10%;">Estado</th>

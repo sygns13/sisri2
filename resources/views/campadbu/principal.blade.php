@@ -175,8 +175,8 @@
               <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ programasalud.nombre }}</td>
               <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ programasalud.descripcion }}</td>
               <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ programasalud.lugar }}</td>
-              <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ programasalud.fechaini }}</td>
-              <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ programasalud.fechafin }}</td>
+              <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ programasalud.fechaini | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ programasalud.fechafin | pasfechaVista }}</td>
               <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">@{{ programasalud.cantidadAtenciones }}</td>
 
              <td style="border:1px solid #ddd;font-size: 14px; padding: 5px;">

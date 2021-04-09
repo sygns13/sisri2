@@ -123,7 +123,7 @@
                 <span v-if="parseInt(beneficiario.tipo)==2">Docente</span>
                 <span v-if="parseInt(beneficiario.tipo)==3">Administrativo</span>
               </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ beneficiario.fechaatencion }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ beneficiario.fechaatencion | pasfechaVista}}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ beneficiario.observaciones }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
                   <center>      
@@ -142,7 +142,7 @@
                 <span v-if="parseInt(beneficiario.tipo)==2">Docente</span>
                 <span v-if="parseInt(beneficiario.tipo)==3">Administrativo</span>
               </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ beneficiario.fechaatencion }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ beneficiario.fechaatencion | pasfechaVista }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ beneficiario.observaciones }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
                   <center>      

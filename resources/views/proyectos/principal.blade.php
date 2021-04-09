@@ -122,12 +122,12 @@
                 </center>
               </td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.descripcion }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.fechainicio }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.fechafinal }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.fechainicio | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.fechafinal | pasfechaVista }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.lugar }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.jefeproyecto }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.fuentefinanciamiento }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.presupuesto }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.presupuesto | mostrarNumero }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ proyecto.cantidadbeneficiarios }}</td>
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">

@@ -87,8 +87,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.doc }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.programaEstudios }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.nombreGrado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.fechaEgreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.fechaEmision }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.fechaEgreso  | pasfechaVista}}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ maestro.fechaEmision | pasfechaVista }}</td>
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      

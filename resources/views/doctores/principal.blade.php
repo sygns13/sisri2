@@ -89,8 +89,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ doctor.doc }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ doctor.programaEstudios }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ doctor.nombreGrado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ doctor.fechaEgreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ doctor.fechaEmision }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ doctor.fechaEgreso | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ doctor.fechaEmision | pasfechaVista }}</td>
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      

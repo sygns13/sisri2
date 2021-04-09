@@ -6,7 +6,7 @@
 
       <div class="form-group">
 
-          <label for="cbutipodocE" class="col-sm-1 control-label">Tipo de Doc:*</label>
+          <label for="cbutipodocE" class="col-sm-1 control-label">Tipo de Doc:<spam style="color:red;">*</spam></label>
 
           <div class="col-sm-2">
               <select class="form-control" id="cbutipodocE" name="cbutipodocE" v-model="fillalumnos.tipodoc">
@@ -20,7 +20,7 @@
 
 
 
-        <label for="txtDNIE" class="col-sm-1 control-label">Documento:*</label>
+        <label for="txtDNIE" class="col-sm-1 control-label">Documento:<spam style="color:red;">*</spam></label>
 
         <div class="col-sm-2">
           <input type="text" class="form-control" id="txtDNIE" name="txtDNIE" placeholder="N° de Doc" maxlength="20"
@@ -46,15 +46,21 @@
         <h4>Datos Personales del Alumno</h4>
       </center>
 
+      <div class="col-md-12">
+        <div class="form-group">
+          <p><b>Nota:</b> Los campos marcadosco <spam style="color:red;">*</spam> son obligatorios</p>
+        </div>
+      </div>
+
       <div class="col-md-12" style="padding-top: 15px;">
         <div class="form-group">
-          <label for="txtapepatE" class="col-sm-2 control-label">Apellido Paterno:*</label>
+          <label for="txtapepatE" class="col-sm-2 control-label">Apellido Paterno:<spam style="color:red;">*</spam></label>
           <div class="col-sm-4">
             <input type="text" class="form-control" id="txtapepatE" name="txtapepatE" placeholder="Apellido Paterno"
               maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.apellidopat">
           </div>
 
-          <label for="txtapematE" class="col-sm-2 control-label">Apellido Materno:*</label>
+          <label for="txtapematE" class="col-sm-2 control-label">Apellido Materno:<spam style="color:red;">*</spam></label>
           <div class="col-sm-4">
               <input type="text" class="form-control" id="txtapematE" name="txtapematE" placeholder="Apellido Materno"
                 maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.apellidomat">
@@ -64,7 +70,7 @@
 
       <div class="col-md-12" style="padding-top: 15px;">
         <div class="form-group">
-          <label for="txtnombresE" class="col-sm-2 control-label">Nombres:*</label>
+          <label for="txtnombresE" class="col-sm-2 control-label">Nombres:<spam style="color:red;">*</spam></label>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="txtnombresE" name="txtnombresE" placeholder="Nombres"
               maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.nombres">
@@ -74,7 +80,7 @@
 
       <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
-            <label for="cbugeneroE" class="col-sm-2 control-label">Género:*</label>
+            <label for="cbugeneroE" class="col-sm-2 control-label">Género:<spam style="color:red;">*</spam></label>
             <div class="col-sm-2">
               <select class="form-control" id="cbugeneroE" name="cbugeneroE" v-model="fillalumnos.genero">
                 <option value="M">Masculino</option>
@@ -82,13 +88,13 @@
               </select>
             </div>
 
-            <label for="txtfechanacE" class="col-sm-2 control-label">Fecha de Nacimiento:*</label>
+            <label for="txtfechanacE" class="col-sm-2 control-label">Fecha de Nacimiento:<spam style="color:red;">*</spam></label>
             <div class="col-sm-2">
                 <input type="date" class="form-control" id="txtfechanacE" name="txtfechanacE" placeholder="dd/mm/aaaa"
                 maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.fechanac">
             </div>
 
-            <label for="cbuestadocivilE" class="col-sm-2 control-label">Estado Civil:*</label>
+            <label for="cbuestadocivilE" class="col-sm-2 control-label">Estado Civil:<spam style="color:red;">*</spam></label>
             <div class="col-sm-2">
                 <select class="form-control" id="cbuestadocivilE" name="cbuestadocivilE" v-model="fillalumnos.estadocivil">
                   <option value="1">Soltero (a)</option>
@@ -104,7 +110,7 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="cbugeneroE" class="col-sm-2 control-label">Sufre Discapacidad:*</label>
+                <label for="cbugeneroE" class="col-sm-2 control-label">Sufre Discapacidad:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-2">
                   <select class="form-control" id="cbugeneroE" name="cbugeneroE" v-model="fillalumnos.esdiscapacitado">
                     <option value="0">No</option>
@@ -113,7 +119,7 @@
                 </div>
 
                 <template v-if="fillalumnos.esdiscapacitado=='1'">
-                <label for="txtdiscapacidadE" class="col-sm-2 control-label">Discapacidad que Padece:*</label>
+                <label for="txtdiscapacidadE" class="col-sm-2 control-label">Discapacidad que Padece:<spam style="color:red;">*</spam></label>
           <div class="col-sm-6">
               <input type="text" class="form-control" id="txtdiscapacidadE" name="txtdiscapacidadE" placeholder="Discapacidad"
                 maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.discapacidad">
@@ -126,13 +132,13 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="txtpaisE" class="col-sm-2 control-label">Pais de Procedencia:*</label>
+                <label for="txtpaisE" class="col-sm-2 control-label">Pais de Procedencia:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="txtpaisE" name="txtpaisE" placeholder="Pais"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.pais">
                 </div>
 
-                <label for="txtdepE" class="col-sm-2 control-label">Departamento:*</label>
+                <label for="txtdepE" class="col-sm-2 control-label">Departamento:<spam style="color:red;">*</spam></label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" id="txtdepE" name="txtdepE" placeholder="Departamento"
                   maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.departamento">
@@ -144,13 +150,13 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="txtprovE" class="col-sm-2 control-label">Provincia:*</label>
+                <label for="txtprovE" class="col-sm-2 control-label">Provincia:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="txtprovE" name="txtprovE" placeholder="Provincia"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.provincia">
                 </div>
 
-                <label for="txtdistE" class="col-sm-2 control-label">Distrito:*</label>
+                <label for="txtdistE" class="col-sm-2 control-label">Distrito:<spam style="color:red;">*</spam></label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" id="txtdistE" name="txtdistE" placeholder="Distrito"
                   maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.distrito">
@@ -163,7 +169,7 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="txtDirE" class="col-sm-2 control-label">Dirección:</label>
+                <label for="txtDirE" class="col-sm-2 control-label">Dirección:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="txtDirE" name="txtDirE" placeholder="Av. Jr. Psje."
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.direccion">
@@ -182,7 +188,7 @@
           <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
   
-                  <label for="txtfonoE" class="col-sm-2 control-label">Teléfono:*</label>
+                  <label for="txtfonoE" class="col-sm-2 control-label">Teléfono:</label>
                   <div class="col-sm-2">
                     <input type="text" class="form-control" id="txtfonoE" name="txtfonoE" placeholder="Telef / Cell"
                       maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.telefono">
@@ -192,7 +198,21 @@
               </div>
             </div>
 
-
+        <div class="col-md-12" style="padding-top: 15px;">
+          <div class="form-group">
+              <label for="txtcorreoinstitucionalE" class="col-sm-2 control-label">Correo Institucional:<spam style="color:red;">*</spam></label>
+              <div class="col-sm-4">
+          <input type="text" class="form-control" id="txtcorreoinstitucionalE" name="txtcorreoinstitucionalE" placeholder="Correo Institucional"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.correoinstitucional">
+            </div>
+  
+              <label for="txtidentidadetnicaE" class="col-sm-2 control-label">Identidad Étnica:<spam style="color:red;">*</spam></label>
+              <div class="col-sm-4">
+          <input type="text" class="form-control" id="txtidentidadetnicaE" name="txtidentidadetnicaE" placeholder="Identidad Étnica"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.identidadetnica">
+            </div>
+          </div>
+        </div>
 
 
       <div class="col-md-12">
@@ -208,7 +228,7 @@
           <div class="form-group">
   
   
-              <label for="cbucarreraE" class="col-sm-2 control-label">Escuela Profesional:*</label>
+              <label for="cbucarreraE" class="col-sm-2 control-label">Escuela Profesional:<spam style="color:red;">*</spam></label>
               <div class="col-sm-10">
                   <select class="form-control" id="cbucarreraE" name="cbucarreraE" v-model="fillalumnos.escuela_id">
                       <option value="0" disabled>Seleccione un Programa Profesional...</option>
@@ -226,14 +246,14 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
   
-                <label for="txtcodigoE" class="col-sm-2 control-label">Código del Alumno:</label>
+                <label for="txtcodigoE" class="col-sm-2 control-label">Código del Alumno:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-2">
                   <input type="text" class="form-control" id="txtcodigoE" name="txtcodigoE" placeholder="Código"
                     maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.codigo">
                 </div>
   
-                <label for="cbuEscalaPagoE" class="col-sm-2 control-label">Escala de Pago:*</label>
-                <div class="col-sm-3">
+                <label for="cbuEscalaPagoE" class="col-sm-2 control-label">Escala de Pago:<spam style="color:red;">*</spam></label>
+                <div class="col-sm-2">
                     <select class="form-control" id="cbuEscalaPagoE" name="cbuEscalaPagoE" v-model="fillalumnos.escalaPago">
                         <option value="0">Ninguna</option>                        
                         <option value="1">Si Cuenta con Escala de Pago</option>                                           
@@ -248,7 +268,7 @@
             <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(fillalumnos.escalaPago)!=0">
                 <div class="form-group">
     
-                    <label for="txtEsclaPagoE" class="col-sm-2 control-label">Describa su Escala de Pago:*</label>
+                    <label for="txtEsclaPagoE" class="col-sm-2 control-label">Describa su Escala de Pago:<spam style="color:red;">*</spam></label>
                     <div class="col-sm-10">
                       <input type="text" class="form-control" id="txtEsclaPagoE" name="txtEsclaPagoE" placeholder="Escala de Pago"
                         maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.escalaPagodesc">
@@ -261,15 +281,21 @@
   
               <div class="col-md-12" style="padding-top: 15px;">
                   <div class="form-group">
+
+                    <label for="txtcreditosacumuladosE" class="col-sm-2 control-label">N° de Créditos Acumulados:<spam style="color:red;">*</spam></label>
+                  <div class="col-sm-2">
+                      <input type="text" class="form-control" id="txtcreditosacumuladosE" name="txtcreditosacumuladosE" placeholder="" onkeypress="return soloNumeros(event);"
+                        maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.creditosacumulados">
+                    </div>
   
   
-                        <label for="txtpromedioponderadoE" class="col-sm-2 control-label">Promedio Ponderado:*</label>
+                        <label for="txtpromedioponderadoE" class="col-sm-2 control-label">Promedio Ponderado:<spam style="color:red;">*</spam></label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control" id="txtpromedioponderadoE" name="txtpromedioponderadoE" placeholder="" onkeypress="return soloNumeros(event);"
                               maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.promedioPonderado">
                           </div>
   
-                          <label for="txtpromediosemestreE" class="col-sm-2 control-label">Promedio del Semestre:*</label>
+                          <label for="txtpromediosemestreE" class="col-sm-2 control-label">Promedio del Semestre:<spam style="color:red;">*</spam></label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control" id="txtpromediosemestreE" name="txtpromediosemestreE" placeholder="" onkeypress="return soloNumeros(event);"
                               maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.promedioSemestre">
@@ -284,8 +310,8 @@
                   <div class="col-md-12" style="padding-top: 15px;">
                       <div class="form-group">
       
-            <label for="cbusemestreingresoE" class="col-sm-2 control-label">Semestre de Ingreso a la Universidad:*</label>
-            <div class="col-sm-3">
+            <label for="cbusemestreingresoE" class="col-sm-2 control-label">Semestre de Ingreso a la Universidad:<spam style="color:red;">*</spam></label>
+            <div class="col-sm-2">
                 <select class="form-control" id="cbusemestreingresoE" name="cbusemestreingresoE" v-model="fillalumnos.periodoIngreso">
                   <option value="0" disabled>Seleccione un Semestre...</option>
                   @foreach ($semestres as $dato)
@@ -296,8 +322,8 @@
 
 
 
-              <label for="cbuprimersemestreE" class="col-sm-2 control-label">Primer Semestre de Matrícula:*</label>
-                  <div class="col-sm-3">
+              <label for="cbuprimersemestreE" class="col-sm-2 control-label">Primer Semestre de Matrícula:<spam style="color:red;">*</spam></label>
+                  <div class="col-sm-2">
                       <select class="form-control" id="cbuprimersemestreE" name="cbuprimersemestreE" v-model="fillalumnos.primerPeriodoMatricula">
                         <option value="0" disabled>Seleccione un Semestre...</option>
                         @foreach ($semestres as $dato)
@@ -316,7 +342,7 @@
                     <div class="form-group">
           
   
-                        <label for="cbumovinacionalE" class="col-sm-2 control-label">Realizó Movilidad Nacional:*</label>
+                        <label for="cbumovinacionalE" class="col-sm-2 control-label">Realizó Movilidad Nacional:<spam style="color:red;">*</spam></label>
                         <div class="col-sm-2">
                             <select class="form-control" id="cbumovinacionalE" name="cbumovinacionalE" v-model="fillalumnos.ismovnacional">
                                 <option value="0">No</option>                        
@@ -327,13 +353,36 @@
           
                       </div>
                     </div>
+
+
+              <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(fillalumnos.ismovnacional)!=0">
+                <div class="form-group">
+                
+                <label for="cbusemestremovnacionalE" class="col-sm-2 control-label">Semestre en que realizó la Movilidad Nacional:<spam style="color:red;">*</spam></label>
+                <div class="col-sm-2">
+                    <select class="form-control" id="cbusemestremovnacionalE" name="cbusemestremovnacionalE" v-model="fillalumnos.semestremovnacional">
+                      <option value="0" disabled>Seleccione un Semestre...</option>
+                      @foreach ($semestres as $dato)
+                      <option value="{{$dato->id}}" selected>{{$dato->nombre}}</option>                        
+                      @endforeach
+                    </select>
+                </div>
+    
+                <label for="txtuniversidadmovnacionalE" class="col-sm-2 control-label">Universidad donde realizó la Movilidad Nacional:<spam style="color:red;">*</spam></label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" id="txtuniversidadmovnacionalE" name="txtuniversidadmovnacionalE" placeholder="Universidad donde realizó la Movilidad Nacional"
+                  maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.universidadmovnacional">
+              </div>
+    
+                </div>
+              </div>
   
   
                 <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(fillalumnos.ismovnacional)!=0">
                     <div class="form-group">
         
-                        <label for="txtmovinacE" class="col-sm-3 control-label">Movilidad Nacional (Describa):*</label>
-                        <div class="col-sm-9">
+                        <label for="txtmovinacE" class="col-sm-2 control-label">Movilidad Nacional (Describa):</label>
+                        <div class="col-sm-10">
                             <textarea name="txtmovinacE" id="txtmovinacE" rows="4" v-model="fillalumnos.movinacional" style="width:100%;"></textarea>
                         </div>
         
@@ -346,7 +395,7 @@
                       <div class="form-group">
             
     
-                          <label for="cbumoviinternacionalE" class="col-sm-2 control-label">Realizó Movilidad Internacional:*</label>
+                          <label for="cbumoviinternacionalE" class="col-sm-2 control-label">Realizó Movilidad Internacional:<spam style="color:red;">*</spam></label>
                           <div class="col-sm-2">
                               <select class="form-control" id="cbumoviinternacionalE" name="cbumoviinternacionalE" v-model="fillalumnos.ismovinternacional">
                                   <option value="0">No</option>                        
@@ -357,14 +406,37 @@
             
                         </div>
                       </div>
+
+
+                <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(fillalumnos.ismovinternacional)!=0">
+                  <div class="form-group">
+                  
+                  <label for="cbusemestremovinternacionalE" class="col-sm-2 control-label">Semestre en que realizó la Movilidad Internacional:<spam style="color:red;">*</spam></label>
+                  <div class="col-sm-2">
+                      <select class="form-control" id="cbusemestremovinternacionalE" name="cbusemestremovinternacionalE" v-model="fillalumnos.semestremovinternacional">
+                        <option value="0" disabled>Seleccione un Semestre...</option>
+                        @foreach ($semestres as $dato)
+                        <option value="{{$dato->id}}" selected>{{$dato->nombre}}</option>                        
+                        @endforeach
+                      </select>
+                  </div>
+      
+                  <label for="txtuniversidadmovinternacionalE" class="col-sm-2 control-label">Universidad donde realizó la Movilidad Internacional:<spam style="color:red;">*</spam></label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="txtuniversidadmovinternacionalE" name="txtuniversidadmovinternacionalE" placeholder="Universidad donde realizó la Movilidad Internacional"
+                    maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.universidadmovinternacional">
+                </div>
+      
+                  </div>
+                </div>
   
   
   
                   <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(fillalumnos.ismovinternacional)!=0">
                       <div class="form-group">
           
-                          <label for="txtmovinternacionalE" class="col-sm-3 control-label">Movilidad Internacional (Describa):*</label>
-                          <div class="col-sm-9">
+                          <label for="txtmovinternacionalE" class="col-sm-2 control-label">Movilidad Internacional (Describa):</label>
+                          <div class="col-sm-10">
                               <textarea name="txtmovinternacionalE" id="txtmovinternacionalE" rows="4" v-model="fillalumnos.moviinternacional" style="width:100%;"></textarea>
                           </div>
           
@@ -378,7 +450,7 @@
                         <div class="form-group">
               
       
-                            <label for="cbualumnoriesgoE" class="col-sm-2 control-label">Es Alumno en Riesgo:*</label>
+                            <label for="cbualumnoriesgoE" class="col-sm-2 control-label">Es Alumno en Riesgo:<spam style="color:red;">*</spam></label>
                             <div class="col-sm-2">
                                 <select class="form-control" id="cbualumnoriesgoE" name="cbualumnoriesgoE" v-model="fillalumnos.alumnoRiesgo">
                                     <option value="0">No</option>                        
@@ -388,10 +460,10 @@
   
                                 <template v-if="parseInt(fillalumnos.alumnoRiesgo)!=0">
   
-                                <label for="txtnumcursosriesgoE" class="col-sm-2 control-label">N° de Cursos en Riesgo:*</label>
+                                <label for="txtnumcursosriesgoE" class="col-sm-2 control-label">N° de Cursos en Riesgo:<spam style="color:red;">*</spam></label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control" id="txtnumcursosriesgoE" name="txtnumcursosriesgoE" placeholder="" onkeypress="return soloNumeros(event);"
-                              maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.numCursosRiesgo">
+                              maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.numCursosRiesgo" @keyup="changeCursosE()">
                           </div>
                                 </template>
               
@@ -400,6 +472,19 @@
                         </div>
   
   
+                  <div class="col-md-12" style="padding-top: 15px;" v-if="parseInt(fillalumnos.alumnoRiesgo)!=0" v-for="curso, key in fillalumnos.cursosriesgo">
+                    <div class="form-group">
+        
+                    <label for="txtcursosriesgoE" class="col-sm-2 control-label">Curso N° @{{key + 1}} en Riesgo:<spam style="color:red;">*</spam></label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" v-bind:id="'txtcursosriesgoE'+key" name="txtcursosriesgoE" placeholder="Nombre de Curso"
+                      maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fillalumnos.cursosriesgo[key]">
+                  </div>
+        
+                    </div>
+                  </div>
+
+
   
                                 <div class="col-md-12" style="padding-top: 15px;">
                                     <div class="form-group">

@@ -207,6 +207,9 @@ desired effect
 @elseif($modulo=="departamentoacademico")
 @include('departamentoacademico.vue')
 
+@elseif($modulo=="condicioneconomicaestudiante")
+@include('condicioneconomicaestudiante.vue')
+
 @endif
 
 <script type="text/javascript">

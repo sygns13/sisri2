@@ -122,9 +122,9 @@
                 <span v-if="parseInt(medico.acargo)==1">Si</span>
                 <span v-if="parseInt(medico.acargo)==0">No</span>
               </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ medico.fechaingreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ medico.fechainiciocontrato }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ medico.fechafincontrato }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ medico.fechaingreso | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ medico.fechainiciocontrato | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ medico.fechafincontrato | pasfechaVista }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
                   <center>      
                            <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="edit(medico)" data-placement="top" data-toggle="tooltip" title="Editar Médico"><i class="fa fa-edit"></i></a>

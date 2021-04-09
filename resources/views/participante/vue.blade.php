@@ -111,6 +111,34 @@ mounted: function () {
    $("#divtitulo").show('slow');
 
 },
+
+filters:{
+    mostrarNumero(value){
+      
+      if(value != null && value != undefined){
+        value=parseFloat(value).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      return value;
+    },
+    pasfechaVista:function(date){
+        if(date!=null && date.length==10){
+            date=date.slice(-2)+'/'+date.slice(-5,-3)+'/'+date.slice(0,4);            
+        }else{
+          return '';
+        }
+
+        return date;
+    },
+    leftpad:function(n, length) {
+        var  n = n.toString();
+        while(n.length < length)
+            n = "0" + n;
+        return n;
+    }
+
+  },
+  
 computed:{
    isActived: function(){
        return this.pagination.current_page;

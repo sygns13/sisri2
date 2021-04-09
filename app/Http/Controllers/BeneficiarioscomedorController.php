@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 use App\Escuela;
 use App\Modalidadadmision;
@@ -352,7 +353,7 @@ class BeneficiarioscomedorController extends Controller
         }
         elseif ($validator17->fails() || intval($escuela_id)==0) {
             $result='0';
-            $msj='Seleccione la Escuela Profesional del alumno '.$tipo;
+            $msj='Seleccione la Escuela Profesional del alumno ';
             $selector='cbucarrera';
         }
 
@@ -685,7 +686,7 @@ class BeneficiarioscomedorController extends Controller
         }
         elseif ($validator17->fails() || intval($escuela_id)==0) {
             $result='0';
-            $msj='Seleccione la Escuela Profesional del alumno '.$tipo;
+            $msj='Seleccione la Escuela Profesional del alumno ';
             $selector='cbucarreraE';
         }
 

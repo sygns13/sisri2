@@ -135,6 +135,32 @@ function esDiscpacitado($var)
     return $result;
 }
 
+function maximoGrado($var)
+{
+    $result="";
+    if(intval($var)==0)
+    {
+        $result="Sin Grado";
+    }else
+    {
+        $result=$var;
+    }
+    return $result;
+}
+
+function cargoGeneral($var)
+{
+    $result="";
+    if(intval($var)==0)
+    {
+        $result="Ninguno";
+    }else
+    {
+        $result=$var;
+    }
+    return $result;
+}
+
 function modalidadEstudios($var)
 {
     $result="";

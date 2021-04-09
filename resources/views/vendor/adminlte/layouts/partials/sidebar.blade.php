@@ -129,6 +129,7 @@
                     <li><a href="{{URL::to('beneficiariostalleresdeportivos')}}"><i class='fa fa-gg'></i> Benef Talleres Deportivos</a></li>
                     <li><a href="{{URL::to('programassalud')}}"><i class='fa fa-gg'></i> Programas de Salud</a></li>
                     <li><a href="{{URL::to('campadbu')}}"><i class='fa fa-gg'></i> Campañas de DBU</a></li>
+                    <li><a href="{{URL::to('condicion')}}"><i class='fa fa-gg'></i> Condición Socioeconómica</a></li>
 
                 </ul>
             </li>
@@ -205,7 +206,7 @@
                         @if($permiso2->submodulo_id==4)
                         <li><a href="{{URL::to('escuelas')}}"><i class='fa fa-gg'></i> Gestión de Escuelas</a></li> 
                         @endif
-                        @if($permiso2->submodulo_id==6)
+                        @if($permiso2->submodulo_id==39)
                         <li><a href="{{URL::to('departamentoacademicos')}}"><i class='fa fa-gg'></i> Departamentos Académicos</a></li> 
                         @endif
 
@@ -397,6 +398,7 @@
                             <li><a href="{{URL::to('beneficiariostalleresdeportivos')}}"><i class='fa fa-gg'></i> Benef Talleres Deportivos</a></li>
                             <li><a href="{{URL::to('programassalud')}}"><i class='fa fa-gg'></i> Programas de Salud</a></li>
                             <li><a href="{{URL::to('campadbu')}}"><i class='fa fa-gg'></i> Campañas de DBU</a></li>
+                            <li><a href="{{URL::to('condicion')}}"><i class='fa fa-gg'></i> Condición Socioeconómica</a></li>
 
                             @else
         
@@ -419,6 +421,10 @@
 
                                 @if($permiso2->submodulo_id==27)
                                 <li><a href="{{URL::to('campadbu')}}"><i class='fa fa-gg'></i> Campañas de DBU</a></li>
+                                @endif
+
+                                @if($permiso2->submodulo_id==40)
+                                <li><a href="{{URL::to('condicion')}}"><i class='fa fa-gg'></i> Condición Socioeconómica</a></li>
                                 @endif
     
         

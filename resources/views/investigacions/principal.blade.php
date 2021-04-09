@@ -117,8 +117,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.financiamiento }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">S/. @{{ parseFloat(investigacion.presupuestoAsignado).toFixed(2) }} </td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">S/. @{{ parseFloat(investigacion.presupuestoEjecutado).toFixed(2) }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.fechaInicio }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.fechaTermino }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.fechaInicio | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.fechaTermino | pasfechaVista }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ investigacion.horas }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
                 <template v-if="parseInt(investigacion.patentado)==0">No</template>

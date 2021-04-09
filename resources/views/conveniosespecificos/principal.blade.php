@@ -200,8 +200,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ convenio.descripcion }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ convenio.institucion }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ convenio.resolucion }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ convenio.fechainicio }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ convenio.fechafinal }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ convenio.fechainicio | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ convenio.fechafinal | pasfechaVista }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
                 <span v-if="parseInt(convenio.estado)==1">Vigente</span>
                 <span v-if="parseInt(convenio.estado)==0">Finalizado</span>

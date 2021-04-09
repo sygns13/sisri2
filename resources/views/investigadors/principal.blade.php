@@ -96,7 +96,7 @@
                 <template v-if="parseInt(docente.escuela_id)==0">No Adscrito a una Escuela Profesional</template>
               </td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.genero }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.fechanac }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.fechanac | pasfechaVista }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.observaciones }}</td>
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      

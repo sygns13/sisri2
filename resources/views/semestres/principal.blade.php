@@ -149,8 +149,8 @@
             <tr v-for="semestre, key in semestres">
               <td style="font-size: 12px; padding: 5px;">@{{key+pagination.from}}</td>
               <td style="font-size: 12px; padding: 5px;">@{{ semestre.nombre }}</td>
-              <td style="font-size: 12px; padding: 5px;">@{{ semestre.fechainicio | fecha}}</td>
-              <td style="font-size: 12px; padding: 5px;">@{{ semestre.fechafin | fecha}}</td>
+              <td style="font-size: 12px; padding: 5px;">@{{ semestre.fechainicio | pasfechaVista}}</td>
+              <td style="font-size: 12px; padding: 5px;">@{{ semestre.fechafin | pasfechaVista}}</td>
               <td style="font-size: 12px; padding: 5px;">
                <span class="label label-success" v-if="semestre.estado=='1'">Activo</span>
                <span class="label label-warning" v-if="semestre.estado=='0'">Inactivo</span>

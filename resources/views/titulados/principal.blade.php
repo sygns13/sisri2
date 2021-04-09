@@ -91,8 +91,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ titulado.facultad }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ titulado.escuela }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ titulado.nombreGrado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ titulado.fechaEgreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ titulado.fechaEmision }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ titulado.fechaEgreso | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ titulado.fechaEmision | pasfechaVista }}</td>
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      

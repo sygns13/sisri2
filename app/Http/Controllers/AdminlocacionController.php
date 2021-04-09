@@ -83,7 +83,7 @@ class AdminlocacionController extends Controller
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
 
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','adminlocacions.id',
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','adminlocacions.id', 'personas.correoinstitucional',
      
      'adminlocacions.persona_id','adminlocacions.local_id','adminlocacions.tipoDependencia','adminlocacions.dependencia','adminlocacions.facultad','adminlocacions.escuela','adminlocacions.cargo','adminlocacions.descripcionCargo','adminlocacions.grado','adminlocacions.descripcionGrado','adminlocacions.esTitulado','adminlocacions.descripcionTitulo','adminlocacions.lugarGrado','adminlocacions.paisGrado','adminlocacions.fechaIngreso','adminlocacions.observaciones','adminlocacions.estado','adminlocacions.condicionLaboral','adminlocacions.fechaFinContrato','adminlocacions.id','locals.id as idlocal','locals.nombre as local','adminlocacions.fechaInicioContrato','adminlocacions.regimenLaboral')
      ->paginate(50);
@@ -138,6 +138,7 @@ class AdminlocacionController extends Controller
         $direccion=$request->direccion;
         $email=$request->email;
         $telefono=$request->telefono;
+        $correoinstitucional=$request->correoinstitucional;
 
         $persona_id=$request->persona_id;
         $local_id=$request->local_id;
@@ -274,6 +275,9 @@ class AdminlocacionController extends Controller
         $input23  = array('condicionLaboral' => $condicionLaboral);
         $reglas23 = array('condicionLaboral' => 'required');
 
+        $input24  = array('correoinstitucional' => $correoinstitucional);
+        $reglas24 = array('correoinstitucional' => 'required');
+
     
 
 
@@ -300,6 +304,7 @@ class AdminlocacionController extends Controller
         $validator21 = Validator::make($input21, $reglas21);
         $validator22 = Validator::make($input22, $reglas22);
         $validator23 = Validator::make($input23, $reglas23);
+        $validator24 = Validator::make($input24, $reglas24);
 
 
 
@@ -312,7 +317,7 @@ class AdminlocacionController extends Controller
         elseif ($validator2->fails())
         {
             $result='0';
-            $msj='Complete el Documento de Identidad del alumno';
+            $msj='Complete el Documento de Identidad del Personal Administrativo por Locación de Servicios';
             $selector='txtDNI';
 
         }
@@ -325,69 +330,74 @@ class AdminlocacionController extends Controller
         }
         elseif ($validator3->fails()) {
             $result='0';
-            $msj='Ingrese los nombres del alumno';
+            $msj='Ingrese los nombres del Personal Administrativo por Locación de Servicios';
             $selector='txtnombres';
         }
         elseif ($validator4->fails()) {
             $result='0';
-            $msj='Ingrese el apellido paterno del alumno';
+            $msj='Ingrese el apellido paterno del Personal Administrativo por Locación de Servicios';
             $selector='txtapepat';
         }
         elseif ($validator5->fails()) {
             $result='0';
-            $msj='Ingrese el apellido materno del alumno';
+            $msj='Ingrese el apellido materno del Personal Administrativo por Locación de Servicios';
             $selector='txtapemat';
         }
         elseif ($validator6->fails()) {
             $result='0';
-            $msj='Seleccione el Género del alumno';
+            $msj='Seleccione el Género del Personal Administrativo por Locación de Servicios';
             $selector='cbugenero';
         }
         elseif ($validator7->fails()) {
             $result='0';
-            $msj='Seleccione el Estado Civil del alumno';
+            $msj='Seleccione el Estado Civil del Personal Administrativo por Locación de Servicios';
             $selector='cbuestadocivil';
         }
         elseif ($validator8->fails()) {
             $result='0';
-            $msj='Ingrese la Fecha de Nacimiento del alumno';
+            $msj='Ingrese la Fecha de Nacimiento del Personal Administrativo por Locación de Servicios';
             $selector='txtfechanac';
         }
         elseif ($validator9->fails()) {
             $result='0';
-            $msj='Seleccione si el alumno es Discapacitado';
+            $msj='Seleccione si el Personal Administrativo por Locación de Servicios es Discapacitado';
             $selector='cbugenero';
         }
         elseif (intval($esdiscapacitado)==1 && strlen($discapacidad)==0) {
             $result='0';
-            $msj='Si ha indicado que el alumno es discapacitado, ingrese la discapacidad que padece';
+            $msj='Si ha indicado que el Personal Administrativo por Locación de Servicios es discapacitado, ingrese la discapacidad que padece';
             $selector='txtdiscapacidad';
         }
 
         elseif ($validator10->fails()) {
             $result='0';
-            $msj='Ingrese el País de procedencia del alumno';
+            $msj='Ingrese el País de procedencia del Personal Administrativo por Locación de Servicios';
             $selector='txtpais';
         }
         elseif ($validator11->fails()) {
             $result='0';
-            $msj='Ingrese el Departamento de procedencia del alumno';
+            $msj='Ingrese el Departamento de procedencia del Personal Administrativo por Locación de Servicios';
             $selector='txtdep';
         }
         elseif ($validator12->fails()) {
             $result='0';
-            $msj='Ingrese la Provincia de procedencia del alumno';
+            $msj='Ingrese la Provincia de procedencia del Personal Administrativo por Locación de Servicios';
             $selector='txtprov';
         }
         elseif ($validator13->fails()) {
             $result='0';
-            $msj='Ingrese el Distrito de procedencia del alumno';
+            $msj='Ingrese el Distrito de procedencia del Personal Administrativo por Locación de Servicios';
             $selector='txtdist';
         }
         elseif ($validator14->fails()) {
             $result='0';
-            $msj='Ingrese la Dirección del alumno';
+            $msj='Ingrese la Dirección del Personal Administrativo por Locación de Servicios';
             $selector='txtDir';
+        }
+        elseif ($validator24->fails()) {
+            $result='0';
+            $msj='ingrese el correo institucional del Personal Administrativo por Locación de Servicios';
+            $selector='txtcorreoinstitucional';
         }
         elseif ($validator15->fails() || $local_id=="0") {
             $result='0';
@@ -507,6 +517,7 @@ class AdminlocacionController extends Controller
             $editPersona->direccion=$direccion;
             $editPersona->email=$email;
             $editPersona->telefono=$telefono;
+            $editPersona->correoinstitucional=$correoinstitucional;
 
             $editPersona->save();
         }
@@ -529,6 +540,7 @@ class AdminlocacionController extends Controller
             $newPersona->direccion=$direccion;
             $newPersona->email=$email;
             $newPersona->telefono=$telefono;
+            $newPersona->correoinstitucional=$correoinstitucional;
             $newPersona->activo='1';
             $newPersona->borrado='0';
 
@@ -622,6 +634,7 @@ class AdminlocacionController extends Controller
         $direccion=$request->direccion;
         $email=$request->email;
         $telefono=$request->telefono;
+        $correoinstitucional=$request->correoinstitucional;
 
         $persona_id=$request->persona_id;
         $local_id=$request->local_id;
@@ -758,6 +771,9 @@ class AdminlocacionController extends Controller
         $input23  = array('condicionLaboral' => $condicionLaboral);
         $reglas23 = array('condicionLaboral' => 'required');
 
+        $input24  = array('correoinstitucional' => $correoinstitucional);
+        $reglas24 = array('correoinstitucional' => 'required');
+
     
 
 
@@ -784,6 +800,7 @@ class AdminlocacionController extends Controller
         $validator21 = Validator::make($input21, $reglas21);
         $validator22 = Validator::make($input22, $reglas22);
         $validator23 = Validator::make($input23, $reglas23);
+        $validator24 = Validator::make($input24, $reglas24);
 
 
 
@@ -796,7 +813,7 @@ class AdminlocacionController extends Controller
         elseif ($validator2->fails())
         {
             $result='0';
-            $msj='Complete el Documento de Identidad del alumno';
+            $msj='Complete el Documento de Identidad del Personal Administrativo por Locación de Servicios';
             $selector='txtDNIE';
 
         }
@@ -809,69 +826,74 @@ class AdminlocacionController extends Controller
         }
         elseif ($validator3->fails()) {
             $result='0';
-            $msj='Ingrese los nombres del alumno';
+            $msj='Ingrese los nombres del Personal Administrativo por Locación de Servicios';
             $selector='txtnombresE';
         }
         elseif ($validator4->fails()) {
             $result='0';
-            $msj='Ingrese el apellido paterno del alumno';
+            $msj='Ingrese el apellido paterno del Personal Administrativo por Locación de Servicios';
             $selector='txtapepatE';
         }
         elseif ($validator5->fails()) {
             $result='0';
-            $msj='Ingrese el apellido materno del alumno';
+            $msj='Ingrese el apellido materno del Personal Administrativo por Locación de Servicios';
             $selector='txtapematE';
         }
         elseif ($validator6->fails()) {
             $result='0';
-            $msj='Seleccione el Género del alumno';
+            $msj='Seleccione el Género del Personal Administrativo por Locación de Servicios';
             $selector='cbugeneroE';
         }
         elseif ($validator7->fails()) {
             $result='0';
-            $msj='Seleccione el Estado Civil del alumno';
+            $msj='Seleccione el Estado Civil del Personal Administrativo por Locación de Servicios';
             $selector='cbuestadocivilE';
         }
         elseif ($validator8->fails()) {
             $result='0';
-            $msj='Ingrese la Fecha de Nacimiento del alumno';
+            $msj='Ingrese la Fecha de Nacimiento del Personal Administrativo por Locación de Servicios';
             $selector='txtfechanacE';
         }
         elseif ($validator9->fails()) {
             $result='0';
-            $msj='Seleccione si el alumno es Discapacitado';
+            $msj='Seleccione si el Personal Administrativo por Locación de Servicios es Discapacitado';
             $selector='cbugeneroE';
         }
         elseif (intval($esdiscapacitado)==1 && strlen($discapacidad)==0) {
             $result='0';
-            $msj='Si ha indicado que el alumno es discapacitado, ingrese la discapacidad que padece';
+            $msj='Si ha indicado que el Personal Administrativo por Locación de Servicios es discapacitado, ingrese la discapacidad que padece';
             $selector='txtdiscapacidadE';
         }
 
         elseif ($validator10->fails()) {
             $result='0';
-            $msj='Ingrese el País de procedencia del alumno';
+            $msj='Ingrese el País de procedencia del Personal Administrativo por Locación de Servicios';
             $selector='txtpaisE';
         }
         elseif ($validator11->fails()) {
             $result='0';
-            $msj='Ingrese el Departamento de procedencia del alumno';
+            $msj='Ingrese el Departamento de procedencia del Personal Administrativo por Locación de Servicios';
             $selector='txtdepE';
         }
         elseif ($validator12->fails()) {
             $result='0';
-            $msj='Ingrese la Provincia de procedencia del alumno';
+            $msj='Ingrese la Provincia de procedencia del Personal Administrativo por Locación de Servicios';
             $selector='txtprovE';
         }
         elseif ($validator13->fails()) {
             $result='0';
-            $msj='Ingrese el Distrito de procedencia del alumno';
+            $msj='Ingrese el Distrito de procedencia del Personal Administrativo por Locación de Servicios';
             $selector='txtdistE';
         }
         elseif ($validator14->fails()) {
             $result='0';
-            $msj='Ingrese la Dirección del alumno';
+            $msj='Ingrese la Dirección del Personal Administrativo por Locación de Servicios';
             $selector='txtDirE';
+        }
+        elseif ($validator24->fails()) {
+            $result='0';
+            $msj='ingrese el correo institucional del Personal Administrativo por Locación de Servicios';
+            $selector='txtcorreoinstitucionalE';
         }
         elseif ($validator15->fails() || $local_id=="0") {
             $result='0';
@@ -990,6 +1012,7 @@ class AdminlocacionController extends Controller
             $editPersona->direccion=$direccion;
             $editPersona->email=$email;
             $editPersona->telefono=$telefono;
+            $editPersona->correoinstitucional=$correoinstitucional;
 
             $editPersona->save();
      
@@ -1071,14 +1094,14 @@ class AdminlocacionController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:AB3');
-                $sheet->cells('A3:AB3',function($cells)
+                $sheet->mergeCells('A3:AC3');
+                $sheet->cells('A3:AC3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:AB3', 'thin');
-                $sheet->cells('A3:AB3', function($cells)
+                $sheet->setBorder('A3:AC3', 'thin');
+                $sheet->cells('A3:AC3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -1089,7 +1112,7 @@ class AdminlocacionController extends Controller
                     #Borders
                 });
                 
-                $sheet->cells('A4:AB4', function($cells)
+                $sheet->cells('A4:AC4', function($cells)
                 {
                     $cells->setBackground('#B4B9E1');
                     $cells->setAlignment('center');
@@ -1132,7 +1155,8 @@ class AdminlocacionController extends Controller
                 'Y'=>'32',
                 'Z'=>'28',
                 'AA'=>'33',
-                'AB'=>'65',
+                'AB'=>'65', //correo institucional
+                'AC'=>'65',
                 )
                 );
 
@@ -1148,8 +1172,8 @@ class AdminlocacionController extends Controller
                 array_push($data, array(''));
                 array_push($data, array($titulo));
 
-                $sheet->setBorder('A4:AB4', 'thin');
-                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','TIPO DE DEPENDENCIA','DEPENDENCIA','CARGO GENERAL','DESCRIPCIÓN DEL CARGO','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO','LUGAR DEL MÁXIMO GRADO','PAÍS DEL MÁXIMO GRADO', 'TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','CONDICIÓN LABORAL','RÉGIMEN LABORAL', 'FECHA DE INGRESO A LA INSTITUCIÓN','FECHA DE INICIO DE CONTRATO','FECHA DE FINALIZACIÓN DE CONTRATO','OBSERVACIONES'));
+                $sheet->setBorder('A4:AC4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','TIPO DE DEPENDENCIA','DEPENDENCIA','CARGO GENERAL','DESCRIPCIÓN DEL CARGO','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO','LUGAR DEL MÁXIMO GRADO','PAÍS DEL MÁXIMO GRADO', 'TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','CONDICIÓN LABORAL','RÉGIMEN LABORAL', 'FECHA DE INGRESO A LA INSTITUCIÓN','FECHA DE INICIO DE CONTRATO','FECHA DE FINALIZACIÓN DE CONTRATO', 'CORREO INSTITUCIONAL', 'OBSERVACIONES'));
 
                 $cont=5;
                 $cont2=5;
@@ -1172,13 +1196,13 @@ class AdminlocacionController extends Controller
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
 
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','adminlocacions.id',
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','adminlocacions.id', 'personas.correoinstitucional', 
      
      'adminlocacions.persona_id','adminlocacions.local_id','adminlocacions.tipoDependencia','adminlocacions.dependencia','adminlocacions.facultad','adminlocacions.escuela','adminlocacions.cargo','adminlocacions.descripcionCargo','adminlocacions.grado','adminlocacions.descripcionGrado','adminlocacions.esTitulado','adminlocacions.descripcionTitulo','adminlocacions.lugarGrado','adminlocacions.paisGrado','adminlocacions.fechaIngreso','adminlocacions.observaciones','adminlocacions.estado','adminlocacions.condicionLaboral','adminlocacions.fechaFinContrato','adminlocacions.id','locals.id as idlocal','locals.nombre as local','adminlocacions.fechaInicioContrato','adminlocacions.regimenLaboral')
      ->get();
 
         foreach ($adminlocacions as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':AB'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':AC'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
 /*
 array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','TIPO DE DEPENDENCIA','DEPENDENCIA','CARGO GENERAL','DESCRIPCIÓN DEL CARGO','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO','LUGAR DEL MÁXIMO GRADO','PAÍS DEL MÁXIMO GRADO', 'TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','CONDICIÓN LABORAL','RÉGIMEN LABORAL', 'FECHA DE INGRESO A LA INSTITUCIÓN','FECHA DE INICIO DE CONTRATO','FECHA DE FINALIZACIÓN DE CONTRATO','OBSERVACIONES'));
@@ -1211,7 +1235,8 @@ array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APEL
            pasFechaVista($dato->fechaIngreso),
            pasFechaVista($dato->fechaInicioContrato),
            pasFechaVista($dato->fechaFinContrato),
-           $dato->observaciones,
+           $dato->correoinstitucional,
+           $dato->observaciones
         
         ));
             

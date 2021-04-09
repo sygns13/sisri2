@@ -110,8 +110,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{key+pagination.from}}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;"> @{{ evento.nombre }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ evento.descripcion }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ evento.fechainicio }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ evento.fechafinal }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ evento.fechainicio | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ evento.fechafinal | pasfechaVista }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ evento.lugarpresentacion }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ evento.entidad }}</td>
 

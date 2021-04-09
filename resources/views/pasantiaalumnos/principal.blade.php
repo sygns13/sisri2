@@ -87,8 +87,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.escuela }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.paispasantia }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.institucionpasantia }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.fechainicio }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.fechafinal }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.fechainicio | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.fechafinal | pasfechaVista }}</td>
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      

@@ -2,7 +2,7 @@
     let app = new Vue({
 el: '#app',
 data:{
-       titulo:"Convenios e Intercambio Estudiantil",
+       titulo:"Convenios e Intercambio Docente",
        subtitulo: "Docentes UNASAM Pasantías e Intercambios",
        subtitulo2: "Principal",
 
@@ -149,6 +149,33 @@ computed:{
        return pagesArray;
    }
 },
+
+filters:{
+    mostrarNumero(value){
+      
+      if(value != null && value != undefined){
+        value=parseFloat(value).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      return value;
+    },
+    pasfechaVista:function(date){
+        if(date!=null && date.length==10){
+            date=date.slice(-2)+'/'+date.slice(-5,-3)+'/'+date.slice(0,4);            
+        }else{
+          return '';
+        }
+
+        return date;
+    },
+    leftpad:function(n, length) {
+        var  n = n.toString();
+        while(n.length < length)
+            n = "0" + n;
+        return n;
+    }
+
+  },
 
 methods: {
 

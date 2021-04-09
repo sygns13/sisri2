@@ -90,8 +90,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.local }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.dependencia }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.cargo }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.fechaIngreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.fechaSalida }}
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.fechaIngreso | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ administrativo.fechaSalida | pasfechaVista }}
                 <center><span v-if="administrativo.estado=='1'">---------</span></center>
               </td>
               

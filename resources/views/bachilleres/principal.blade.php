@@ -91,8 +91,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.facultad }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.escuela }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.nombreGrado }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.fechaEgreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.fechaEmision }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.fechaEgreso | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ bachiller.fechaEmision | pasfechaVista }}</td>
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      

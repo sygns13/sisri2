@@ -14,6 +14,7 @@ use Auth;
 use DB;
 
 use App\Alumno;
+use App\Cursosriesgo;
 use App\Persona;
 use App\Tipouser;
 use App\User;
@@ -234,9 +235,10 @@ class AlumnoController extends Controller
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
 
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono', 'personas.identidadetnica', 'personas.correoinstitucional','alumnos.id',
      
-     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo','semestrematriculo.id as idsemestrematriculo','semestrematriculo.nombre as semestrematriculo')
+     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo','semestrematriculo.id as idsemestrematriculo','semestrematriculo.nombre as semestrematriculo',
+     'alumnos.universidadmovnacional','alumnos.semestremovnacional','alumnos.universidadmovinternacional','alumnos.semestremovinternacional','alumnos.creditosacumulados')
      ->paginate(50);
 
     }
@@ -262,11 +264,16 @@ class AlumnoController extends Controller
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
 
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
-     
-     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo')
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id', 'personas.identidadetnica', 'personas.correoinstitucional',
+     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo', 'alumnos.maximogrado')
      ->paginate(50);
 
+    }
+
+    foreach ($alumnos as $key => $dato) {
+        
+        $cursos = Cursosriesgo::where('activo','1')->where('borrado','0')->where('alumno_id', $dato->id)->get();
+        $alumnos[$key]->cursosriesgo = $cursos;
     }
 
 
@@ -324,6 +331,8 @@ class AlumnoController extends Controller
         $direccion=$request->direccion;
         $email=$request->email;
         $telefono=$request->telefono;
+        $correoinstitucional=$request->correoinstitucional;
+        $identidadetnica=$request->identidadetnica;
 
         $periodoMatricula=$request->periodoMatricula;
         $escuela_id=$request->escuela_id;
@@ -352,6 +361,16 @@ class AlumnoController extends Controller
         $ismovnacional=$request->ismovnacional;
         $ismovinternacional=$request->ismovinternacional;
         $otrotitulo=$request->otrotitulo;
+
+        $universidadmovnacional=$request->universidadmovnacional;
+        $semestremovnacional=$request->semestremovnacional;
+        $universidadmovinternacional=$request->universidadmovinternacional;
+        $semestremovinternacional=$request->semestremovinternacional;
+        $creditosacumulados=$request->creditosacumulados;
+        $cursosriesgo=$request->cursosriesgo;
+
+        $maximogrado=$request->maximogrado;
+
 
        
 
@@ -388,12 +407,16 @@ class AlumnoController extends Controller
 
         if(intval($ismovnacional)==0)
         {
-            $movinacional="";
+            $movinacional = "";
+            $universidadmovnacional = "";
+            $semestremovnacional = 0;
         }
 
         if(intval($ismovinternacional)==0)
         {
-            $moviinternacional="";
+            $moviinternacional = "";
+            $universidadmovinternacional = "";
+            $semestremovinternacional = 0;
         }
 
 
@@ -473,6 +496,18 @@ class AlumnoController extends Controller
         $input21  = array('periodoIngreso' => $periodoIngreso);
         $reglas21 = array('periodoIngreso' => 'required');
 
+        $input22  = array('correoinstitucional' => $correoinstitucional);
+        $reglas22 = array('correoinstitucional' => 'required');
+
+        $input23  = array('creditosacumulados' => $creditosacumulados);
+        $reglas23 = array('creditosacumulados' => 'required');
+
+        $input24  = array('identidadetnica' => $identidadetnica);
+        $reglas24 = array('identidadetnica' => 'required');
+        
+        $input25  = array('maximogrado' => $maximogrado);
+        $reglas25 = array('maximogrado' => 'required');
+
      
 
 
@@ -498,6 +533,10 @@ class AlumnoController extends Controller
         $validator19 = Validator::make($input19, $reglas19);
         $validator20 = Validator::make($input20, $reglas20);
         $validator21 = Validator::make($input21, $reglas21);
+        $validator22 = Validator::make($input22, $reglas22);
+        $validator23 = Validator::make($input23, $reglas23);
+        $validator24 = Validator::make($input24, $reglas24);
+        $validator25 = Validator::make($input25, $reglas25);
 
 
         if($regla0>0){
@@ -590,10 +629,25 @@ class AlumnoController extends Controller
             $msj='Ingrese la Dirección del alumno';
             $selector='txtDir';
         }
+        elseif ($validator22->fails()) {
+            $result='0';
+            $msj='ingrese el correo institucional del Alumno';
+            $selector='txtcorreoinstitucional';
+        }
+        elseif ($validator24->fails() && ($tipo==1 || $tipo==2)) {
+            $result='0';
+            $msj='Ingrese la identidad étnica del Alumno';
+            $selector='txtidentidadetnica';
+        }
         elseif ($validator15->fails()) {
             $result='0';
             $msj='Ingrese el Código del alumno';
             $selector='txtcodigo';
+        }
+        elseif ($validator23->fails() && ($tipo==1)) {
+            $result='0';
+            $msj='Ingrese el N° de créditos Acumulados del Alumno';
+            $selector='txtcreditosacumulados';
         }
         elseif ($validator16->fails()) {
             $result='0';
@@ -628,20 +682,51 @@ class AlumnoController extends Controller
             $selector='cbuprimersemestre';
         }
 
+
+        elseif ($validator25->fails() && ($tipo==3)) {
+            $result='0';
+            $msj='Ingrese el máximo grado acedémico del Alumno';
+            $selector='cbumaxgrado';
+        }
+
         elseif (intval($escalaPago)!=0 && strlen($escalaPagodesc)==0) {
             $result='0';
             $msj='Ingrese la Descripción de la Escala de Pago del Alumno';
             $selector='txtEsclaPago';
         }
-        elseif (intval($ismovnacional)!=0 && strlen($movinacional)==0 && ($tipo==1 || $tipo==2)) {
+        elseif (intval($ismovnacional)!=0 && strlen($movinacional)==0 && ($tipo==2)) {
             $result='0';
             $msj='Ingrese la Descripción de la Movilidad Nacional Efectuada por el Alumno';
             $selector='txtmovinac';
         }
-        elseif (intval($ismovinternacional)!=0 && strlen($moviinternacional)==0 && ($tipo==1 || $tipo==2)) {
+        elseif (($tipo==1) && intval($ismovnacional)!=0 && strlen($universidadmovnacional)==0) {
+            $result='0';
+            $msj='Ingrese la Descripción de la Universidad donde efectuó la Movilidad Nacional';
+            $selector='txtuniversidadmovnacional';
+        }
+        elseif (($tipo==1) && intval($ismovnacional)!=0 && intval($semestremovnacional)==0) {
+            $result='0';
+            $msj='Ingrese el semestre en que el Alumno efectuó la Movilidad Nacional';
+            $selector='cbusemestremovnacional';
+        }
+
+
+
+       elseif (intval($ismovinternacional)!=0 && strlen($moviinternacional)==0 && ($tipo==2)) {
             $result='0';
             $msj='Ingrese la Descripción de la Movilidad Internacional Efectuada por el Alumno';
             $selector='txtmovinternacional';
+        }
+
+        elseif (($tipo==1) &&intval($ismovinternacional)!=0 && strlen($universidadmovinternacional)==0) {
+            $result='0';
+            $msj='Ingrese la Descripción de la Universidad donde efectuó la Movilidad internacional';
+            $selector='txtuniversidadmovinternacional';
+        }
+        elseif (($tipo==1) && intval($ismovinternacional)!=0 && intval($semestremovinternacional)==0) {
+            $result='0';
+            $msj='Ingrese el semestre en que el Alumno efectuó la Movilidad internacional';
+            $selector='cbusemestremovinternacional';
         }
 
         elseif (intval($tipo)==2 && intval($egresadoOtraCarrera)!=0 && strlen($otraCarrera)==0) {
@@ -663,144 +748,226 @@ class AlumnoController extends Controller
             $selector='nombreGrado';
         }
 
+        elseif (($tipo==1) && intval($alumnoRiesgo) == 1 && intval($numCursosRiesgo) <= 0) {
+            $result='0';
+            $msj='Si marcó que es un alumno en riesgo, por favor marque el número de cursos que el alumno tiene en riesgo';
+            $selector='txtnumcursosriesgo';
+        }
+
+        elseif (($tipo==1) && intval($numCursosRiesgo) > 0 && $cursosriesgo == null ) {
+            $result='0';
+            $msj='Si indicó que tiene '.intval($numCursosRiesgo).' cursos en riesgo, por favor indique los nombres de los cursos en riesgo, o cambie el número de cursos en riesgo';
+            $selector='txtnumcursosriesgo';
+        }
       
         else{
 
+        $bandera = true;
 
+        if (($tipo==1) && intval($numCursosRiesgo) > 0) {
 
-        if(intval($persona_id)!=0)
-        {
-            $editPersona =Persona::find($persona_id);
-            $editPersona->tipodoc=$tipodoc;
-            $editPersona->doc=$doc;
-            $editPersona->nombres=$nombres;
-            $editPersona->apellidopat=$apellidopat;
-            $editPersona->apellidomat=$apellidomat;
-            $editPersona->genero=$genero;
-            $editPersona->estadocivil=$estadocivil;
-            $editPersona->fechanac=$fechanac;
-            $editPersona->esdiscapacitado=$esdiscapacitado;
-            $editPersona->discapacidad=$discapacidad;
-            $editPersona->pais=$pais;
-            $editPersona->departamento=$departamento;
-            $editPersona->provincia=$provincia;
-            $editPersona->distrito=$distrito;
-            $editPersona->direccion=$direccion;
-            $editPersona->email=$email;
-            $editPersona->telefono=$telefono;
-
-            $editPersona->save();
-        }
-        else{
-            $newPersona = new Persona();
-            $newPersona->tipodoc=$tipodoc;
-            $newPersona->doc=$doc;
-            $newPersona->nombres=$nombres;
-            $newPersona->apellidopat=$apellidopat;
-            $newPersona->apellidomat=$apellidomat;
-            $newPersona->genero=$genero;
-            $newPersona->estadocivil=$estadocivil;
-            $newPersona->fechanac=$fechanac;
-            $newPersona->esdiscapacitado=$esdiscapacitado;
-            $newPersona->discapacidad=$discapacidad;
-            $newPersona->pais=$pais;
-            $newPersona->departamento=$departamento;
-            $newPersona->provincia=$provincia;
-            $newPersona->distrito=$distrito;
-            $newPersona->direccion=$direccion;
-            $newPersona->email=$email;
-            $newPersona->telefono=$telefono;
-            $newPersona->activo='1';
-            $newPersona->borrado='0';
-
-            $newPersona->save();
-
-            $persona_id=$newPersona->id;
+            for ($i=0; $i <count($cursosriesgo) ; $i++) { 
+                if(strlen($cursosriesgo[$i]) == 0){
+                    $bandera = false;
+                    $result='0';
+                    $msj='Si indicó que tiene '.intval($numCursosRiesgo).' cursos en riesgo, por favor indique los nombres de los cursos en riesgo, o cambie el número de cursos en riesgo';
+                    $selector='txtcursosriesgo'.$i;
+                    break;
+                }
+            }
         }
 
-        if($tipo==1 || $tipo==2)
-        {
-            $newAlumno = new Alumno();
-        $newAlumno->periodoMatricula=$periodoMatricula;
-        $newAlumno->escuela_id=$escuela_id;
-        $newAlumno->escalaPago=$escalaPago;
-        $newAlumno->promedioPonderado=$promedioPonderado;
-        $newAlumno->promedioSemestre=$promedioSemestre;
-        $newAlumno->periodoIngreso=$periodoIngreso;
-        $newAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
-        $newAlumno->alumnoRiesgo=$alumnoRiesgo;
-        $newAlumno->numCursosRiesgo=$numCursosRiesgo;
-        $newAlumno->observaciones=$observaciones;
-        $newAlumno->persona_id=$persona_id;
-        $newAlumno->estado=$estado;
-        $newAlumno->descestado=$descestado;
-        $newAlumno->codigo=$codigo;
-        $newAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
-        $newAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
-        $newAlumno->otraCarrera=$otraCarrera;
-        $newAlumno->email=$email;
-        $newAlumno->grado=$grado;
-        $newAlumno->nombreGrado=$nombreGrado;
-        $newAlumno->escalaPagodesc=$escalaPagodesc;
-        $newAlumno->semestre_id=$semestre_id;
-        $newAlumno->movinacional=$movinacional;
-        $newAlumno->moviinternacional=$moviinternacional;
-        $newAlumno->ismovnacional=$ismovnacional;
-        $newAlumno->ismovinternacional=$ismovinternacional;
-        $newAlumno->otrotitulo=$otrotitulo;
-        $newAlumno->tipo=$tipo;
-        $newAlumno->activo='1';
-        $newAlumno->borrado='0';
-
-        $newAlumno->save();
-
-        }
-
-        if($tipo==3 || $tipo==4)
-        {
-            $newAlumno = new Alumno();
-        $newAlumno->periodoMatricula=$periodoMatricula;
-
-        $newAlumno->escalaPago=$escalaPago;
-        $newAlumno->promedioPonderado=$promedioPonderado;
-        $newAlumno->promedioSemestre=$promedioSemestre;
-        $newAlumno->periodoIngreso=$periodoIngreso;
-        $newAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
-        $newAlumno->alumnoRiesgo=$alumnoRiesgo;
-        $newAlumno->numCursosRiesgo=$numCursosRiesgo;
-        $newAlumno->observaciones=$observaciones;
-        $newAlumno->persona_id=$persona_id;
-        $newAlumno->estado=$estado;
-        $newAlumno->descestado=$descestado;
-        $newAlumno->codigo=$codigo;
-        $newAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
-        $newAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
-        $newAlumno->otraCarrera=$otraCarrera;
-        $newAlumno->email=$email;
-        $newAlumno->grado=$grado;
-        $newAlumno->nombreGrado=$nombreGrado;
-        $newAlumno->escalaPagodesc=$escalaPagodesc;
-        $newAlumno->semestre_id=$semestre_id;
-        $newAlumno->movinacional=$movinacional;
-        $newAlumno->moviinternacional=$moviinternacional;
-        $newAlumno->ismovnacional=$ismovnacional;
-        $newAlumno->ismovinternacional=$ismovinternacional;
-        $newAlumno->otrotitulo=$otrotitulo;
-        $newAlumno->tipo=$tipo;
-        $newAlumno->activo='1';
-        $newAlumno->borrado='0';
-
-        $newAlumno->save();
-
-        }
+            if($bandera){
+                if(intval($persona_id)!=0)
+                {
+                    $editPersona =Persona::find($persona_id);
+                    $editPersona->tipodoc=$tipodoc;
+                    $editPersona->doc=$doc;
+                    $editPersona->nombres=$nombres;
+                    $editPersona->apellidopat=$apellidopat;
+                    $editPersona->apellidomat=$apellidomat;
+                    $editPersona->genero=$genero;
+                    $editPersona->estadocivil=$estadocivil;
+                    $editPersona->fechanac=$fechanac;
+                    $editPersona->esdiscapacitado=$esdiscapacitado;
+                    $editPersona->discapacidad=$discapacidad;
+                    $editPersona->pais=$pais;
+                    $editPersona->departamento=$departamento;
+                    $editPersona->provincia=$provincia;
+                    $editPersona->distrito=$distrito;
+                    $editPersona->direccion=$direccion;
+                    $editPersona->email=$email;
+                    $editPersona->telefono=$telefono;
+                    $editPersona->correoinstitucional=$correoinstitucional;
+                    $editPersona->identidadetnica=$identidadetnica;
         
+                    $editPersona->save();
+                }
+                else{
+                    $newPersona = new Persona();
+                    $newPersona->tipodoc=$tipodoc;
+                    $newPersona->doc=$doc;
+                    $newPersona->nombres=$nombres;
+                    $newPersona->apellidopat=$apellidopat;
+                    $newPersona->apellidomat=$apellidomat;
+                    $newPersona->genero=$genero;
+                    $newPersona->estadocivil=$estadocivil;
+                    $newPersona->fechanac=$fechanac;
+                    $newPersona->esdiscapacitado=$esdiscapacitado;
+                    $newPersona->discapacidad=$discapacidad;
+                    $newPersona->pais=$pais;
+                    $newPersona->departamento=$departamento;
+                    $newPersona->provincia=$provincia;
+                    $newPersona->distrito=$distrito;
+                    $newPersona->direccion=$direccion;
+                    $newPersona->email=$email;
+                    $newPersona->telefono=$telefono;
+                    $newPersona->correoinstitucional=$correoinstitucional;
+                    $newPersona->identidadetnica=$identidadetnica;
+                    $newPersona->activo='1';
+                    $newPersona->borrado='0';
+        
+                    $newPersona->save();
+        
+                    $persona_id=$newPersona->id;
+                }
+        
+                if($tipo==1 || $tipo==2)
+                {
+                    $newAlumno = new Alumno();
+                    $newAlumno->periodoMatricula=$periodoMatricula;
+                    $newAlumno->escuela_id=$escuela_id;
+                    $newAlumno->escalaPago=$escalaPago;
+                    $newAlumno->promedioPonderado=$promedioPonderado;
+                    $newAlumno->promedioSemestre=$promedioSemestre;
+                    $newAlumno->periodoIngreso=$periodoIngreso;
+                    $newAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
+                    $newAlumno->alumnoRiesgo=$alumnoRiesgo;
+                    $newAlumno->numCursosRiesgo=$numCursosRiesgo;
+                    $newAlumno->observaciones=$observaciones;
+                    $newAlumno->persona_id=$persona_id;
+                    $newAlumno->estado=$estado;
+                    $newAlumno->descestado=$descestado;
+                    $newAlumno->codigo=$codigo;
+                    $newAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
+                    $newAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
+                    $newAlumno->otraCarrera=$otraCarrera;
+                    $newAlumno->email=$email;
+                    $newAlumno->grado=$grado;
+                    $newAlumno->nombreGrado=$nombreGrado;
+                    $newAlumno->escalaPagodesc=$escalaPagodesc;
+                    $newAlumno->semestre_id=$semestre_id;
+                    $newAlumno->movinacional=$movinacional;
+                    $newAlumno->moviinternacional=$moviinternacional;
+                    $newAlumno->ismovnacional=$ismovnacional;
+                    $newAlumno->ismovinternacional=$ismovinternacional;
+                    $newAlumno->otrotitulo=$otrotitulo;
+                    $newAlumno->universidadmovnacional=$universidadmovnacional;
+                    $newAlumno->semestremovnacional=$semestremovnacional;
+                    $newAlumno->universidadmovinternacional=$universidadmovinternacional;
+                    $newAlumno->semestremovinternacional=$semestremovinternacional;
+                    $newAlumno->creditosacumulados=$creditosacumulados;
+                    $newAlumno->tipo=$tipo;
+                    $newAlumno->activo='1';
+                    $newAlumno->borrado='0';
+        
+                    $newAlumno->save();
 
-           
+                    if (($tipo==1) && intval($numCursosRiesgo) > 0) {
+                        for ($i=0; $i <count($cursosriesgo) ; $i++) { 
+                            
+                            $newCursoRiesgo = new Cursosriesgo();
+                            $newCursoRiesgo->nombre = $cursosriesgo[$i];
+                            $newCursoRiesgo->activo = '1';
+                            $newCursoRiesgo->borrado = '0';
+                            $newCursoRiesgo->alumno_id =  $newAlumno ->id;
 
-            $msj='Nuevo Alumno registrado con éxito';
+                            $newCursoRiesgo->save();
+                        } 
+                    }
+        
+                }
+        
+                if($tipo==3)
+                {
+                    $newAlumno = new Alumno();
+                    $newAlumno->periodoMatricula=$periodoMatricula;
+            
+                    $newAlumno->escalaPago=$escalaPago;
+                    $newAlumno->promedioPonderado=$promedioPonderado;
+                    $newAlumno->promedioSemestre=$promedioSemestre;
+                    $newAlumno->periodoIngreso=$periodoIngreso;
+                    $newAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
+                    $newAlumno->alumnoRiesgo=$alumnoRiesgo;
+                    $newAlumno->numCursosRiesgo=$numCursosRiesgo;
+                    $newAlumno->observaciones=$observaciones;
+                    $newAlumno->persona_id=$persona_id;
+                    $newAlumno->estado=$estado;
+                    $newAlumno->descestado=$descestado;
+                    $newAlumno->codigo=$codigo;
+                    $newAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
+                    $newAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
+                    $newAlumno->otraCarrera=$otraCarrera;
+                    $newAlumno->email=$email;
+                    $newAlumno->grado=$grado;
+                    $newAlumno->nombreGrado=$nombreGrado;
+                    $newAlumno->escalaPagodesc=$escalaPagodesc;
+                    $newAlumno->semestre_id=$semestre_id;
+                    $newAlumno->movinacional=$movinacional;
+                    $newAlumno->moviinternacional=$moviinternacional;
+                    $newAlumno->ismovnacional=$ismovnacional;
+                    $newAlumno->ismovinternacional=$ismovinternacional;
+                    $newAlumno->otrotitulo=$otrotitulo;
+                    $newAlumno->maximogrado=$maximogrado;
+                    $newAlumno->tipo=$tipo;
+                    $newAlumno->activo='1';
+                    $newAlumno->borrado='0';
+            
+                    $newAlumno->save();
+        
+                }
+
+                if($tipo==4)
+                {
+                    $newAlumno = new Alumno();
+                    $newAlumno->periodoMatricula=$periodoMatricula;
+            
+                    $newAlumno->escalaPago=$escalaPago;
+                    $newAlumno->promedioPonderado=$promedioPonderado;
+                    $newAlumno->promedioSemestre=$promedioSemestre;
+                    $newAlumno->periodoIngreso=$periodoIngreso;
+                    $newAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
+                    $newAlumno->alumnoRiesgo=$alumnoRiesgo;
+                    $newAlumno->numCursosRiesgo=$numCursosRiesgo;
+                    $newAlumno->observaciones=$observaciones;
+                    $newAlumno->persona_id=$persona_id;
+                    $newAlumno->estado=$estado;
+                    $newAlumno->descestado=$descestado;
+                    $newAlumno->codigo=$codigo;
+                    $newAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
+                    $newAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
+                    $newAlumno->otraCarrera=$otraCarrera;
+                    $newAlumno->email=$email;
+                    $newAlumno->grado=$grado;
+                    $newAlumno->nombreGrado=$nombreGrado;
+                    $newAlumno->escalaPagodesc=$escalaPagodesc;
+                    $newAlumno->semestre_id=$semestre_id;
+                    $newAlumno->movinacional=$movinacional;
+                    $newAlumno->moviinternacional=$moviinternacional;
+                    $newAlumno->ismovnacional=$ismovnacional;
+                    $newAlumno->ismovinternacional=$ismovinternacional;
+                    $newAlumno->otrotitulo=$otrotitulo;
+                    $newAlumno->tipo=$tipo;
+                    $newAlumno->activo='1';
+                    $newAlumno->borrado='0';
+            
+                    $newAlumno->save();
+        
+                }
+                
+                $msj='Nuevo Alumno registrado con éxito';
+            }
         }
-
-
 
 
        //Areaunasam::create($request->all());
@@ -856,6 +1023,8 @@ class AlumnoController extends Controller
         $direccion=$request->direccion;
         $email=$request->email;
         $telefono=$request->telefono;
+        $correoinstitucional=$request->correoinstitucional;
+        $identidadetnica=$request->identidadetnica;
 
         $periodoMatricula=$request->periodoMatricula;
         $escuela_id=$request->escuela_id;
@@ -884,6 +1053,15 @@ class AlumnoController extends Controller
         $ismovnacional=$request->ismovnacional;
         $ismovinternacional=$request->ismovinternacional;
         $otrotitulo=$request->otrotitulo;
+
+        $universidadmovnacional=$request->universidadmovnacional;
+        $semestremovnacional=$request->semestremovnacional;
+        $universidadmovinternacional=$request->universidadmovinternacional;
+        $semestremovinternacional=$request->semestremovinternacional;
+        $creditosacumulados=$request->creditosacumulados;
+        $cursosriesgo=$request->cursosriesgo;
+        
+        $maximogrado=$request->maximogrado;
 
 
         if(intval($esdiscapacitado)==0)
@@ -918,14 +1096,17 @@ class AlumnoController extends Controller
 
         if(intval($ismovnacional)==0)
         {
-            $movinacional="";
+            $movinacional = "";
+            $universidadmovnacional = "";
+            $semestremovnacional = 0;
         }
 
         if(intval($ismovinternacional)==0)
         {
-            $moviinternacional="";
+            $moviinternacional = "";
+            $universidadmovinternacional = "";
+            $semestremovinternacional = 0;
         }
-
 
 
         $result='1';
@@ -1005,6 +1186,18 @@ class AlumnoController extends Controller
         $input21  = array('periodoIngreso' => $periodoIngreso);
         $reglas21 = array('periodoIngreso' => 'required');
 
+        $input22  = array('correoinstitucional' => $correoinstitucional);
+        $reglas22 = array('correoinstitucional' => 'required');
+
+        $input23  = array('creditosacumulados' => $creditosacumulados);
+        $reglas23 = array('creditosacumulados' => 'required');
+
+        $input24  = array('identidadetnica' => $identidadetnica);
+        $reglas24 = array('identidadetnica' => 'required');
+
+        $input25  = array('maximogrado' => $maximogrado);
+        $reglas25 = array('maximogrado' => 'required');
+
 
         $validator1 = Validator::make($input1, $reglas1);
         $validator2 = Validator::make($input2, $reglas2);
@@ -1027,6 +1220,10 @@ class AlumnoController extends Controller
         $validator19 = Validator::make($input19, $reglas19);
         $validator20 = Validator::make($input20, $reglas20);
         $validator21 = Validator::make($input21, $reglas21);
+        $validator22 = Validator::make($input22, $reglas22);
+        $validator23 = Validator::make($input23, $reglas23);
+        $validator24 = Validator::make($input24, $reglas24);
+        $validator25 = Validator::make($input25, $reglas25);
 
 
         if($regla0>0){
@@ -1119,10 +1316,25 @@ class AlumnoController extends Controller
             $msj='Ingrese la Dirección del alumno';
             $selector='txtDirE';
         }
+        elseif ($validator22->fails()) {
+            $result='0';
+            $msj='ingrese el correo institucional del Alumno';
+            $selector='txtcorreoinstitucionalE';
+        }
+        elseif ($validator24->fails() && ($tipo==1 || $tipo==2)) {
+            $result='0';
+            $msj='Ingrese la identidad étnica del Alumno';
+            $selector='txtidentidadetnicaE';
+        }
         elseif ($validator15->fails()) {
             $result='0';
             $msj='Ingrese el Código del alumno';
             $selector='txtcodigoE';
+        }
+        elseif ($validator23->fails() && ($tipo==1)) {
+            $result='0';
+            $msj='Ingrese el N° de créditos Acumulados del Alumno';
+            $selector='txtcreditosacumuladosE';
         }
         elseif ($validator16->fails()) {
             $result='0';
@@ -1158,20 +1370,48 @@ class AlumnoController extends Controller
             $selector='cbuprimersemestreE';
         }
 
+        elseif ($validator25->fails() && ($tipo==3)) {
+            $result='0';
+            $msj='Ingrese el máximo grado acedémico del Alumno';
+            $selector='cbumaxgradoE';
+        }
+
         elseif (intval($escalaPago)!=0 && strlen($escalaPagodesc)==0) {
             $result='0';
             $msj='Ingrese la Descripción de la Escala de Pago del Alumno';
             $selector='txtEsclaPagoE';
         }
-        elseif (intval($ismovnacional)!=0 && strlen($movinacional)==0 && ($tipo==1 || $tipo==2)) {
+        elseif (intval($ismovnacional)!=0 && strlen($movinacional)==0 && ($tipo==2)) {
             $result='0';
             $msj='Ingrese la Descripción de la Movilidad Nacional Efectuada por el Alumno';
             $selector='txtmovinacE';
         }
-        elseif (intval($ismovinternacional)!=0 && strlen($moviinternacional)==0 && ($tipo==1 || $tipo==2)) {
+        elseif (($tipo==1) && intval($ismovnacional)!=0 && strlen($universidadmovnacional)==0) {
+            $result='0';
+            $msj='Ingrese la Descripción de la Universidad donde efectuó la Movilidad Nacional';
+            $selector='txtuniversidadmovnacionalE';
+        }
+        elseif (($tipo==1) && intval($ismovnacional)!=0 && intval($semestremovnacional)==0) {
+            $result='0';
+            $msj='Ingrese el semestre en que el Alumno efectuó la Movilidad Nacional';
+            $selector='cbusemestremovnacionalE';
+        }
+
+        elseif (intval($ismovinternacional)!=0 && strlen($moviinternacional)==0 && ($tipo==2)) {
             $result='0';
             $msj='Ingrese la Descripción de la Movilidad Internacional Efectuada por el Alumno';
             $selector='txtmovinternacionalE';
+        }
+
+        elseif (($tipo==1) &&intval($ismovinternacional)!=0 && strlen($universidadmovinternacional)==0) {
+            $result='0';
+            $msj='Ingrese la Descripción de la Universidad donde efectuó la Movilidad internacional';
+            $selector='txtuniversidadmovinternacionalE';
+        }
+        elseif (($tipo==1) && intval($ismovinternacional)!=0 && intval($semestremovinternacional)==0) {
+            $result='0';
+            $msj='Ingrese el semestre en que el Alumno efectuó la Movilidad internacional';
+            $selector='cbusemestremovinternacionalE';
         }
 
         elseif (intval($tipo)==2 && intval($egresadoOtraCarrera)!=0 && strlen($otraCarrera)==0) {
@@ -1189,106 +1429,193 @@ class AlumnoController extends Controller
         elseif (strlen($nombreGrado)==0 && ($tipo==3 || $tipo==4)) {
             $result='0';
             $msj='Ingrese la Descripción del Grado y Mensión que Estudia el Alumno';
-            $selector='nombreGrado';
+            $selector='nombreGradoE';
+        }
+
+        elseif (($tipo==1) && intval($alumnoRiesgo) == 1 && intval($numCursosRiesgo) <= 0) {
+            $result='0';
+            $msj='Si marcó que es un alumno en riesgo, por favor marque el número de cursos que el alumno tiene en riesgo';
+            $selector='txtnumcursosriesgoE';
+        }
+
+        elseif (($tipo==1) && intval($numCursosRiesgo) > 0 && $cursosriesgo == null ) {
+            $result='0';
+            $msj='Si indicó que tiene '.intval($numCursosRiesgo).' cursos en riesgo, por favor indique los nombres de los cursos en riesgo, o cambie el número de cursos en riesgo';
+            $selector='txtnumcursosriesgoE';
         }
 
       
         else{
 
+            $bandera = true;
 
-            $editPersona =Persona::find($persona_id);
-            $editPersona->tipodoc=$tipodoc;
-            $editPersona->doc=$doc;
-            $editPersona->nombres=$nombres;
-            $editPersona->apellidopat=$apellidopat;
-            $editPersona->apellidomat=$apellidomat;
-            $editPersona->genero=$genero;
-            $editPersona->estadocivil=$estadocivil;
-            $editPersona->fechanac=$fechanac;
-            $editPersona->esdiscapacitado=$esdiscapacitado;
-            $editPersona->discapacidad=$discapacidad;
-            $editPersona->pais=$pais;
-            $editPersona->departamento=$departamento;
-            $editPersona->provincia=$provincia;
-            $editPersona->distrito=$distrito;
-            $editPersona->direccion=$direccion;
-            $editPersona->email=$email;
-            $editPersona->telefono=$telefono;
+            if (($tipo==1) && intval($numCursosRiesgo) > 0) {
 
-            $editPersona->save();
+                for ($i=0; $i <count($cursosriesgo) ; $i++) { 
+                    if(strlen($cursosriesgo[$i]) == 0){
+                        $bandera = false;
+                        $result='0';
+                        $msj='Si indicó que tiene '.intval($numCursosRiesgo).' cursos en riesgo, por favor indique los nombres de los cursos en riesgo, o cambie el número de cursos en riesgo';
+                        $selector='txtcursosriesgoE'.$i;
+                        break;
+                    }
+                }
+            }
+
+            if($bandera){
+
+                $editPersona =Persona::find($persona_id);
+                $editPersona->tipodoc=$tipodoc;
+                $editPersona->doc=$doc;
+                $editPersona->nombres=$nombres;
+                $editPersona->apellidopat=$apellidopat;
+                $editPersona->apellidomat=$apellidomat;
+                $editPersona->genero=$genero;
+                $editPersona->estadocivil=$estadocivil;
+                $editPersona->fechanac=$fechanac;
+                $editPersona->esdiscapacitado=$esdiscapacitado;
+                $editPersona->discapacidad=$discapacidad;
+                $editPersona->pais=$pais;
+                $editPersona->departamento=$departamento;
+                $editPersona->provincia=$provincia;
+                $editPersona->distrito=$distrito;
+                $editPersona->direccion=$direccion;
+                $editPersona->email=$email;
+                $editPersona->telefono=$telefono;
+                $editPersona->correoinstitucional=$correoinstitucional;
+                $editPersona->identidadetnica=$identidadetnica;
+
+                $editPersona->save();
 
             if($tipo==1 || $tipo==2)
             {
-                $newAlumno = Alumno::find($id);
-        $newAlumno->periodoMatricula=$periodoMatricula;
-        $newAlumno->escuela_id=$escuela_id;
-        $newAlumno->escalaPago=$escalaPago;
-        $newAlumno->promedioPonderado=$promedioPonderado;
-        $newAlumno->promedioSemestre=$promedioSemestre;
-        $newAlumno->periodoIngreso=$periodoIngreso;
-        $newAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
-        $newAlumno->alumnoRiesgo=$alumnoRiesgo;
-        $newAlumno->numCursosRiesgo=$numCursosRiesgo;
-        $newAlumno->observaciones=$observaciones;
-        $newAlumno->persona_id=$persona_id;
-        $newAlumno->estado=$estado;
-        $newAlumno->descestado=$descestado;
-        $newAlumno->codigo=$codigo;
-        $newAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
-        $newAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
-        $newAlumno->otraCarrera=$otraCarrera;
-        $newAlumno->email=$email;
-        $newAlumno->grado=$grado;
-        $newAlumno->nombreGrado=$nombreGrado;
-        $newAlumno->escalaPagodesc=$escalaPagodesc;
-        $newAlumno->semestre_id=$semestre_id;
-        $newAlumno->movinacional=$movinacional;
-        $newAlumno->moviinternacional=$moviinternacional;
-        $newAlumno->ismovnacional=$ismovnacional;
-        $newAlumno->ismovinternacional=$ismovinternacional;
-        $newAlumno->otrotitulo=$otrotitulo;
+                $editAlumno = Alumno::find($id);
+                $editAlumno->periodoMatricula=$periodoMatricula;
+                $editAlumno->escuela_id=$escuela_id;
+                $editAlumno->escalaPago=$escalaPago;
+                $editAlumno->promedioPonderado=$promedioPonderado;
+                $editAlumno->promedioSemestre=$promedioSemestre;
+                $editAlumno->periodoIngreso=$periodoIngreso;
+                $editAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
+                $editAlumno->alumnoRiesgo=$alumnoRiesgo;
+                $editAlumno->numCursosRiesgo=$numCursosRiesgo;
+                $editAlumno->observaciones=$observaciones;
+                $editAlumno->persona_id=$persona_id;
+                $editAlumno->estado=$estado;
+                $editAlumno->descestado=$descestado;
+                $editAlumno->codigo=$codigo;
+                $editAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
+                $editAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
+                $editAlumno->otraCarrera=$otraCarrera;
+                $editAlumno->email=$email;
+                $editAlumno->grado=$grado;
+                $editAlumno->nombreGrado=$nombreGrado;
+                $editAlumno->escalaPagodesc=$escalaPagodesc;
+                $editAlumno->semestre_id=$semestre_id;
+                $editAlumno->movinacional=$movinacional;
+                $editAlumno->moviinternacional=$moviinternacional;
+                $editAlumno->ismovnacional=$ismovnacional;
+                $editAlumno->ismovinternacional=$ismovinternacional;
+                $editAlumno->otrotitulo=$otrotitulo;
+                $editAlumno->universidadmovnacional=$universidadmovnacional;
+                $editAlumno->semestremovnacional=$semestremovnacional;
+                $editAlumno->universidadmovinternacional=$universidadmovinternacional;
+                $editAlumno->semestremovinternacional=$semestremovinternacional;
+                $editAlumno->creditosacumulados=$creditosacumulados;
             }
 
 
-            if($tipo==3 || $tipo==4)
+            if($tipo==3)
             {
-                $newAlumno = Alumno::find($id);
-        $newAlumno->periodoMatricula=$periodoMatricula;
+                $editAlumno = Alumno::find($id);
+                $editAlumno->periodoMatricula=$periodoMatricula;
 
-        $newAlumno->escalaPago=$escalaPago;
-        $newAlumno->promedioPonderado=$promedioPonderado;
-        $newAlumno->promedioSemestre=$promedioSemestre;
-        $newAlumno->periodoIngreso=$periodoIngreso;
-        $newAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
-        $newAlumno->alumnoRiesgo=$alumnoRiesgo;
-        $newAlumno->numCursosRiesgo=$numCursosRiesgo;
-        $newAlumno->observaciones=$observaciones;
-        $newAlumno->persona_id=$persona_id;
-        $newAlumno->estado=$estado;
-        $newAlumno->descestado=$descestado;
-        $newAlumno->codigo=$codigo;
-        $newAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
-        $newAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
-        $newAlumno->otraCarrera=$otraCarrera;
-        $newAlumno->email=$email;
-        $newAlumno->grado=$grado;
-        $newAlumno->nombreGrado=$nombreGrado;
-        $newAlumno->escalaPagodesc=$escalaPagodesc;
-        $newAlumno->semestre_id=$semestre_id;
-        $newAlumno->movinacional=$movinacional;
-        $newAlumno->moviinternacional=$moviinternacional;
-        $newAlumno->ismovnacional=$ismovnacional;
-        $newAlumno->ismovinternacional=$ismovinternacional;
-        $newAlumno->otrotitulo=$otrotitulo;
+                $editAlumno->escalaPago=$escalaPago;
+                $editAlumno->promedioPonderado=$promedioPonderado;
+                $editAlumno->promedioSemestre=$promedioSemestre;
+                $editAlumno->periodoIngreso=$periodoIngreso;
+                $editAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
+                $editAlumno->alumnoRiesgo=$alumnoRiesgo;
+                $editAlumno->numCursosRiesgo=$numCursosRiesgo;
+                $editAlumno->observaciones=$observaciones;
+                $editAlumno->persona_id=$persona_id;
+                $editAlumno->estado=$estado;
+                $editAlumno->descestado=$descestado;
+                $editAlumno->codigo=$codigo;
+                $editAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
+                $editAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
+                $editAlumno->otraCarrera=$otraCarrera;
+                $editAlumno->email=$email;
+                $editAlumno->grado=$grado;
+                $editAlumno->nombreGrado=$nombreGrado;
+                $editAlumno->escalaPagodesc=$escalaPagodesc;
+                $editAlumno->semestre_id=$semestre_id;
+                $editAlumno->movinacional=$movinacional;
+                $editAlumno->moviinternacional=$moviinternacional;
+                $editAlumno->ismovnacional=$ismovnacional;
+                $editAlumno->ismovinternacional=$ismovinternacional;
+                $editAlumno->otrotitulo=$otrotitulo;
+                $editAlumno->maximogrado=$maximogrado;
             }
-        
+
+            if($tipo==4)
+            {
+                $editAlumno = Alumno::find($id);
+                $editAlumno->periodoMatricula=$periodoMatricula;
+
+                $editAlumno->escalaPago=$escalaPago;
+                $editAlumno->promedioPonderado=$promedioPonderado;
+                $editAlumno->promedioSemestre=$promedioSemestre;
+                $editAlumno->periodoIngreso=$periodoIngreso;
+                $editAlumno->primerPeriodoMatricula=$primerPeriodoMatricula;
+                $editAlumno->alumnoRiesgo=$alumnoRiesgo;
+                $editAlumno->numCursosRiesgo=$numCursosRiesgo;
+                $editAlumno->observaciones=$observaciones;
+                $editAlumno->persona_id=$persona_id;
+                $editAlumno->estado=$estado;
+                $editAlumno->descestado=$descestado;
+                $editAlumno->codigo=$codigo;
+                $editAlumno->tituladoOtraCarrera=$tituladoOtraCarrera;
+                $editAlumno->egresadoOtraCarrera=$egresadoOtraCarrera;
+                $editAlumno->otraCarrera=$otraCarrera;
+                $editAlumno->email=$email;
+                $editAlumno->grado=$grado;
+                $editAlumno->nombreGrado=$nombreGrado;
+                $editAlumno->escalaPagodesc=$escalaPagodesc;
+                $editAlumno->semestre_id=$semestre_id;
+                $editAlumno->movinacional=$movinacional;
+                $editAlumno->moviinternacional=$moviinternacional;
+                $editAlumno->ismovnacional=$ismovnacional;
+                $editAlumno->ismovinternacional=$ismovinternacional;
+                $editAlumno->otrotitulo=$otrotitulo;
+            }
+                
 
 
-        $newAlumno->save();
+                $editAlumno->save();
+
+                $borrar = Cursosriesgo::where('alumno_id',  $editAlumno->id)->delete();
+                if (($tipo==1) && intval($numCursosRiesgo) > 0) {
+
+                    for ($i=0; $i <count($cursosriesgo) ; $i++) { 
+                            
+                        $newCursoRiesgo = new Cursosriesgo();
+                        $newCursoRiesgo->nombre = $cursosriesgo[$i];
+                        $newCursoRiesgo->activo = '1';
+                        $newCursoRiesgo->borrado = '0';
+                        $newCursoRiesgo->alumno_id =  $editAlumno ->id;
+
+                        $newCursoRiesgo->save();
+                    }
+                }
 
            
 
             $msj='Alumno modificado con éxito';
+            }
+
+
+            
         }
 
 
@@ -1338,14 +1665,14 @@ class AlumnoController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:AE3');
-                $sheet->cells('A3:AE3',function($cells)
+                $sheet->mergeCells('A3:AM3');
+                $sheet->cells('A3:AM3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:AE3', 'thin');
-                $sheet->cells('A3:AE3', function($cells)
+                $sheet->setBorder('A3:AM3', 'thin');
+                $sheet->cells('A3:AM3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -1356,7 +1683,7 @@ class AlumnoController extends Controller
                     #Borders
                 });
                 
-                $sheet->cells('A4:AE4', function($cells)
+                $sheet->cells('A4:AM4', function($cells)
                 {
                     $cells->setBackground('#B4B9E1');
                     $cells->setAlignment('center');
@@ -1390,19 +1717,27 @@ class AlumnoController extends Controller
                 'P'=>'45',
                 'Q'=>'20',
                 'R'=>'35',
-                'S'=>'22',
+                'S'=>'22', // creditos acumulados
                 'T'=>'22',
-                'U'=>'20',
-                'V'=>'30',
-                'W'=>'25',
-                'X'=>'32',
-                'Y'=>'30',
-                'Z'=>'37',
-                'AA'=>'20',
-                'AB'=>'25',
-                'AC'=>'35',
-                'AD'=>'15',
-                'AE'=>'65',
+                'U'=>'22',
+                'V'=>'20',
+                'W'=>'30',
+                'X'=>'25',
+                'Y'=>'20', //semestre de movilidad nacional
+                'Z'=>'32', // universidad de movilidad nacional
+                'AA'=>'32', //detalles mov nacional
+                'AB'=>'30',
+                'AC'=>'37', //semestre de movilidad internacional
+                'AD'=>'37', // universidad de movilidad internacional
+                'AE'=>'37', //detalles mov internacional
+                'AF'=>'20',
+                'AG'=>'25',
+                'AH'=>'50', //cursos en riesgo
+                'AI'=>'35', // correo institucional
+                'AJ'=>'35', //correo personal <>
+                'AK'=>'15',
+                'AL'=>'30', // IDENTIDAD ETNICA
+                'AM'=>'65',
                 )
                 );
 
@@ -1419,7 +1754,7 @@ class AlumnoController extends Controller
                 array_push($data, array($titulo));
 
                 $sheet->setBorder('A4:AE4', 'thin');
-                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','FACULTAD','ESCUELA PROFESIONAL','ESCALA DE PAGO','DESCRIPCIÓN DE LA ESCALA DE PAGO','PROMEDIO PONDERADO','PROMEDIO DEL SEMESTRE','PERIODO DE INGRESO','PRIMER PERIODO DE MATRÍCULA','MOVILIDAD NACIONAL','DESCRIPCION MOVILIDAD NACIONAL','MOVILIDAD INTERNACIONAL','DESCRIPCION MOVILIDAD INTERNACIONAL','ALUMNO EN RIESGO','N° DE CURSOS EN RIESGO','CORREO ELECTRÓNICO','TELÉFONO','OBSERVACIONES'));
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','FACULTAD','ESCUELA PROFESIONAL','ESCALA DE PAGO','DESCRIPCIÓN DE LA ESCALA DE PAGO','NUM DE CREDITOS ACUMULADOS', 'PROMEDIO PONDERADO','PROMEDIO DEL SEMESTRE','PERIODO DE INGRESO','PRIMER PERIODO DE MATRÍCULA','MOVILIDAD NACIONAL','SEMESTRE DE MOV NACIONAL', 'UNIVERSIDAD DE MOV NACIONAL', 'DESCRIPCION MOVILIDAD NACIONAL','MOVILIDAD INTERNACIONAL','SEMESTRE DE MOV INTERNACIONAL', 'UNIVERSIDAD DE MOV INTERNACIONAL','DESCRIPCION MOVILIDAD INTERNACIONAL','ALUMNO EN RIESGO','N° DE CURSOS EN RIESGO', 'CURSOS EN RIESGO ACADEMICO','CORREO INSTITUCIONAL','CORREO PERSONAL','TELÉFONO','IDENTIDAD ETNICA','OBSERVACIONES'));
 
                 $cont=5;
                 $cont2=5;
@@ -1432,6 +1767,9 @@ class AlumnoController extends Controller
                 ->join('locals', 'locals.id', '=', 'facultads.local_id')
                 ->join('semestres as semestreingreso', 'semestreingreso.id', '=', 'alumnos.periodoIngreso')
                 ->join('semestres as semestrematriculo', 'semestrematriculo.id', '=', 'alumnos.primerPeriodoMatricula')
+
+                ->leftjoin('semestres as semestreMovNacionalTable', 'semestreMovNacionalTable.id', '=', 'alumnos.semestremovnacional')
+                ->leftjoin('semestres as semestreMovInternacionalTable', 'semestreMovInternacionalTable.id', '=', 'alumnos.semestremovinternacional')
            
                 ->where('alumnos.borrado','0')
                 ->where('alumnos.tipo',$tipo)
@@ -1447,14 +1785,25 @@ class AlumnoController extends Controller
                 ->orderBy('personas.apellidomat')
                 ->orderBy('personas.nombres')
            
-                ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+                ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono', 'personas.identidadetnica', 'personas.correoinstitucional','alumnos.id',
                 
-                'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo','locals.nombre as local','semestrematriculo.id as idsemestrematriculo','semestrematriculo.nombre as semestrematriculo')
+                'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo','locals.nombre as local','semestrematriculo.id as idsemestrematriculo','semestrematriculo.nombre as semestrematriculo',
+                'alumnos.universidadmovnacional','alumnos.semestremovnacional','alumnos.universidadmovinternacional','alumnos.semestremovinternacional','alumnos.creditosacumulados',
+                DB::Raw("IFNULL( `semestreMovNacionalTable`.`nombre` , '' ) as semestreMovNacionalNombre"),
+                DB::Raw("IFNULL( `semestreMovInternacionalTable`.`nombre` , '' ) as semestreMovInternacionalNombre"))
                 ->get();
 
         foreach ($alumnos as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':AE'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':AM'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
+
+
+            $cursos = Cursosriesgo::where('activo','1')->where('borrado','0')->where('alumno_id', $dato->id)->get();
+
+            $cursosRiesgo = "";
+            foreach($cursos as $keyC => $datoC){
+                $cursosRiesgo .=  $datoC->nombre.' -- ';
+            }
 
 
            array_push($data, array($key+1,
@@ -1475,18 +1824,26 @@ class AlumnoController extends Controller
            $dato->escuela,
            SiUnoNoCero($dato->escalaPago),
            $dato->escalaPagodesc,
+           $dato->creditosacumulados,
            $dato->promedioPonderado,
            $dato->promedioSemestre,
            $dato->semestreingreso,
            $dato->semestrematriculo,
            SiUnoNoCero($dato->ismovnacional),
+           $dato->semestreMovNacionalNombre,
+           $dato->universidadmovnacional,
            $dato->movinacional,
            SiUnoNoCero($dato->ismovinternacional),
+           $dato->semestreMovInternacionalNombre,
+           $dato->universidadmovinternacional,
            $dato->moviinternacional,
            SiUnoNoCero($dato->alumnoRiesgo),
            $dato->numCursosRiesgo,
+           $cursosRiesgo,
+           $dato->correoinstitucional,
            $dato->email,
            $dato->telefono,
+           $dato->identidadetnica,
            $dato->observaciones
         
         ));
@@ -1525,14 +1882,14 @@ class AlumnoController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:Y3');
-                $sheet->cells('A3:Y3',function($cells)
+                $sheet->mergeCells('A3:AA3');
+                $sheet->cells('A3:AA3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:Y3', 'thin');
-                $sheet->cells('A3:Y3', function($cells)
+                $sheet->setBorder('A3:AA3', 'thin');
+                $sheet->cells('A3:AA3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -1543,7 +1900,7 @@ class AlumnoController extends Controller
                     #Borders
                 });
                 
-                $sheet->cells('A4:Y4', function($cells)
+                $sheet->cells('A4:AA4', function($cells)
                 {
                     $cells->setBackground('#B4B9E1');
                     $cells->setAlignment('center');
@@ -1583,7 +1940,9 @@ class AlumnoController extends Controller
                 'V'=>'30',
                 'W'=>'30',
                 'X'=>'20',
-                'Y'=>'65'
+                'Y'=>'35', // CORREO INSTITUCIONAL
+                'Z'=>'35', // IDENTIDAD ETNICA
+                'AA'=>'65'
 
                 )
                 );
@@ -1601,7 +1960,7 @@ class AlumnoController extends Controller
                 array_push($data, array($titulo));
 
                 $sheet->setBorder('A4:Y4', 'thin');
-                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','FACULTAD','ESCUELA PROFESIONAL','PROMEDIO PONDERADO','PROMEDIO DEL SEMESTRE','ES EGRESADO DE OTRA CARRERA','OTRA CARRERA DE EGRESO','ES TITULADO DE OTRA CARRERA','OTRA CARRERA TITULADA','PRIMER PERIODO DE MATRÍCULA','CORREO ELECTRÓNICO','TELÉFONO','OBSERVACIONES'));
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','FACULTAD','ESCUELA PROFESIONAL','PROMEDIO PONDERADO','PROMEDIO DEL SEMESTRE','ES EGRESADO DE OTRA CARRERA','OTRA CARRERA DE EGRESO','ES TITULADO DE OTRA CARRERA','OTRA CARRERA TITULADA','PRIMER PERIODO DE MATRÍCULA','CORREO PERSONAL','TELÉFONO', 'CORREO INSTITUCIONAL','IDENTIDAD ETNICA','OBSERVACIONES'));
 
                 $cont=5;
                 $cont2=5;
@@ -1629,13 +1988,13 @@ class AlumnoController extends Controller
                 ->orderBy('personas.apellidomat')
                 ->orderBy('personas.nombres')
            
-                ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+                ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id', 'personas.identidadetnica', 'personas.correoinstitucional',
                 
                 'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','escuelas.id as idescuela','escuelas.nombre as escuela','facultads.id as idfacultad','facultads.nombre as facultad','semestreingreso.id as idSemestreIngreso','semestreingreso.nombre as semestreingreso','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo','locals.nombre as local','semestrematriculo.id as idsemestrematriculo','semestrematriculo.nombre as semestrematriculo')
                 ->get();
 
         foreach ($alumnos as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':Y'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':AA'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
 
 
@@ -1663,6 +2022,8 @@ class AlumnoController extends Controller
            $dato->semestrematriculo,
            $dato->email,
            $dato->telefono,
+           $dato->correoinstitucional,
+           $dato->identidadetnica,
            $dato->observaciones
         
         ));
@@ -1697,14 +2058,14 @@ class AlumnoController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:Q3');
-                $sheet->cells('A3:Q3',function($cells)
+                $sheet->mergeCells('A3:T3');
+                $sheet->cells('A3:T3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:Q3', 'thin');
-                $sheet->cells('A3:Q3', function($cells)
+                $sheet->setBorder('A3:T3', 'thin');
+                $sheet->cells('A3:T3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -1715,7 +2076,7 @@ class AlumnoController extends Controller
                     #Borders
                 });
                 
-                $sheet->cells('A4:Q4', function($cells)
+                $sheet->cells('A4:T4', function($cells)
                 {
                     $cells->setBackground('#B4B9E1');
                     $cells->setAlignment('center');
@@ -1747,7 +2108,10 @@ class AlumnoController extends Controller
                 'N'=>'35',
                 'O'=>'45',
                 'P'=>'45',
-                'Q'=>'65',
+                'Q'=>'65', // maximo grado
+                'R'=>'65', // correo institucional
+                'S'=>'65', //identidad etnica
+                'T'=>'65',
                 )
                 );
 
@@ -1764,7 +2128,7 @@ class AlumnoController extends Controller
                 array_push($data, array($titulo));
 
                 $sheet->setBorder('A4:Q4', 'thin');
-                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO DE ESTUDIOS','DENOMINACIÓN DEL GRADO','ESCALA DE PAGO','OBSERVACIONES'));
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO DE ESTUDIOS','DENOMINACIÓN DEL GRADO','ESCALA DE PAGO' ,'MÁXIMO GRADO ALCANZADO', 'CORREO INSTITUCIONAL','IDENTIDAD ETNICA','OBSERVACIONES'));
 
                 $cont=5;
                 $cont2=5;
@@ -1788,13 +2152,13 @@ class AlumnoController extends Controller
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
 
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id', 'personas.identidadetnica', 'personas.correoinstitucional',
      
-     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo')
+     'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo' , 'alumnos.maximogrado')
      ->get();
 
         foreach ($alumnos as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':Q'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':T'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
 
             /*
@@ -1817,6 +2181,9 @@ array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APEL
            grado($dato->grado),
            $dato->nombreGrado,
            $dato->escalaPagodesc,
+           $dato->maximogrado,
+           $dato->correoinstitucional,
+           $dato->identidadetnica,
            $dato->observaciones
         
         ));
@@ -1851,14 +2218,14 @@ array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APEL
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:R3');
-                $sheet->cells('A3:R3',function($cells)
+                $sheet->mergeCells('A3:T3');
+                $sheet->cells('A3:T3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:R3', 'thin');
-                $sheet->cells('A3:R3', function($cells)
+                $sheet->setBorder('A3:T3', 'thin');
+                $sheet->cells('A3:T3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -1869,7 +2236,7 @@ array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APEL
                     #Borders
                 });
                 
-                $sheet->cells('A4:R4', function($cells)
+                $sheet->cells('A4:T4', function($cells)
                 {
                     $cells->setBackground('#B4B9E1');
                     $cells->setAlignment('center');
@@ -1902,7 +2269,9 @@ array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APEL
                 'O'=>'45',
                 'P'=>'45',
                 'Q'=>'20',
-                'R'=>'65'
+                'R'=>'65', //Correo institucional
+                'S'=>'65', //identidad etnica
+                'T'=>'65'
                 )
                 );
 
@@ -1919,7 +2288,7 @@ array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APEL
                 array_push($data, array($titulo));
 
                 $sheet->setBorder('A4:R4', 'thin');
-                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO DE ESTUDIOS','DENOMINACIÓN DEL GRADO','CORREO ELECTRÓNICO','TELÉFONO ','OBSERVACIONES'));
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','CÓDIGO','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','PERIODO DE MATRÍCULA','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','GRADO DE ESTUDIOS','DENOMINACIÓN DEL GRADO','CORREO ELECTRÓNICO','TELÉFONO ',  'CORREO INSTITUCIONAL','IDENTIDAD ETNICA', 'OBSERVACIONES'));
 
                 $cont=5;
                 $cont2=5;
@@ -1943,13 +2312,13 @@ array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APEL
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
 
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id',
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','alumnos.id', 'personas.identidadetnica', 'personas.correoinstitucional',
      
      'alumnos.periodoMatricula','alumnos.escuela_id','alumnos.escalaPago','alumnos.promedioPonderado','alumnos.promedioSemestre','alumnos.periodoIngreso','alumnos.primerPeriodoMatricula','alumnos.alumnoRiesgo','alumnos.numCursosRiesgo','alumnos.observaciones','alumnos.persona_id','alumnos.estado','alumnos.descestado','alumnos.codigo','alumnos.tituladoOtraCarrera','alumnos.egresadoOtraCarrera','alumnos.otraCarrera','alumnos.tipo','alumnos.grado','alumnos.nombreGrado','alumnos.escalaPagodesc','alumnos.semestre_id','semestre.nombre as semestre','alumnos.movinacional','alumnos.moviinternacional','alumnos.ismovnacional','alumnos.ismovinternacional','alumnos.otrotitulo')
      ->get();
 
         foreach ($alumnos as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':R'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':T'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
 
             /*
@@ -1974,6 +2343,8 @@ $sheet->setBorder('A4:Q4', 'thin');
            $dato->nombreGrado,
            $dato->email,
            $dato->telefono,
+           $dato->correoinstitucional,
+           $dato->identidadetnica,
            $dato->observaciones
         
         ));

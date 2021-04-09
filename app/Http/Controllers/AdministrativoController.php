@@ -82,7 +82,7 @@ class AdministrativoController extends Controller
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
 
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','administrativos.id',
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','administrativos.id', 'personas.correoinstitucional',
      
      'administrativos.persona_id','administrativos.local_id','administrativos.tipoDependencia','administrativos.dependencia','administrativos.facultad','administrativos.escuela','administrativos.cargo','administrativos.descripcionCargo','administrativos.grado','administrativos.descripcionGrado','administrativos.esTitulado','administrativos.descripcionTitulo','administrativos.lugarGrado','administrativos.paisGrado','administrativos.fechaIngreso','administrativos.observaciones','administrativos.estado','administrativos.condicion','administrativos.fechaSalida','administrativos.id','locals.id as idlocal','locals.nombre as local')
      ->paginate(50);
@@ -137,6 +137,7 @@ class AdministrativoController extends Controller
         $direccion=$request->direccion;
         $email=$request->email;
         $telefono=$request->telefono;
+        $correoinstitucional=$request->correoinstitucional;
 
         $persona_id=$request->persona_id;
         $local_id=$request->local_id;
@@ -266,6 +267,9 @@ class AdministrativoController extends Controller
         $input20  = array('fechaSalida' => $fechaSalida);
         $reglas20 = array('fechaSalida' => 'required');
 
+        $input21  = array('correoinstitucional' => $correoinstitucional);
+        $reglas21 = array('correoinstitucional' => 'required');
+
     
 
 
@@ -289,6 +293,7 @@ class AdministrativoController extends Controller
         $validator18 = Validator::make($input18, $reglas18);
         $validator19 = Validator::make($input19, $reglas19);
         $validator20 = Validator::make($input20, $reglas20);
+        $validator21 = Validator::make($input21, $reglas21);
 
 
 
@@ -301,7 +306,7 @@ class AdministrativoController extends Controller
         elseif ($validator2->fails())
         {
             $result='0';
-            $msj='Complete el Documento de Identidad del alumno';
+            $msj='Complete el Documento de Identidad del Personal Administrativo';
             $selector='txtDNI';
 
         }
@@ -314,69 +319,74 @@ class AdministrativoController extends Controller
         }
         elseif ($validator3->fails()) {
             $result='0';
-            $msj='Ingrese los nombres del alumno';
+            $msj='Ingrese los nombres del Personal Administrativo';
             $selector='txtnombres';
         }
         elseif ($validator4->fails()) {
             $result='0';
-            $msj='Ingrese el apellido paterno del alumno';
+            $msj='Ingrese el apellido paterno del Personal Administrativo';
             $selector='txtapepat';
         }
         elseif ($validator5->fails()) {
             $result='0';
-            $msj='Ingrese el apellido materno del alumno';
+            $msj='Ingrese el apellido materno del Personal Administrativo';
             $selector='txtapemat';
         }
         elseif ($validator6->fails()) {
             $result='0';
-            $msj='Seleccione el Género del alumno';
+            $msj='Seleccione el Género del Personal Administrativo';
             $selector='cbugenero';
         }
         elseif ($validator7->fails()) {
             $result='0';
-            $msj='Seleccione el Estado Civil del alumno';
+            $msj='Seleccione el Estado Civil del Personal Administrativo';
             $selector='cbuestadocivil';
         }
         elseif ($validator8->fails()) {
             $result='0';
-            $msj='Ingrese la Fecha de Nacimiento del alumno';
+            $msj='Ingrese la Fecha de Nacimiento del Personal Administrativo';
             $selector='txtfechanac';
         }
         elseif ($validator9->fails()) {
             $result='0';
-            $msj='Seleccione si el alumno es Discapacitado';
+            $msj='Seleccione si el personal administrativo es Discapacitado';
             $selector='cbugenero';
         }
         elseif (intval($esdiscapacitado)==1 && strlen($discapacidad)==0) {
             $result='0';
-            $msj='Si ha indicado que el alumno es discapacitado, ingrese la discapacidad que padece';
+            $msj='Si ha indicado que el personal administrativo es discapacitado, ingrese la discapacidad que padece';
             $selector='txtdiscapacidad';
         }
 
         elseif ($validator10->fails()) {
             $result='0';
-            $msj='Ingrese el País de procedencia del alumno';
+            $msj='Ingrese el País de procedencia del Personal Administrativo';
             $selector='txtpais';
         }
         elseif ($validator11->fails()) {
             $result='0';
-            $msj='Ingrese el Departamento de procedencia del alumno';
+            $msj='Ingrese el Departamento de procedencia del Personal Administrativo';
             $selector='txtdep';
         }
         elseif ($validator12->fails()) {
             $result='0';
-            $msj='Ingrese la Provincia de procedencia del alumno';
+            $msj='Ingrese la Provincia de procedencia del Personal Administrativo';
             $selector='txtprov';
         }
         elseif ($validator13->fails()) {
             $result='0';
-            $msj='Ingrese el Distrito de procedencia del alumno';
+            $msj='Ingrese el Distrito de procedencia del Personal Administrativo';
             $selector='txtdist';
         }
         elseif ($validator14->fails()) {
             $result='0';
-            $msj='Ingrese la Dirección del alumno';
+            $msj='Ingrese la Dirección del Personal Administrativo';
             $selector='txtDir';
+        }
+        elseif ($validator21->fails()) {
+            $result='0';
+            $msj='ingrese el correo institucional del Personal Administrativo';
+            $selector='txtcorreoinstitucional';
         }
         elseif ($validator15->fails() || $local_id=="0") {
             $result='0';
@@ -476,6 +486,7 @@ class AdministrativoController extends Controller
             $editPersona->direccion=$direccion;
             $editPersona->email=$email;
             $editPersona->telefono=$telefono;
+            $editPersona->correoinstitucional=$correoinstitucional;
 
             $editPersona->save();
         }
@@ -498,6 +509,7 @@ class AdministrativoController extends Controller
             $newPersona->direccion=$direccion;
             $newPersona->email=$email;
             $newPersona->telefono=$telefono;
+            $newPersona->correoinstitucional=$correoinstitucional;
             $newPersona->activo='1';
             $newPersona->borrado='0';
 
@@ -589,6 +601,7 @@ class AdministrativoController extends Controller
         $direccion=$request->direccion;
         $email=$request->email;
         $telefono=$request->telefono;
+        $correoinstitucional=$request->correoinstitucional;
 
         $persona_id=$request->persona_id;
         $local_id=$request->local_id;
@@ -718,6 +731,9 @@ class AdministrativoController extends Controller
         $input20  = array('fechaSalida' => $fechaSalida);
         $reglas20 = array('fechaSalida' => 'required');
 
+        $input21  = array('correoinstitucional' => $correoinstitucional);
+        $reglas21 = array('correoinstitucional' => 'required');
+
     
 
 
@@ -741,6 +757,7 @@ class AdministrativoController extends Controller
         $validator18 = Validator::make($input18, $reglas18);
         $validator19 = Validator::make($input19, $reglas19);
         $validator20 = Validator::make($input20, $reglas20);
+        $validator21 = Validator::make($input21, $reglas21);
 
 
 
@@ -753,7 +770,7 @@ class AdministrativoController extends Controller
         elseif ($validator2->fails())
         {
             $result='0';
-            $msj='Complete el Documento de Identidad del alumno';
+            $msj='Complete el Documento de Identidad del Personal Administrativo';
             $selector='txtDNIE';
 
         }
@@ -766,69 +783,74 @@ class AdministrativoController extends Controller
         }
         elseif ($validator3->fails()) {
             $result='0';
-            $msj='Ingrese los nombres del alumno';
+            $msj='Ingrese los nombres del Personal Administrativo';
             $selector='txtnombresE';
         }
         elseif ($validator4->fails()) {
             $result='0';
-            $msj='Ingrese el apellido paterno del alumno';
+            $msj='Ingrese el apellido paterno del Personal Administrativo';
             $selector='txtapepatE';
         }
         elseif ($validator5->fails()) {
             $result='0';
-            $msj='Ingrese el apellido materno del alumno';
+            $msj='Ingrese el apellido materno del Personal Administrativo';
             $selector='txtapematE';
         }
         elseif ($validator6->fails()) {
             $result='0';
-            $msj='Seleccione el Género del alumno';
+            $msj='Seleccione el Género del Personal Administrativo';
             $selector='cbugeneroE';
         }
         elseif ($validator7->fails()) {
             $result='0';
-            $msj='Seleccione el Estado Civil del alumno';
+            $msj='Seleccione el Estado Civil del Personal Administrativo';
             $selector='cbuestadocivilE';
         }
         elseif ($validator8->fails()) {
             $result='0';
-            $msj='Ingrese la Fecha de Nacimiento del alumno';
+            $msj='Ingrese la Fecha de Nacimiento del Personal Administrativo';
             $selector='txtfechanacE';
         }
         elseif ($validator9->fails()) {
             $result='0';
-            $msj='Seleccione si el alumno es Discapacitado';
+            $msj='Seleccione si el personal administrativo es Discapacitado';
             $selector='cbugeneroE';
         }
         elseif (intval($esdiscapacitado)==1 && strlen($discapacidad)==0) {
             $result='0';
-            $msj='Si ha indicado que el alumno es discapacitado, ingrese la discapacidad que padece';
+            $msj='Si ha indicado que el personal administrativo es discapacitado, ingrese la discapacidad que padece';
             $selector='txtdiscapacidadE';
         }
 
         elseif ($validator10->fails()) {
             $result='0';
-            $msj='Ingrese el País de procedencia del alumno';
+            $msj='Ingrese el País de procedencia del Personal Administrativo';
             $selector='txtpaisE';
         }
         elseif ($validator11->fails()) {
             $result='0';
-            $msj='Ingrese el Departamento de procedencia del alumno';
+            $msj='Ingrese el Departamento de procedencia del Personal Administrativo';
             $selector='txtdepE';
         }
         elseif ($validator12->fails()) {
             $result='0';
-            $msj='Ingrese la Provincia de procedencia del alumno';
+            $msj='Ingrese la Provincia de procedencia del Personal Administrativo';
             $selector='txtprovE';
         }
         elseif ($validator13->fails()) {
             $result='0';
-            $msj='Ingrese el Distrito de procedencia del alumno';
+            $msj='Ingrese el Distrito de procedencia del Personal Administrativo';
             $selector='txtdistE';
         }
         elseif ($validator14->fails()) {
             $result='0';
-            $msj='Ingrese la Dirección del alumno';
+            $msj='Ingrese la Dirección del Personal Administrativo';
             $selector='txtDirE';
+        }
+        elseif ($validator21->fails()) {
+            $result='0';
+            $msj='ingrese el correo institucional del Personal Administrativo';
+            $selector='txtcorreoinstitucionalE';
         }
         elseif ($validator15->fails() || $local_id=="0") {
             $result='0';
@@ -925,37 +947,38 @@ class AdministrativoController extends Controller
             $editPersona->direccion=$direccion;
             $editPersona->email=$email;
             $editPersona->telefono=$telefono;
+            $editPersona->correoinstitucional=$correoinstitucional;
 
             $editPersona->save();
      
 
      
-        $newAdministrativo = Administrativo::find($id);
-        $newAdministrativo->persona_id=$persona_id;
-        $newAdministrativo->local_id=$local_id;
-        $newAdministrativo->tipoDependencia=$tipoDependencia;
-        $newAdministrativo->dependencia=$dependencia;
-        $newAdministrativo->facultad=$facultad;
-        $newAdministrativo->escuela=$escuela;
-        $newAdministrativo->cargo=$cargo;
-        $newAdministrativo->descripcionCargo=$descripcionCargo;
-        $newAdministrativo->grado=$grado;
-        $newAdministrativo->descripcionGrado=$descripcionGrado;
-        $newAdministrativo->esTitulado=$esTitulado;
-        $newAdministrativo->descripcionTitulo=$descripcionTitulo;
-        $newAdministrativo->lugarGrado=$lugarGrado;
-        $newAdministrativo->paisGrado=$paisGrado;
-        $newAdministrativo->fechaIngreso=$fechaIngreso;
-        $newAdministrativo->observaciones=$observaciones;
-        $newAdministrativo->estado=$estado;
-        $newAdministrativo->condicion=$condicion;
-        $newAdministrativo->fechaSalida=$fechaSalida;
+            $newAdministrativo = Administrativo::find($id);
+            $newAdministrativo->persona_id=$persona_id;
+            $newAdministrativo->local_id=$local_id;
+            $newAdministrativo->tipoDependencia=$tipoDependencia;
+            $newAdministrativo->dependencia=$dependencia;
+            $newAdministrativo->facultad=$facultad;
+            $newAdministrativo->escuela=$escuela;
+            $newAdministrativo->cargo=$cargo;
+            $newAdministrativo->descripcionCargo=$descripcionCargo;
+            $newAdministrativo->grado=$grado;
+            $newAdministrativo->descripcionGrado=$descripcionGrado;
+            $newAdministrativo->esTitulado=$esTitulado;
+            $newAdministrativo->descripcionTitulo=$descripcionTitulo;
+            $newAdministrativo->lugarGrado=$lugarGrado;
+            $newAdministrativo->paisGrado=$paisGrado;
+            $newAdministrativo->fechaIngreso=$fechaIngreso;
+            $newAdministrativo->observaciones=$observaciones;
+            $newAdministrativo->estado=$estado;
+            $newAdministrativo->condicion=$condicion;
+            $newAdministrativo->fechaSalida=$fechaSalida;
 
 
-        $newAdministrativo->save();
+            $newAdministrativo->save();
 
-        $msj='Personal Administrativo modificado con éxito';
-    }
+            $msj='Personal Administrativo modificado con éxito';
+        }
         
 
 
@@ -999,14 +1022,14 @@ class AdministrativoController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:AA3');
-                $sheet->cells('A3:AA3',function($cells)
+                $sheet->mergeCells('A3:AB3');
+                $sheet->cells('A3:AB3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:AA3', 'thin');
-                $sheet->cells('A3:AA3', function($cells)
+                $sheet->setBorder('A3:AB3', 'thin');
+                $sheet->cells('A3:AB3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -1017,7 +1040,7 @@ class AdministrativoController extends Controller
                     #Borders
                 });
                 
-                $sheet->cells('A4:AA4', function($cells)
+                $sheet->cells('A4:AB4', function($cells)
                 {
                     $cells->setBackground('#B4B9E1');
                     $cells->setAlignment('center');
@@ -1059,7 +1082,8 @@ class AdministrativoController extends Controller
                 'X'=>'25',
                 'Y'=>'26',
                 'Z'=>'33',
-                'AA'=>'65',
+                'AA'=>'65', // Correo Institucional
+                'AB'=>'65',
                 )
                 );
 
@@ -1075,8 +1099,8 @@ class AdministrativoController extends Controller
                 array_push($data, array(''));
                 array_push($data, array($titulo));
 
-                $sheet->setBorder('A4:AA4', 'thin');
-                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','TIPO DE DEPENDENCIA','DEPENDENCIA','CARGO','DESCRIPCIÓN DEL CARGO','CONDICIÓN LABORAL','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO','TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','LUGAR DEL MÁXIMO GRADO','PAÍS DEL MÁXIMO GRADO','ESTADO DE CONTRATO','FECHA DE INICIO DE LABORES','FECHA DE FINALIZACIÓN DE LABORES','OBSERVACIONES'));
+                $sheet->setBorder('A4:AB4', 'thin');
+                array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','TIPO DE DEPENDENCIA','DEPENDENCIA','CARGO','DESCRIPCIÓN DEL CARGO','CONDICIÓN LABORAL','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO','TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','LUGAR DEL MÁXIMO GRADO','PAÍS DEL MÁXIMO GRADO','ESTADO DE CONTRATO','FECHA DE INICIO DE LABORES','FECHA DE FINALIZACIÓN DE LABORES', 'CORREO INSTITUCIONAL', 'OBSERVACIONES'));
 
                 $cont=5;
                 $cont2=5;
@@ -1099,13 +1123,12 @@ class AdministrativoController extends Controller
      ->orderBy('personas.apellidomat')
      ->orderBy('personas.nombres')
 
-     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','administrativos.id',
-     
+     ->select('personas.id as idpersona','personas.tipodoc','personas.doc','personas.nombres','personas.apellidopat','personas.apellidomat','personas.genero','personas.estadocivil','personas.fechanac','personas.esdiscapacitado','personas.discapacidad','personas.pais','personas.departamento','personas.provincia','personas.distrito','personas.direccion','personas.email','personas.telefono','administrativos.id', 'personas.correoinstitucional', 
      'administrativos.persona_id','administrativos.local_id','administrativos.tipoDependencia','administrativos.dependencia','administrativos.facultad','administrativos.escuela','administrativos.cargo','administrativos.descripcionCargo','administrativos.grado','administrativos.descripcionGrado','administrativos.esTitulado','administrativos.descripcionTitulo','administrativos.lugarGrado','administrativos.paisGrado','administrativos.fechaIngreso','administrativos.observaciones','administrativos.estado','administrativos.condicion','administrativos.fechaSalida','administrativos.id','locals.id as idlocal','locals.nombre as local')
      ->get();
 
         foreach ($administrativos as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':AA'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':AB'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
 /*
  array_push($data, array('N°','TIPO DE DOCUMENTO', 'NÚMERO DE DOCUMENTO', 'APELLIDO PATERNO', 'APELLIDO MATERNO','NOMBRES','GÉNERO','FECHA DE NACIMIENTO','ESTADO CIVIL','SUFRE DISCAPACIDAD','DISCAPACIDAD QUE PADECE','LOCAL','TIPO DE DEPENDENCIA','DEPENDENCIA','CARGO','DESCRIPCIÓN DEL CARGO','CONDICIÓN LABORAL','MÁXIMO GRADO ACADÉMICO','DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO','TÍTULO UNIVERSITARIO','DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO','LUGAR DEL MÁXIMO GRADO','PAÍS DEL MÁXIMO GRADO','ESTADO DE CONTRATO','FECHA DE INICIO DE LABORES','FECHA DE FINALIZACIÓN DE LABORES','OBSERVACIONES'));
@@ -1137,6 +1160,7 @@ class AdministrativoController extends Controller
            estadoContrato($dato->estado),
            pasFechaVista($dato->fechaIngreso),
            pasFechaVista($dato->fechaSalida),
+           $dato->correoinstitucional,
            $dato->observaciones
         
         ));

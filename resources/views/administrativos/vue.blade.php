@@ -47,7 +47,7 @@ data:{
    administrativos: [],
    errors:[],
 
-   filladministrativos:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','id':'','persona_id':'','local_id':'','tipoDependencia':'','dependencia':'','facultad':'','escuela':'','cargo':'','descripcionCargo':'','grado':'','descripcionGrado':'','esTitulado':'','descripcionTitulo':'','lugarGrado':'','paisGrado':'','fechaIngreso':'','observaciones':'','estado':'','condicion':'','fechaSalida':''},
+   filladministrativos:{'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','id':'','persona_id':'','local_id':'','tipoDependencia':'','dependencia':'','facultad':'','escuela':'','cargo':'','descripcionCargo':'','grado':'','descripcionGrado':'','esTitulado':'','descripcionTitulo':'','lugarGrado':'','paisGrado':'','fechaIngreso':'','observaciones':'','estado':'','condicion':'','fechaSalida':'', 'correoinstitucional' : ''},
 
 
    pagination: {
@@ -110,6 +110,8 @@ data:{
     condicion:'Nombrado',
     fechaSalida:'',
 
+    correoinstitucional : '',
+
     persona_id:'0',      
 
 
@@ -153,6 +155,32 @@ computed:{
        return pagesArray;
    }
 },
+filters:{
+    mostrarNumero(value){
+      
+      if(value != null && value != undefined){
+        value=parseFloat(value).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      return value;
+    },
+    pasfechaVista:function(date){
+        if(date!=null && date.length==10){
+            date=date.slice(-2)+'/'+date.slice(-5,-3)+'/'+date.slice(0,4);            
+        }else{
+          return '';
+        }
+
+        return date;
+    },
+    leftpad:function(n, length) {
+        var  n = n.toString();
+        while(n.length < length)
+            n = "0" + n;
+        return n;
+    }
+
+  },
 
 methods: {
 
@@ -244,6 +272,8 @@ methods: {
     this.condicion='Nombrado';
     this.fechaSalida='';
 
+    this.correoinstitucional = '';
+
 
     this.persona_id='0';
 
@@ -279,6 +309,7 @@ var url='persona/buscarDNI';
         this.direccion='';
         this.email='';
         this.telefono='';
+        this.correoinstitucional = '';
 
         this.persona_id='0';
 
@@ -296,20 +327,21 @@ var url='persona/buscarDNI';
         this.persona_id=response.data.idPer;
 
         this.nombres=response.data.persona.nombres;
-    this.apellidopat=response.data.persona.apellidopat;
-    this.apellidomat=response.data.persona.apellidomat;
-    this.genero=response.data.persona.genero;
-    this.estadocivil=response.data.persona.estadocivil;
-    this.fechanac=response.data.persona.fechanac;
-    this.esdiscapacitado=response.data.persona.esdiscapacitado;
-    this.discapacidad=response.data.persona.discapacidad;
-    this.pais=response.data.persona.pais;
-    this.departamento=response.data.persona.departamento;
-    this.provincia=response.data.persona.provincia;
-    this.distrito=response.data.persona.distrito;
-    this.direccion=response.data.persona.direccion;
-    this.email=response.data.persona.email;
-    this.telefono=response.data.persona.telefono;
+        this.apellidopat=response.data.persona.apellidopat;
+        this.apellidomat=response.data.persona.apellidomat;
+        this.genero=response.data.persona.genero;
+        this.estadocivil=response.data.persona.estadocivil;
+        this.fechanac=response.data.persona.fechanac;
+        this.esdiscapacitado=response.data.persona.esdiscapacitado;
+        this.discapacidad=response.data.persona.discapacidad;
+        this.pais=response.data.persona.pais;
+        this.departamento=response.data.persona.departamento;
+        this.provincia=response.data.persona.provincia;
+        this.distrito=response.data.persona.distrito;
+        this.direccion=response.data.persona.direccion;
+        this.email=response.data.persona.email;
+        this.telefono=response.data.persona.telefono;
+        this.correoinstitucional = response.data.persona.correoinstitucional;
 
 
         this.formularioCrear=true;
@@ -335,6 +367,7 @@ var url='persona/buscarDNI';
             this.direccion='';
             this.email='';
             this.telefono='';
+            this.correoinstitucional = '';
 
             this.persona_id='0';
 
@@ -386,7 +419,7 @@ var url='persona/buscarDNI';
 
        $(".form-control").css("border","1px solid #d2d6de");
 
-       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, persona_id:this.persona_id, local_id:this.local_id, tipoDependencia:this.tipoDependencia, dependencia:this.dependencia, facultad:this.facultad, escuela:this.escuela, cargo:this.cargo, descripcionCargo:this.descripcionCargo, grado:this.grado, descripcionGrado:this.descripcionGrado, esTitulado:this.esTitulado, descripcionTitulo:this.descripcionTitulo, lugarGrado:this.lugarGrado, paisGrado:this.paisGrado, fechaIngreso:this.fechaIngreso, observaciones:this.observaciones, estado:this.estado, condicion:this.condicion, fechaSalida:this.fechaSalida}).then(response=>{
+       axios.post(url,{tipodoc:this.tipodoc, doc:this.doc, nombres:this.nombres, apellidopat:this.apellidopat, apellidomat:this.apellidomat, genero:this.genero, estadocivil:this.estadocivil, fechanac:this.fechanac,esdiscapacitado:this.esdiscapacitado, discapacidad:this.discapacidad, pais:this.pais, departamento:this.departamento, provincia:this.provincia, distrito:this.distrito, direccion:this.direccion, email:this.email, telefono:this.telefono, persona_id:this.persona_id, local_id:this.local_id, tipoDependencia:this.tipoDependencia, dependencia:this.dependencia, facultad:this.facultad, escuela:this.escuela, cargo:this.cargo, descripcionCargo:this.descripcionCargo, grado:this.grado, descripcionGrado:this.descripcionGrado, esTitulado:this.esTitulado, descripcionTitulo:this.descripcionTitulo, lugarGrado:this.lugarGrado, paisGrado:this.paisGrado, fechaIngreso:this.fechaIngreso, observaciones:this.observaciones, estado:this.estado, condicion:this.condicion, fechaSalida:this.fechaSalida, correoinstitucional: this.correoinstitucional}).then(response=>{
            //console.log(response.data);
 
            $("#btnGuardar").removeAttr("disabled");
@@ -472,6 +505,7 @@ var url='persona/buscarDNI';
        this.filladministrativos.direccion=administrativo.direccion;
        this.filladministrativos.email=administrativo.email;
        this.filladministrativos.telefono=administrativo.telefono;
+       this.filladministrativos.correoinstitucional=administrativo.correoinstitucional;
 
        this.filladministrativos.persona_id=administrativo.persona_id;
        this.filladministrativos.local_id=administrativo.local_id;
@@ -522,7 +556,7 @@ var url='persona/buscarDNI';
            
            if(response.data.result=='1'){   
            this.getAdministrativos(this.thispage);
-           this.filladministrativos={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','id':'','persona_id':'','local_id':'','tipoDependencia':'','dependencia':'','facultad':'','escuela':'','cargo':'','descripcionCargo':'','grado':'','descripcionGrado':'','esTitulado':'','descripcionTitulo':'','lugarGrado':'','paisGrado':'','fechaIngreso':'','observaciones':'','estado':'','condicion':'','fechaSalida':''};
+           this.filladministrativos={'tipodoc':'', 'doc':'', 'nombres':'','apellidopat':'','apellidomat':'','genero':'','estadocivil':'','fechanac':'','esdiscapacitado':'','discapacidad':'','pais':'','departamento':'','provincia':'','distrito':'','direccion':'','email':'','telefono':'','id':'','persona_id':'','local_id':'','tipoDependencia':'','dependencia':'','facultad':'','escuela':'','cargo':'','descripcionCargo':'','grado':'','descripcionGrado':'','esTitulado':'','descripcionTitulo':'','lugarGrado':'','paisGrado':'','fechaIngreso':'','observaciones':'','estado':'','condicion':'','fechaSalida':'', 'correoinstitucional' : ''};
            this.errors=[];
 
            this.cerrarFormE();

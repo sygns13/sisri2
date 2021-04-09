@@ -119,11 +119,14 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
                 @{{ docente.departamentoacademico }}
                 
-                <template v-if="parseInt(docente.departamentoacademico_id)==0">No Adscrito a una Escuela Profesional</template>
+                <template v-if="parseInt(docente.departamentoacademico_id)==0">No Adscrito a un Departamento Académico</template>
 
               
               </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.maximogrado }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
+                <template v-if="docente.maximogrado == '0'">Sin grado</template>
+                <template v-else>@{{ docente.maximogrado }}</template>
+              </td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.personalacademico }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.condicion }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ docente.categoria }}</td>

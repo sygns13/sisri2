@@ -93,8 +93,8 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.escuela }}
                 <template v-if="parseInt(alumno.escuela_id)==0 && parseInt(alumno.tipo)>3">No Adscrito a una Escuela Profesional</template>
               </td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.fechainicio }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.fechafinal }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.fechainicio | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ alumno.fechafinal | pasfechaVista }}</td>
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>      

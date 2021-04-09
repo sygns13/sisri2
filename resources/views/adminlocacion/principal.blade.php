@@ -92,9 +92,9 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.dependencia }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.condicionLaboral }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.cargo }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.fechaIngreso }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.fechaInicioContrato }}</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.fechaFinContrato }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.fechaIngreso | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.fechaInicioContrato | pasfechaVista }}</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ adminlocaserv.fechaFinContrato | pasfechaVista }}</td>
               
 
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
