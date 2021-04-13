@@ -1570,8 +1570,10 @@ class PostulanteController extends Controller
        // $nombreArchivo="";
 
         $result='1';
-         $msj='';
-         $selector='';
+        $msj='';
+        $selector='';
+        $errorColumna='';
+        $errorFila='';
 
         if($request->hasFile('archivo')){
 
@@ -1647,22 +1649,24 @@ class PostulanteController extends Controller
 
              $variablePrueba = "hola"; //si quieres meter una variable exterma al recorrido del excel
 
+             $fecha=date("Y-m-d");
 
-
-                $errorFila="";
-                $errorColumna="";
-                $detError="";
-                $error=0;
+            $errorFila="";
+            $errorColumna="";
+            $detError="";
+            $error=0;
+            $msj="";
     
-    
-                $semestres=Semestre::where('activo','1')->where('borrado','0')->get();
-                $escuelas=Escuela::where('activo','1')->where('borrado','0')->get();
-                $modalidadAdmisions=Modalidadadmision::where('activo','1')->where('borrado','0')->get();
+            $semestres=Semestre::where('activo','1')->where('borrado','0')->get();
+            $escuelas=Escuela::where('activo','1')->where('borrado','0')->get();
+            $modalidadAdmisions=Modalidadadmision::where('activo','1')->where('borrado','0')->get();
 
 
-                 Excel::load(public_path().'/archivosExcel/'.$archivo, function ($reader) use (&$errorFila,  &$errorColumna,  &$detError, &$error, $archivo, &$msj, $semestres, $escuelas, $modalidadAdmisions, &$result) { 
+                 Excel::load(public_path().'/archivosExcel/'.$archivo, function ($reader) use (&$errorFila,  &$errorColumna,  &$detError, &$error, $archivo, &$msj, $semestres, $escuelas, $modalidadAdmisions, &$result, &$selector) { 
 
-                   $resultado=$reader->skipRows(4)->get();
+                    //$reader->first(); // Leer datos de la primera hoja
+
+                   $resultado=$reader->skipRows(4)->first();
 
 
                    $error=0;
@@ -1675,6 +1679,7 @@ class PostulanteController extends Controller
                         if(intval($row->c_sem)==$dato->id)
                         {
                             $bandera01=true;
+                            break;
                         }
                     }
 
@@ -1682,7 +1687,7 @@ class PostulanteController extends Controller
 
                         $errorFila="Error en la Fila ".($key+6);
                         $errorColumna="Error en la Columna SEMESTRE DE POSTULACIÓN";
-                        $detError="El Identificador de Semestre no corresponde a ninguno ingresado en la base de datos";
+                        $detError="El Identificador de Semestre no corresponde a ninguno ingresado en la base de datos. Corrija la Columna B, Fila ".($key+6);
                         $error=1;
                         break 1;
 
@@ -1693,6 +1698,7 @@ class PostulanteController extends Controller
                         if(intval($row->c_carr1)==$dato->id)
                         {
                             $bandera01=true;
+                            break;
                         }
                     }
 
@@ -1700,7 +1706,7 @@ class PostulanteController extends Controller
         
                         $errorFila="Error en la Fila ".($key+6);
                         $errorColumna="Error en la Columna CARRERA PRIMERA OPCIÓN";
-                        $detError="El Identificador de Carrera Primera Opción no corresponde a ninguna Escuela Profesional registrada en la base de datos";
+                        $detError="El Identificador de Carrera Primera Opción no corresponde a ninguna Escuela Profesional registrada en la base de datos. Corrija la Columna C, Fila ".($key+6);
                         $error=1;
                         break 1;
 
@@ -1714,7 +1720,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna HUBO SEGUNDA OPCIÓN";
-                            $detError="El código de Hubo Segunda Opción solo debe de llevar valores de 0 para NO o 1 para SI";
+                            $detError="El código de Hubo Segunda Opción solo debe de llevar valores de 0 para NO o 1 para SI. Corrija la Columna D, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -1729,6 +1735,7 @@ class PostulanteController extends Controller
                         if(intval($row->c_carr2)==$dato->id)
                         {
                             $bandera01=true;
+                            break;
                         }
                     }
 
@@ -1739,7 +1746,7 @@ class PostulanteController extends Controller
         
                         $errorFila="Error en la Fila ".($key+6);
                         $errorColumna="Error en la Columna CARRERA SEGUNDA OPCIÓN";
-                        $detError="El Identificador de Carrera Segunda Opción no corresponde a ninguna Escuela Profesional registrada en la base de datos. De no haber habido segunda Opción, deje en blanco o con valor de 0 la Columna Hubo Segunda Opcion";
+                        $detError="El Identificador de Carrera Segunda Opción no corresponde a ninguna Escuela Profesional registrada en la base de datos. De no haber habido segunda Opción, deje en blanco o con valor de 0 la Columna Hubo Segunda Opcion. Corrija la Columna E, Fila ".($key+6);
                         $error=1;
                         break 1;
 
@@ -1747,10 +1754,11 @@ class PostulanteController extends Controller
 
 
                     $bandera01=false;
-                    foreach ($modalidadAdmisions as $key => $dato) {
+                    foreach ($modalidadAdmisions as $key6 => $dato) {
                         if(intval($row->c_modadmi)==$dato->id)
                         {
                             $bandera01=true;
+                            break;
                         }
                     }
 
@@ -1758,7 +1766,7 @@ class PostulanteController extends Controller
         
                         $errorFila="Error en la Fila ".($key+6);
                         $errorColumna="Error en la Columna MODALIDAD DE ADMISIÓN";
-                        $detError="El Identificador de Modalidad de Admisión no corresponde a ninguna Modalidad de Admisión registrada en la base de datos";
+                        $detError="El Identificador de Modalidad de Admisión no corresponde a ninguna Modalidad de Admisión registrada en la base de datos. Corrija la Columna F, Fila ".($key+6);
                         $error=1;
                         break 1;
 
@@ -1773,7 +1781,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna MODALIDAD DE ESTUDIOS";
-                            $detError="El código de Modalidad de Estudios Ingresada no corresponde a los valores posibles de ser consignados";
+                            $detError="El código de Modalidad de Estudios Ingresada no corresponde a los valores posibles de ser consignados. Ingrese 1 para Presencial, ó 2 para Semipresencial ó 3 para Virtual. Corrija la Columna G, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -1787,13 +1795,14 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna ESTADO DE INGRESO";
-                            $detError="El código del Estado de Ingreso no corresponde a los valores posibles de ser consignados. Solo debe de llevar valores de 0 para No Ingresó o 1 para Si Ingresó";
+                            $detError="El código del Estado de Ingreso no corresponde a los valores posibles de ser consignados. Solo debe de llevar valores de 0 para No Ingresó o 1 para Si Ingresó. Corrija la Columna H, Fila ".($key+6);
                             $error=1;
                             break 1;
     
                         }
 
 
+                        if(intval($row->c_estado)==1){
                         $bandera01=false;
                         if(intval($row->c_opcion)==intval($row->c_carr1) || intval($row->c_opcion)==intval($row->c_carr2)){
                             $bandera01=true;
@@ -1802,36 +1811,37 @@ class PostulanteController extends Controller
         
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna OPCIÓN DE INGRESO";
-                                $detError="El código de la Opción no corresponde a los valores posibles de ser consignados. Debe consignar el código de la Primera o Segunda Opción a la que postuló";
+                                $detError="El código de la Opción no corresponde a los valores posibles de ser consignados. Debe consignar el código de la Primera o Segunda Opción a la que postuló según lo indicó en la columna C o E. Corrija la Columna I, Fila ".($key+6);
                                 $error=1;
                                 break 1;
         
                             }
+                        }
 
 
                         $bandera01=false;
-                        if(intval($row->c_tipodoc)==1 || intval($row->c_tipodoc)==2 || intval($row->c_tipodoc)==3 || intval($row->c_tipodoc)==4){
+                        if(intval($row->c_tipodoc)==1 || intval($row->c_tipodoc)==2 || intval($row->c_tipodoc)==3 || intval($row->c_tipodoc)==4 || intval($row->c_tipodoc)==5){
                             $bandera01=true;
                             }
                             if($bandera01==false){
         
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna TIPO DE DOCUMENTO";
-                                $detError="El código del Tipo de Documento no corresponde a los valores posibles de ser consignados";
+                                $detError="El código del Tipo de Documento no corresponde a los valores posibles de ser consignados (1: DNI, 2: RUC, 3: Carnet de Extranjería, 4: Pasaporte, 5: Partida de Nacimiento). Corrija la Columna J, Fila ".($key+6);
                                 $error=1;
                                 break 1;
         
                             }
 
                         $bandera01=false;
-                        if(strlen(trim($row->c_numdoc))>0){
+                        if(strlen(trim($row->c_numdoc))>=8){
                             $bandera01=true;
                             }
                             if($bandera01==false){
         
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna NÚMERO DE DOCUMENTO";
-                                $detError="El Número de Documento de Indentidad ingresado se encuentran en blanco";
+                                $detError="El Número de Documento de Indentidad ingresado se encuentran en blanco o no cuenta con un formato correcto. Corrija la Columna K, Fila ".($key+6);
                                 $error=1;
                                 break 1;
         
@@ -1846,7 +1856,7 @@ class PostulanteController extends Controller
         
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna CÓDIGO DE POSTULANTE";
-                                $detError="El código ingresado se encuentran en blanco";
+                                $detError="El código ingresado se encuentran en blanco. Corrija la Columna L, Fila ".($key+6);
                                 $error=1;
                                 break 1;
         
@@ -1861,7 +1871,7 @@ class PostulanteController extends Controller
         
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna APELLIDO PATERNO";
-                                $detError="El Apellido ingresado se encuentran en blanco";
+                                $detError="El Apellido ingresado se encuentran en blanco. Corrija la Columna M, Fila ".($key+6);
                                 $error=1;
                                 break 1;
         
@@ -1876,46 +1886,69 @@ class PostulanteController extends Controller
         
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna NOMBRES";
-                                $detError="Los Nombres ingresados se encuentran en blanco";
+                                $detError="Los Nombres ingresados se encuentran en blanco. Corrija la columna O, Fila ".($key+6);
                                 $error=1;
                                 break 1;
         
                             }
 
                         $bandera01=false;
-                        if((trim($row->c_genero)=="M") || (trim($row->c_genero)=="F")){
-                            $bandera01=true;
-                            }
-                            if($bandera01==false){
-        
-                                $errorFila="Error en la Fila ".($key+11);
-                                $errorColumna="Error en la Columna GÉNERO";
-                                $detError="Consideró un dato no identificado, solo indique M para másculino y F para femenino, sin espacios en blanco";
-                                $error=1;
-                                break 1;
-        
-                            }
-
-                        if(strlen(trim($row->c_fechanac))==10){
-
-                        //$dateTime = new DateTime::createFromFormat('d/m/Y',$row->c_fechanac);   //pasar a datetime
-
-                        $var=pasFechaBD($row->c_fechanac);
-                        $dateTime = new DateTime($var);
-                        $fechanac=$dateTime->format('Y-m-d'); 
-
-                        $bandera01=false;
-                        if(strlen(trim($row->$fechanac))>0){
+                        if((trim($row->c_genero)=="M") || (trim($row->c_genero)=="F") || (trim($row->c_genero)=="m") || (trim($row->c_genero)=="f")){
                             $bandera01=true;
                             }
                             if($bandera01==false){
         
                                 $errorFila="Error en la Fila ".($key+6);
-                                $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
-                                $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto";
+                                $errorColumna="Error en la Columna GÉNERO";
+                                $detError="Consideró un dato no identificado, indique M para másculino ó F para femenino, sin espacios en blanco. Corrija la Columna P, Fila ".($key+6);
                                 $error=1;
                                 break 1;
         
+                            }
+
+                            
+                        if(strlen(trim($row->c_fechanac))==10){
+
+                        //$dateTime = new DateTime::createFromFormat('d/m/Y',$row->c_fechanac);   //pasar a datetime
+
+                        if(checkdate(intval(substr($row->c_fechanac, -7,2)), intval(substr($row->c_fechanac, -10,2)), intval(substr($row->c_fechanac, -4)))){
+                            $var=pasFechaBD($row->c_fechanac);
+                            $dateTime = DateTime::createFromFormat('Y-m-d', $var);  //pasar a datetime
+                            $fechanac=$dateTime->format('Y-m-d');
+                            $bandera01=false;
+                            if($fechanac != null){
+                                $bandera01=true;
+                                }
+                                if($bandera01==false){
+            
+                                    $errorFila="Error en la Fila ".($key+6);
+                                    $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
+                                    $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q1, Fila ".($key+6);
+                                    $error=1;
+                                    break 1;
+            
+                                }
+                            }
+                            else{
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
+                                $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q1, Fila ".($key+6);
+                                $error=1;
+                                break 1;
+                            }
+
+                        }
+                        else{
+                            if($row->c_fechanac != null && strlen($row->c_fechanac->format('Y-m-d')) != null){
+                                $bandera01=true;
+                            }
+                            else{
+                                $bandera01=false;
+                                $errorFila="Error en la Fila ".($key+6);
+                                $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
+                                $detError=$row->c_fechanac. " EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q2, Fila ".($key+6);
+                                $error=1;
+                                break 1;
                             }
                         }
 
@@ -1928,7 +1961,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna ESTADO CIVIL";
-                            $detError="El código del Estado CIvil no corresponde a los valores posibles de ser consignados";
+                            $detError="El código del Estado CIvil no corresponde a los valores posibles de ser consignados (1: Soltero (a), 2: Casado (a), 3: Viudo (a), ó 4: Divorsiado (a)). Corrija la Columna R, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -1944,7 +1977,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna SUFRE DISCAPACIDAD";
-                            $detError="El código de Condiciónd de Discapacidad no corresponde a los valores posibles de ser consignados. Consigne 1 para SI o 0 para NO";
+                            $detError="El código de Condición de Discapacidad no corresponde a los valores posibles de ser consignados. Consigne 1 para SI o 0 para NO. Corrija la Columna S, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -1961,7 +1994,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna DISCAPACIDAD QUE PADECE";
-                            $detError="Si ha ingresado que el Alumno es Discapacitado, ingrese la Discapacidad que padece, no puede dejar el registro en blanco";
+                            $detError="Si ha ingresado que el Alumno es Discapacitado, ingrese la Discapacidad que padece, no puede dejar el registro en blanco. Corrija la Columna T, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -1978,7 +2011,7 @@ class PostulanteController extends Controller
         
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna PUNTAJE OBTENIDO";
-                                $detError="Ha consignado un valor no válido";
+                                $detError="Ha consignado un valor no válido, ingrese un valor mayor o igual a cero. Corrija la Columna U, Fila ".($key+6);
                                 $error=1;
                                 break 1;
         
@@ -1993,7 +2026,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna PAÍS DE PROCEDENCIA";
-                            $detError="El País de Procedencia ingresado se encuentran en blanco";
+                            $detError="El País de Procedencia ingresado se encuentran en blanco. Corrija la Columna V, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -2008,7 +2041,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="c";
-                            $detError="El Departamento de Procedencia ingresado se encuentran en blanco";
+                            $detError="El Departamento de Procedencia ingresado se encuentran en blanco. Corrija la Columna W, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -2024,7 +2057,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna PROVINCIA DE PROCEDENCIA";
-                            $detError="La Provincia de Procedencia ingresado se encuentran en blanco";
+                            $detError="La Provincia de Procedencia ingresado se encuentran en blanco. Corrija la Columna X, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -2040,7 +2073,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna DISTRITO DE PROCEDENCIA";
-                            $detError="El Distrito de Procedencia ingresado se encuentran en blanco";
+                            $detError="El Distrito de Procedencia ingresado se encuentran en blanco. Corrija la Columna Y, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -2056,7 +2089,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna COLEGIO DONDE TERMINÓ EL 5° GRADO DE SECUNADARIA";
-                            $detError="El Valor ingresado se encuentran en blanco";
+                            $detError="El Valor ingresado se encuentran en blanco. Corrija la Columna Z, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -2072,7 +2105,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna GESTIÓN DEL COLEGIO";
-                            $detError="El código de Tipo de Gestión del Colegio no corresponde a los valores posibles de ser consignados. Indique 1 para Estatalo 2 para Particular";
+                            $detError="El código de Tipo de Gestión del Colegio no corresponde a los valores posibles de ser consignados. Indique 1 para Estatal ó 2 para Particular. Corrija la Columna AA, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -2087,7 +2120,7 @@ class PostulanteController extends Controller
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna DIRECCIÓN DEL POSTULANTE";
-                            $detError="El Valor ingresado se encuentran en blanco";
+                            $detError="El Valor ingresado se encuentran en blanco. Corrija la Columna AB, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -2095,14 +2128,14 @@ class PostulanteController extends Controller
 
 
                         $bandera01=false;
-                        if(strlen(trim($row->c_email))>0){
+                        if(strlen(trim($row->c_email))>0 && is_valid_email(trim($row->c_email))){
                         $bandera01=true;
                         }
                         if($bandera01==false){
     
                             $errorFila="Error en la Fila ".($key+6);
                             $errorColumna="Error en la Columna CORREO ELECTRÓNICO";
-                            $detError="El Valor ingresado se encuentran en blanco";
+                            $detError="El Valor ingresado se encuentran en blanco, o cuenta con un formato incorrecto. Corrija la Coumna AC, Fila ".($key+6);
                             $error=1;
                             break 1;
     
@@ -2113,7 +2146,7 @@ class PostulanteController extends Controller
 
                     if($error==1){
                     Storage::disk('infoFile')->delete($archivo);
-                    $msj=$detError.'. '.$errorFila.'. '.$errorColumna. ' Por lo Que no se realizó la Importación de Datos.';
+                    $msj=$detError.' Por lo Que no se realizó la Importación de Datos.';
                     $result='0';
                     }
                     else{
@@ -2131,16 +2164,57 @@ class PostulanteController extends Controller
                             $persona_id=$dato->id;
                         }
 
-                        if(trim($row->c_genero)=="M")
+                        $newGenero=1;
+                        if(trim($row->c_genero)=="M" || trim($row->c_genero)=="m" )
                         {
-                            $newGenero=1;
-                        }elseif(trim($row->c_genero)=="F")
+                            $newGenero="M";
+                        }elseif(trim($row->c_genero)=="F" || trim($row->c_genero)=="f")
                         {
-                            $newGenero=0;
+                            $newGenero="F";
                         }
+
+                        $discapacidad="";
+                        if(intval($row->c_esdisca)==0)
+                        {
+                            $discapacidad=trim($row->c_disca);
+                        }else{
+
+                        }
+
+                        $escuela_id2 = 0;
+                        if(intval($row->c_segop)==0)
+                        {
+                        $escuela_id2 = 0;
+                        }
+                        else{
+                            $escuela_id2 = intval($row->c_carr2);
+                        }
+
+                        $opcionIngreso = 0;
+                        if(intval($row->c_estado)==0)
+                        {
+                            $opcionIngreso = 0;
+                        }
+                        else{
+                            $opcionIngreso = intval($row->c_opcion);
+                        }
+
+                        $grado=0;
+                        $nombreGrado="";
+                        $universidadCulminoPregrado="";
+
                     
-                        $dateTime = new DateTime(pasFechaBD($row->c_fechanac));   //pasar a datetime
-                        $fechanac=$dateTime->format('Y-m-d');
+                        /*$dateTime = new DateTime(pasFechaBD($row->c_fechanac));   //pasar a datetime
+                        $fechanac=$dateTime->format('Y-m-d');*/
+                        $fechanac= null;
+                        if(strlen(trim($row->c_fechanac))==10){
+
+                            $fechanac=pasFechaBD($row->c_fechanac);
+                        }
+                        else{
+                            $fechanac=$row->c_fechanac->format('Y-m-d');
+                        }
+
 
                         if(intval($persona_id)!=0)
                         {
@@ -2154,7 +2228,7 @@ class PostulanteController extends Controller
                             $editPersona->estadocivil=intval($row->c_estadociv);
                             $editPersona->fechanac=$fechanac;
                             $editPersona->esdiscapacitado=intval($row->c_esdisca);
-                            $editPersona->discapacidad=trim($row->c_disca);
+                            $editPersona->discapacidad=$discapacidad;
                             $editPersona->pais=trim($row->c_pais);
                             $editPersona->departamento=trim($row->c_depar);
                             $editPersona->provincia=trim($row->c_prov);
@@ -2176,7 +2250,7 @@ class PostulanteController extends Controller
                             $newPersona->estadocivil=intval($row->c_estadociv);
                             $newPersona->fechanac=$fechanac;
                             $newPersona->esdiscapacitado=intval($row->c_esdisca);
-                            $newPersona->discapacidad=trim($row->c_disca);
+                            $newPersona->discapacidad=$discapacidad;
                             $newPersona->pais=trim($row->c_pais);
                             $newPersona->departamento=trim($row->c_depar);
                             $newPersona->provincia=trim($row->c_prov);
@@ -2193,6 +2267,7 @@ class PostulanteController extends Controller
                         }
 
                         $postulantes=Postulante::where('persona_id',$persona_id)->where('semestre_id',intval($row->c_sem))->where('tipo','1')->get();
+                        $idPostulante=0;
 
                         foreach ($postulantes as $key => $dato) {
                             $idPostulante=$dato->id;
@@ -2200,7 +2275,8 @@ class PostulanteController extends Controller
                 
                         if(intval($idPostulante)==0)
                         {
-                            $newPostulante = new Postulante();
+
+                        $newPostulante = new Postulante();
                         $newPostulante->codigo=trim($row->c_codpos);
                         $newPostulante->semestre_id=intval($row->c_sem);
                         $newPostulante->escuela_id=intval($row->c_carr1);
@@ -2209,12 +2285,12 @@ class PostulanteController extends Controller
                         $newPostulante->modalidadestudios=intval($row->c_modestu);
                         $newPostulante->puntaje=floatval($row->c_puntaje);
                         $newPostulante->estado=intval($row->c_estado);
-                        $newPostulante->opcioningreso=intval($row->c_opcion);
+                        $newPostulante->opcioningreso=$opcionIngreso;
                         $newPostulante->persona_id=$persona_id;
                         $newPostulante->observaciones=trim($row->c_obs);
                         $newPostulante->tipo='1';
                         $newPostulante->email=trim($row->c_email);
-                        $newPostulante->escuela_id2=intval($row->c_segop);
+                        $newPostulante->escuela_id2=$escuela_id2;
                         $newPostulante->tipogestioncolegio=intval($row->c_gestcolegio);
                 
                         $newPostulante->activo='1';
@@ -2234,22 +2310,18 @@ class PostulanteController extends Controller
                             $editPostulante->modalidadestudios=intval($row->c_modestu);
                             $editPostulante->puntaje=floatval($row->c_puntaje);
                             $editPostulante->estado=intval($row->c_estado);
-                            $editPostulante->opcioningreso=intval($row->c_opcion);
+                            $editPostulante->opcioningreso=$opcionIngreso;
                             $editPostulante->persona_id=$persona_id;
                             $editPostulante->observaciones=trim($row->c_obs);
 
                             $editPostulante->email=trim($row->c_email);
-                            $editPostulante->escuela_id2=intval($row->c_segop);
+                            $editPostulante->escuela_id2=$escuela_id2;
                             $editPostulante->tipogestioncolegio=intval($row->c_gestcolegio);
 
 
                             $editPostulante->save();
 
                         }               
-                  
-
-
-               
   
                     }
 
@@ -2259,7 +2331,9 @@ class PostulanteController extends Controller
             })->get(); 
         
     }
-        return response()->json(["result"=>$result,'msj'=>$msj,'selector'=>$selector]);
+
+        $errtitulo = $errorColumna.' '.$errorFila;
+        return response()->json(["result"=>$result,'msj'=>$msj,'selector'=>$selector, 'errtitulo'=>$errtitulo]);
    
     }
 

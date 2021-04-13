@@ -616,7 +616,7 @@ var url='persona/buscarDNI';
                     //console.log(response.data.msj);
                     //toastr.error(response.data.errorFinal);
                     this.cancelFormImporteForm();
-                     swal.fire("Error", response.data.msj, "error");
+                     swal.fire(response.data.errtitulo, response.data.msj, "error");
                 }
             }).catch(error=>{
                 //this.errors=error.response.data

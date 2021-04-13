@@ -5,7 +5,7 @@
 
       <div class="form-group">
 
-          <label for="cbutipodoc" class="col-sm-1 control-label">Tipo de Doc:*</label>
+          <label for="cbutipodoc" class="col-sm-1 control-label">Tipo de Doc:<spam style="color:red;">*</spam></label>
 
           <div class="col-sm-2">
               <select class="form-control" id="cbutipodoc" name="cbutipodoc" v-model="tipodoc">
@@ -19,7 +19,7 @@
 
 
 
-        <label for="txtDNI" class="col-sm-1 control-label">Documento:*</label>
+        <label for="txtDNI" class="col-sm-1 control-label">Documento:<spam style="color:red;">*</spam></label>
 
         <div class="col-sm-2">
           <input type="text" class="form-control" id="txtDNI" name="txtDNI" placeholder="N° de Doc" maxlength="20"
@@ -48,15 +48,21 @@
         <h4>Datos Personales del Postulante</h4>
       </center>
 
+      <div class="col-md-12">
+        <div class="form-group">
+          <p><b>Nota:</b> Los campos marcadosco <spam style="color:red;">*</spam> son obligatorios</p>
+        </div>
+      </div>
+
       <div class="col-md-12" style="padding-top: 15px;">
         <div class="form-group">
-          <label for="txtapepat" class="col-sm-2 control-label">Apellido Paterno:*</label>
+          <label for="txtapepat" class="col-sm-2 control-label">Apellido Paterno:<spam style="color:red;">*</spam></label>
           <div class="col-sm-4">
             <input type="text" class="form-control" id="txtapepat" name="txtapepat" placeholder="Apellido Paterno"
               maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="apellidopat">
           </div>
 
-          <label for="txtapemat" class="col-sm-2 control-label">Apellido Materno:*</label>
+          <label for="txtapemat" class="col-sm-2 control-label">Apellido Materno:<spam style="color:red;">*</spam></label>
           <div class="col-sm-4">
               <input type="text" class="form-control" id="txtapemat" name="txtapemat" placeholder="Apellido Materno"
                 maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="apellidomat">
@@ -66,7 +72,7 @@
 
       <div class="col-md-12" style="padding-top: 15px;">
         <div class="form-group">
-          <label for="txtnombres" class="col-sm-2 control-label">Nombres:*</label>
+          <label for="txtnombres" class="col-sm-2 control-label">Nombres:<spam style="color:red;">*</spam></label>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="txtnombres" name="txtnombres" placeholder="Nombres"
               maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="nombres">
@@ -76,7 +82,7 @@
 
       <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
-            <label for="cbugenero" class="col-sm-2 control-label">Género:*</label>
+            <label for="cbugenero" class="col-sm-2 control-label">Género:<spam style="color:red;">*</spam></label>
             <div class="col-sm-2">
               <select class="form-control" id="cbugenero" name="cbugenero" v-model="genero">
                 <option value="M">Masculino</option>
@@ -84,13 +90,13 @@
               </select>
             </div>
 
-            <label for="txtfechanac" class="col-sm-2 control-label">Fecha de Nacimiento:*</label>
+            <label for="txtfechanac" class="col-sm-2 control-label">Fecha de Nacimiento:<spam style="color:red;">*</spam></label>
             <div class="col-sm-2">
                 <input type="date" class="form-control" id="txtfechanac" name="txtfechanac" placeholder="dd/mm/aaaa"
                 maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fechanac">
             </div>
 
-            <label for="cbuestadocivil" class="col-sm-2 control-label">Estado Civil:*</label>
+            <label for="cbuestadocivil" class="col-sm-2 control-label">Estado Civil:<spam style="color:red;">*</spam></label>
             <div class="col-sm-2">
                 <select class="form-control" id="cbuestadocivil" name="cbuestadocivil" v-model="estadocivil">
                   <option value="1">Soltero (a)</option>
@@ -106,7 +112,7 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="cbugenero" class="col-sm-2 control-label">Sufre Discapacidad:*</label>
+                <label for="cbugenero" class="col-sm-2 control-label">Sufre Discapacidad:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-2">
                   <select class="form-control" id="cbugenero" name="cbugenero" v-model="esdiscapacitado">
                     <option value="0">No</option>
@@ -115,7 +121,7 @@
                 </div>
 
                 <template v-if="esdiscapacitado=='1'">
-                <label for="txtdiscapacidad" class="col-sm-2 control-label">Discapacidad que Padece:*</label>
+                <label for="txtdiscapacidad" class="col-sm-2 control-label">Discapacidad que Padece:<spam style="color:red;">*</spam></label>
           <div class="col-sm-6">
               <input type="text" class="form-control" id="txtdiscapacidad" name="txtdiscapacidad" placeholder="Discapacidad"
                 maxlength="225" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="discapacidad">
@@ -128,13 +134,13 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="txtpais" class="col-sm-2 control-label">Pais de Procedencia:*</label>
+                <label for="txtpais" class="col-sm-2 control-label">Pais de Procedencia:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="txtpais" name="txtpais" placeholder="Pais"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="pais">
                 </div>
 
-                <label for="txtdep" class="col-sm-2 control-label">Departamento:*</label>
+                <label for="txtdep" class="col-sm-2 control-label">Departamento:<spam style="color:red;">*</spam></label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" id="txtdep" name="txtdep" placeholder="Departamento"
                   maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="departamento">
@@ -146,13 +152,13 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="txtprov" class="col-sm-2 control-label">Provincia:*</label>
+                <label for="txtprov" class="col-sm-2 control-label">Provincia:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="txtprov" name="txtprov" placeholder="Provincia"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="provincia">
                 </div>
 
-                <label for="txtdist" class="col-sm-2 control-label">Distrito:*</label>
+                <label for="txtdist" class="col-sm-2 control-label">Distrito:<spam style="color:red;">*</spam></label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" id="txtdist" name="txtdist" placeholder="Distrito"
                   maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="distrito">
@@ -184,7 +190,7 @@
           <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
   
-                  <label for="txtfono" class="col-sm-2 control-label">Teléfono:*</label>
+                  <label for="txtfono" class="col-sm-2 control-label">Teléfono:<spam style="color:red;">*</spam></label>
                   <div class="col-sm-2">
                     <input type="text" class="form-control" id="txtfono" name="txtfono" placeholder="Telef / Cell"
                       maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="telefono">
@@ -205,7 +211,7 @@
                         maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="colegio">
                     </div>
 
-                    <label for="cbutipogestion" class="col-sm-2 control-label">Tipo de Gestión:*</label>
+                    <label for="cbutipogestion" class="col-sm-2 control-label">Tipo de Gestión:<spam style="color:red;">*</spam></label>
                     <div class="col-sm-2">
                         <select class="form-control" id="cbutipogestion" name="cbutipogestion" v-model="tipogestioncolegio">
                           <option value="1">Pública</option>
@@ -243,7 +249,7 @@
               <div class="form-group">
     
     
-                  <label for="cbucarrera1" class="col-sm-2 control-label">Carrera Primera Opción:*</label>
+                  <label for="cbucarrera1" class="col-sm-2 control-label">Carrera Primera Opción:<spam style="color:red;">*</spam></label>
                   <div class="col-sm-10">
                       <select class="form-control" id="cbucarrera1" name="cbucarrera1" v-model="escuela_id">
                           <option value="0" disabled>Seleccione un Programa Profesional...</option>
@@ -260,7 +266,7 @@
               <div class="col-md-12" style="padding-top: 15px;">
                   <div class="form-group">
     
-                      <label for="cbucarrera2" class="col-sm-2 control-label">Carrera Segunda Opción:*</label>
+                      <label for="cbucarrera2" class="col-sm-2 control-label">Carrera Segunda Opción:<spam style="color:red;">*</spam></label>
                       <div class="col-sm-10">
                           <select class="form-control" id="cbucarrera2" name="cbucarrera2" v-model="escuela_id2">
                             <option value="0">No hubo segunda opción</option>
@@ -276,7 +282,7 @@
                   <div class="col-md-12" style="padding-top: 15px;">
                       <div class="form-group">
         
-                          <label for="cbumodalidadadmision" class="col-sm-2 control-label">Modalidad de Admisión:*</label>
+                          <label for="cbumodalidadadmision" class="col-sm-2 control-label">Modalidad de Admisión:<spam style="color:red;">*</spam></label>
                           <div class="col-sm-4">
                               <select class="form-control" id="cbumodalidadadmision" name="cbumodalidadadmision" v-model="modalidadadmision_id">
                                   <option value="0" disabled>Seleccione una Modalidad de Admisión...</option>
@@ -286,7 +292,7 @@
                               </select>
                             </div>
 
-                            <label for="cbumodalidadestudios" class="col-sm-2 control-label">Modalidad de Estudios:*</label>
+                            <label for="cbumodalidadestudios" class="col-sm-2 control-label">Modalidad de Estudios:<spam style="color:red;">*</spam></label>
                             <div class="col-sm-4">
                             <select class="form-control" id="cbumodalidadestudios" name="cbumodalidadestudios" v-model="modalidadestudios">
                                 <option value="1">Presencial</option>                        
@@ -303,7 +309,7 @@
                       <div class="col-md-12" style="padding-top: 15px;">
                           <div class="form-group">
             
-                              <label for="cbuestadoingreso" class="col-sm-2 control-label">Estado de Ingreso:*</label>
+                              <label for="cbuestadoingreso" class="col-sm-2 control-label">Estado de Ingreso:<spam style="color:red;">*</spam></label>
                               <div class="col-sm-2">
                                   <select class="form-control" id="cbuestadoingreso" name="cbuestadoingreso" v-model="estado">
                                     <option value="1">Ingresó</option>
@@ -312,7 +318,7 @@
                                   </select>
                                 </div>
 
-                                <label for="txtpuntaje" class="col-sm-2 control-label">Puntaje Obtenido:*</label>
+                                <label for="txtpuntaje" class="col-sm-2 control-label">Puntaje Obtenido:<spam style="color:red;">*</spam></label>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control" id="txtpuntaje" name="txtpuntaje" placeholder="" onkeypress="return soloNumeros(event);"
                                       maxlength="20" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="puntaje">
@@ -324,7 +330,7 @@
                           <div class="col-md-12" style="padding-top: 15px;" v-if="estado=='1'">
                               <div class="form-group">
                 
-                                  <label for="cbucarreraing" class="col-sm-2 control-label">Carrera Ingreso:*</label>
+                                  <label for="cbucarreraing" class="col-sm-2 control-label">Carrera Ingreso:<spam style="color:red;">*</spam></label>
                                   <div class="col-sm-10">
                                       <select class="form-control" id="cbucarreraing" name="cbucarreraing" v-model="opcioningreso">
                                         <option value="0" disabled>Seleccione un Programa Profesional...</option>

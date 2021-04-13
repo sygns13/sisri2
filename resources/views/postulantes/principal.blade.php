@@ -31,7 +31,7 @@
 
                   </div>
 
-              <div class="col-sm-9">
+            <div class="col-sm-12" style="padding-top:15px;">
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
 
            
@@ -48,7 +48,7 @@
 
             <div class="col-sm-12" style="padding-top:15px;">
 
-                <a download="instructivoImportarDataPostulantesPregrado.xlsx" type="button" class="btn btn-info" id="btnDescargarPlantilla" href="{{URL::to('instructivos/instructivoImportarDataPostulantesPregrado.xlsx')}}" data-placement="top" data-toggle="tooltip" title="Descargar Instructivo Para Importar Data"><i class="fa fa-search" aria-hidden="true" ></i> Ver Instructivo Para Carga de Data</a>
+                <a download="instructivoImportarDataPostulantesPregrado.xlsx" type="button" class="btn btn-info" id="btnDescargarPlantilla" href="{{URL::to('instructivo/Instructivo_Carga_Data_Postulantes_Pregrado.xlsx')}}" data-placement="top" data-toggle="tooltip" title="Descargar Instructivo Para Importar Data"><i class="fa fa-search" aria-hidden="true" ></i> Ver Instructivo Para Carga de Data</a>
 
                 <a type="button" class="btn btn-default" id="btnDescargarPlantilla" v-bind:href="'semestres/exportarExcel?busca='+buscar" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Semestres</a>
 
@@ -147,7 +147,7 @@
       <div style="color:red;" class="sk-circle12 sk-child"></div>
     </div>
     <center>
-    <h3 style="color:red;">Importando Datos del Archivo CSV, espere por favor y no ejecute ninguna acción hasta que el proceso haya finalizado</h3></center>
+    <h3 style="color:red;">Importando Datos del Archivo Excel, espere por favor y no ejecute ninguna acción hasta que el proceso haya finalizado</h3></center>
     </div>
 
   </div>
@@ -232,7 +232,7 @@
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.escuela2 }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.modalidadadmision }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;" v-if="postulante.estado=='1'">Ingresó</td>
-              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;" v-if="postulante.estado=='0'">Mo Ingresó</td>
+              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;" v-if="postulante.estado=='0'">No Ingresó</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.puntaje }}</td>
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{ postulante.escuelaing }}</td>
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
