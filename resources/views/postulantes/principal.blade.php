@@ -86,7 +86,7 @@
 
 <div class="box box-success" v-if="divNuevoImporte">
   <div class="box-header with-border" >
-    <h3 class="box-title" id="tituloAgregarImporte">Importar Archivo Mensual de Avance de Expedientes - Formato CSV</h3>
+    <h3 class="box-title" id="tituloAgregarImporte">Importar Datos en Lote Postulantes de Pregrado - Formato EXCEL</h3>
   </div>
 
    <form v-on:submit.prevent="createImportacion">

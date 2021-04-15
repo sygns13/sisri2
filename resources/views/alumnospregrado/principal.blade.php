@@ -10,14 +10,9 @@
 
 
             <template v-if="contse!='0'">
-            <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
 
-            {{-- <button type="button" class="btn btn-success" id="btnDescargarPlantilla" @click.prevent="descargarPlantilla()"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Plantilla</button> --}}
-
-            <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'alumnopregradoR/exportarExcel?busca='+buscar+'&semestre_id='+semestre_id+'&tipo='+tipoGeneral" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
-
-            <label for="cbusemestre" class="col-sm-3 control-label" style="width: auto;">Semestre de Matrícula:*</label>
-                    <div class="col-sm-3">
+            <label for="cbusemestre" class="col-sm-1 control-label" style="width: auto;">Semestre de Matrícula:*</label>
+                    <div class="col-sm-2">
                         <select class="form-control" id="cbusemestre" name="cbusemestre" v-model="semestre_id" @change="cambiarSemestre">
                           <option value="0" disabled>Seleccione un Semestre...</option>
                           @foreach ($semestres as $dato)
@@ -32,6 +27,31 @@
                       @foreach ($semestres as $dato)
                       <input type="hidden" id="txtseme{{$dato->id}}" value="{{$dato->nombre}}">
                       @endforeach
+
+                    <div class="col-sm-12" style="padding-top:15px;">
+                      <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Registro</button>
+          
+                      
+                      <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'alumnopregradoR/exportarExcel?busca='+buscar+'&semestre_id='+semestre_id+'&tipo='+tipoGeneral" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
+          
+                        <a download="Alumnos_Pregrado_Plantilla_Carga_Datos.xlsx" type="button" class="btn btn-warning" id="btnDescargarPlantilla" href="{{URL::to('plantillas/Alumnos_Pregrado_Plantilla_Carga_Datos.xlsx')}}" data-placement="top" data-toggle="tooltip" title="Descargar Plantilla de Carga de Datos"><i class="fa fa-file-text" aria-hidden="true" ></i> Descargar Plantilla Para Carga de Data</a>
+          
+                        <button type="button" class="btn btn-primary" id="btncrearArea" @click.prevent="nuevaExportación()"><i class="fa fa-cloud-upload" aria-hidden="true" ></i> Realizar Nueva Importación de Data</button>
+          
+                      </div>
+          
+                      <div class="col-sm-12" style="padding-top:15px;">
+          
+                          <a download="Instructivo_Carga_Data_Alumnos_Pregrado.xlsx" type="button" class="btn btn-info" id="btnDescargarPlantilla" href="{{URL::to('instructivo/Instructivo_Carga_Data_Alumnos_Pregrado.xlsx')}}" data-placement="top" data-toggle="tooltip" title="Descargar Instructivo Para Importar Data"><i class="fa fa-search" aria-hidden="true" ></i> Ver Instructivo Para Carga de Data</a>
+          
+                          <a type="button" class="btn btn-default" id="btnDescargarPlantilla" v-bind:href="'semestres/exportarExcel?busca='+buscar" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Semestres</a>
+          
+                          <a type="button" class="btn btn-default" id="btnDescargarPlantilla" v-bind:href="'escuelas/exportarExcel?busca='+buscar" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Semestre y Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Escuelas Profesionales</a>
+          
+          
+                      </div>
+
+
             </template>
 
             <template v-if="contse=='0'">
@@ -51,6 +71,85 @@
           </div>
       
 </div>
+
+
+
+<div class="box box-success" v-if="divNuevoImporte">
+  <div class="box-header with-border" >
+    <h3 class="box-title" id="tituloAgregarImporte">Importar Datos en Lote Alumnos de Pregrado - Formato EXCEL</h3>
+  </div>
+
+   <form v-on:submit.prevent="createImportacion">
+
+    {{--  <form action="/" method="POST" accept-charset="UTF-8" enctype="multipart/form-data" id="pruebaCreate">--}}
+   <div class="box-body">
+
+
+
+
+                  {{ csrf_field() }}
+                  
+                        <div class="col-sm-12" style="padding-left: 0px;">
+                      <div class="form-group">
+
+                        
+                          <span class="pull-left label label-default" style="margin-right: 5px; font-size: 12px;">
+                           {{--    {!! Form::file('formatoexcel',['id'=>'formatoexcel','accept'=>'.xls,.xlsx','required']) !!}  --}}  
+
+                                <input v-if="uploadReady" name="archivo2" type="file" id="archivo" class="archivo form-control" required @change="getArchivo" 
+        accept=".xls, .XLS, .xlsx, .XLSX "/>
+
+                              </span>
+                        </div>
+
+                      </div>
+
+
+
+
+  </div>
+
+  <!-- /.box-body -->
+  <div class="box-footer">
+    <button type="submit" class="btn btn-info" id="btnGuardarImporte" >Guardar Datos</button>
+
+     {{-- <button type="submit" class="btn btn-primary" id="guardar" style="margin-right: 15px;">Guardar</button>--}}
+
+    <button type="reset" class="btn btn-warning" id="btnCancelImporte" @click="cancelFormImporteForm()">Cancelar</button>
+
+    <button type="button" class="btn btn-default" id="btnCloseImporte" @click.prevent="cerrarFormImportacion()">Cerrar</button>
+
+    <div v-show="divloaderNuevoImporte">
+      
+    
+    <div class="sk-circle" >
+      <div style="color:red;" class="sk-circle1 sk-child"></div>
+      <div style="color:red;" class="sk-circle2 sk-child"></div>
+      <div style="color:red;" class="sk-circle3 sk-child"></div>
+      <div style="color:red;" class="sk-circle4 sk-child"></div>
+      <div style="color:red;" class="sk-circle5 sk-child"></div>
+      <div style="color:red;" class="sk-circle6 sk-child"></div>
+      <div style="color:red;" class="sk-circle7 sk-child"></div>
+      <div style="color:red;" class="sk-circle8 sk-child"></div>
+      <div style="color:red;" class="sk-circle9 sk-child"></div>
+      <div style="color:red;" class="sk-circle10 sk-child"></div>
+      <div style="color:red;" class="sk-circle11 sk-child"></div>
+      <div style="color:red;" class="sk-circle12 sk-child"></div>
+    </div>
+    <center>
+    <h3 style="color:red;">Importando Datos del Archivo Excel, espere por favor y no ejecute ninguna acción hasta que el proceso haya finalizado</h3></center>
+    </div>
+
+  </div>
+  <!-- /.box-footer -->
+
+</form>
+
+
+
+</div>
+
+
       
 <div class="box box-success" v-if="divNuevo">
   <div class="box-header with-border" style="border: 1px solid rgb(0, 166, 90); background-color: rgb(0, 166, 90); color: white;">

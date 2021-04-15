@@ -115,6 +115,7 @@ data:{
     divNuevoImporte:false,
     divloaderNuevoImporte:false,
     uploadReady: true,
+    archivo:[],
 
 },
 created:function () {

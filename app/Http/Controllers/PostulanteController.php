@@ -1863,7 +1863,7 @@ class PostulanteController extends Controller
             
                                     $errorFila="Error en la Fila ".($key+6);
                                     $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
-                                    $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q1, Fila ".($key+6);
+                                    $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q, Fila ".($key+6);
                                     $error=1;
                                     break 1;
             
@@ -1872,7 +1872,7 @@ class PostulanteController extends Controller
                             else{
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
-                                $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q1, Fila ".($key+6);
+                                $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q, Fila ".($key+6);
                                 $error=1;
                                 break 1;
                             }
@@ -1886,7 +1886,7 @@ class PostulanteController extends Controller
                                 $bandera01=false;
                                 $errorFila="Error en la Fila ".($key+6);
                                 $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
-                                $detError=$row->c_fechanac. " EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q2, Fila ".($key+6);
+                                $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna Q, Fila ".($key+6);
                                 $error=1;
                                 break 1;
                             }
@@ -2104,7 +2104,7 @@ class PostulanteController extends Controller
                             $persona_id=$dato->id;
                         }
 
-                        $newGenero=1;
+                        $newGenero="M";
                         if(trim($row->c_genero)=="M" || trim($row->c_genero)=="m" )
                         {
                             $newGenero="M";
@@ -2116,9 +2116,9 @@ class PostulanteController extends Controller
                         $discapacidad="";
                         if(intval($row->c_esdisca)==0)
                         {
-                            $discapacidad=trim($row->c_disca);
+                            $discapacidad="";
                         }else{
-
+                            $discapacidad=trim($row->c_disca);
                         }
 
                         $escuela_id2 = 0;
