@@ -3025,8 +3025,11 @@ $sheet->setBorder('A4:Q4', 'thin');
 
                         if(strlen(trim($row->c_cursos_riesgo))>0){
 
-                            $cursosRiesgo = split("--" , strlen(trim($row->c_cursos_riesgo)));
-                            if($cursosRiesgo != null && count($cursosRiesgo->count) == $numCursos){
+                            $cursosRiesgo = explode("--" , trim($row->c_cursos_riesgo));
+                            //var_dump($row->c_cursos_riesgo);
+                            //var_dump($cursosRiesgo);
+                            // && is_array($cursosRiesgo) 
+                            if($cursosRiesgo != null && is_array($cursosRiesgo)   && count($cursosRiesgo) == $numCursos){
                                 $bandera01=true;
                             }
                         }
@@ -3253,7 +3256,7 @@ $sheet->setBorder('A4:Q4', 'thin');
                         }
                         else{
                             $numCursosRiesgo = intval($row->c_num_cursos_riesgo);
-                            $cursosRiesgo = split("--" , strlen(trim($row->c_cursos_riesgo)));
+                            $cursosRiesgo = explode("--" , trim($row->c_cursos_riesgo));
                         }
                 
 
@@ -3360,7 +3363,7 @@ $sheet->setBorder('A4:Q4', 'thin');
                 
                             $newAlumno->save();
         
-                            if (intval($numCursosRiesgo) > 0) {
+                            if (intval($numCursosRiesgo) > 0 && is_array($cursosRiesgo) ) {
                                 for ($i=0; $i <count($cursosRiesgo) ; $i++) { 
                                     
                                     $newCursoRiesgo = new Cursosriesgo();
@@ -3411,7 +3414,7 @@ $sheet->setBorder('A4:Q4', 'thin');
                             $editAlumno->save();
 
                             $borrar = Cursosriesgo::where('alumno_id',  $editAlumno->id)->delete();
-                            if (($tipo==1) && intval($numCursosRiesgo) > 0) {
+                            if (($tipo==1) && intval($numCursosRiesgo) > 0 && is_array($cursosRiesgo) ) {
 
                                 for ($i=0; $i <count($cursosRiesgo) ; $i++) { 
                                         
