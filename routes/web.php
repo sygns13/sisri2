@@ -165,6 +165,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('postulantespregrado/importardata','PostulanteController@importarArchivo');
     Route::post('alumnopregradoR/importardata1','AlumnoController@importarArchivo1');
+    Route::post('alumnopregradoR/importardata2','AlumnoController@importarArchivo2');
+    Route::post('postulantesR/importardata','PostulanteController@importarArchivo2');
 
 
 

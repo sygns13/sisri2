@@ -289,7 +289,7 @@
                       
 
           <label for="cbusemestreingreso" class="col-sm-2 control-label">Semestre de Ingreso a la Universidad:<spam style="color:red;">*</spam></label>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
               <select class="form-control" id="cbusemestreingreso" name="cbusemestreingreso" v-model="periodoIngreso">
                 <option value="0" disabled>Seleccione un Semestre...</option>
                 @foreach ($semestres as $dato)
@@ -302,7 +302,7 @@
 
     
             <label for="cbuprimersemestre" class="col-sm-2 control-label">Primer Semestre de Matrícula:<spam style="color:red;">*</spam></label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <select class="form-control" id="cbuprimersemestre" name="cbuprimersemestre" v-model="primerPeriodoMatricula">
                       <option value="0" disabled>Seleccione un Semestre...</option>
                       @foreach ($semestres as $dato)
