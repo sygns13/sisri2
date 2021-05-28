@@ -23,6 +23,9 @@ use App\User;
 use Excel;
 set_time_limit(600);
 
+use Storage;
+use DateTime;
+
 class DocenteController extends Controller
 {
     /**
@@ -460,11 +463,11 @@ class DocenteController extends Controller
             $selector='txtdescCargo';
         }
 
-        elseif ($validator16->fails()) {
+        /*elseif ($validator16->fails()) {
             $result='0';
             $msj='Ingrese la descripción del Máximo Grado Obtenido';
             $selector='txtdescGrado';
-        }
+        }*/
         elseif ($validator17->fails()) {
             $result='0';
             $msj='Ingrese la universidad del Máximo Grado Obtenido';
@@ -1419,4 +1422,1503 @@ class DocenteController extends Controller
 
         return response()->json(["buscar"=>$buscar,'tipo'=>$tipo]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function importarArchivo(Request $request)
+    {
+        ini_set('memory_limit','256M');
+
+        ini_set('upload_max_filesize','128M');
+
+        $archivo="";
+        $file = $request->archivo;
+        $segureFile=0;
+
+       // $nombreArchivo="";
+
+        $result='1';
+        $msj='';
+        $selector='';
+        $errorColumna='';
+        $errorFila='';
+
+        if($request->hasFile('archivo')){
+
+
+
+           /* $nombreArchivo=$request->nombreArchivo;*/
+
+            $aux2='docente'.date('d-m-Y').'-'.date('H-i-s');
+            $input2  = array('archivo' => $file) ;
+            $reglas2 = array('archivo' => 'required|file:1,51200');
+            $validatorF = Validator::make($input2, $reglas2);
+
+          /*  $inputNA  = array('archivonombre' => $nombreArchivo);
+            $reglasNA = array('archivonombre' => 'required');
+            $validatorNA = Validator::make($inputNA, $reglasNA);*/
+
+          
+
+            if ($validatorF->fails())
+            {
+
+            $segureFile=1;
+            $msj="El archivo adjunto ingresado tiene un tamaño no válido superior a los 5 MB, ingrese otro archivo o limpie el formulario";
+            $result='0';
+            $selector='archivo';
+            }
+          /*  elseif($validatorNA->fails()){
+                $segureFile=1;
+                $msj="Si va a registrar un archivo adjunto, debe de ingresar un nombre válido con el que se verá en el sistema";
+                $result='0';
+                $selector='txtArchivoAdjunto';
+            }*/
+            else
+            {
+                $nombre2=$file->getClientOriginalName();
+                $extension2=$file->getClientOriginalExtension();
+                $nuevoNombre2=$aux2.".".$extension2;
+                //$subir2=Storage::disk('revistas')->put($nuevoNombre2, \File::get($file));
+                $subir2=Storage::disk('infoFile')->put($nuevoNombre2, \File::get($file));
+
+               
+
+                if($extension2=="xls" || $extension2=="xlsx"  || $extension2=="XLS" || $extension2=="XLSX" )
+                {
+
+                if($subir2){
+                    $archivo=$nuevoNombre2;
+                }
+                else{
+                    $msj="Error al subir el archivo adjunto, intentelo nuevamente luego";
+                    $segureFile=1;
+                    $result='0';
+                    $selector='archivo';
+                }
+                }
+                else {
+                    $segureFile=1;
+                    $msj="El archivo adjunto ingresado tiene una extensión no válida, ingrese otro archivo o limpie el formulario";
+                    $result='0';
+                    $selector='archivo';
+                }
+            }
+
+        }
+
+        if($segureFile==1){
+            Storage::disk('infoFile')->delete($archivo);
+
+            
+        }
+        else
+        {
+
+             $variablePrueba = "hola"; //si quieres meter una variable exterma al recorrido del excel
+
+             $fecha=date("Y-m-d");
+
+            $errorFila="";
+            $errorColumna="";
+            $detError="";
+            $error=0;
+            $msj="";
+    
+            $semestres=Semestre::where('activo','1')->where('borrado','0')->get();
+            $departamentos=Departamentoacademico::where('activo','1')->where('borrado','0')->get();
+
+
+                 Excel::load(public_path().'/archivosExcel/'.$archivo, function ($reader) use (&$errorFila,  &$errorColumna,  &$detError, &$error, $archivo, &$msj, $semestres, $departamentos, &$result, &$selector) { 
+
+                    //$reader->first(); // Leer datos de la primera hoja
+
+                   $resultado=$reader->skipRows(4)->first();
+
+
+                   $error=0;
+
+                   
+
+                   foreach ($resultado as $key => $row) {
+
+                    
+                    // Validando c_sem
+
+                    $bandera01=false;
+                    foreach ($semestres as $key3 => $dato) {
+                        if(intval($row->c_sem)==$dato->id)
+                        {
+                            $bandera01=true;
+                            break;
+                        }
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna SEMESTRE DE REGISTRO";
+                        $detError="El Identificador de Semestre no corresponde a ninguno ingresado en la base de datos. Corrija la Columna B, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_depar_academico
+
+                    $bandera01=false;
+                    foreach ($departamentos as $key4 => $dato) {
+                        if(intval($row->c_depar_academico)==$dato->id)
+                        {
+                            $bandera01=true;
+                            break;
+                        }
+                    }
+                    if($bandera01==false){
+        
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna DEPARTAMENTO ACADÉMICO";
+                        $detError="El Identificador de Departamento Académico no corresponde a ningun Departamento Académico registrado en la base de datos. Corrija la Columna C, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_tipodoc
+
+                    $bandera01=false;
+                    if(intval($row->c_tipodoc)==1 || intval($row->c_tipodoc)==2 || intval($row->c_tipodoc)==3 || intval($row->c_tipodoc)==4 || intval($row->c_tipodoc)==5){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna TIPO DE DOCUMENTO";
+                        $detError="El código del Tipo de Documento no corresponde a los valores posibles de ser consignados (1: DNI, 2: RUC, 3: Carnet de Extranjería, 4: Pasaporte, 5: Partida de Nacimiento). Corrija la Columna D, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_numdoc
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_numdoc))>=8){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna NÚMERO DE DOCUMENTO";
+                        $detError="El Número de Documento de Indentidad ingresado se encuentran en blanco o no cuenta con un formato correcto. Corrija la Columna E, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_apepat
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_apepat))>0){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna APELLIDO PATERNO";
+                        $detError="El Apellido ingresado se encuentran en blanco. Corrija la Columna F, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_noms
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_noms))>0){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna NOMBRES";
+                        $detError="Los Nombres ingresados se encuentran en blanco. Corrija la columna H, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_genero
+
+                    $bandera01=false;
+                    if((trim($row->c_genero)=="M") || (trim($row->c_genero)=="F") || (trim($row->c_genero)=="m") || (trim($row->c_genero)=="f")){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna GÉNERO";
+                        $detError="Consideró un dato no identificado, indique M para másculino ó F para femenino, sin espacios en blanco. Corrija la Columna I, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_fechanac
+
+                    if(strlen(trim($row->c_fechanac))==10){
+
+                        if(checkdate(intval(substr($row->c_fechanac, -7,2)), intval(substr($row->c_fechanac, -10,2)), intval(substr($row->c_fechanac, -4)))){
+                            $var=pasFechaBD($row->c_fechanac);
+                            $dateTime = DateTime::createFromFormat('Y-m-d', $var);  //pasar a datetime
+                            $fechanac=$dateTime->format('Y-m-d');
+                            $bandera01=false;
+                            if($fechanac != null){
+                                $bandera01=true;
+                                }
+                                if($bandera01==false){
+            
+                                    $errorFila="Error en la Fila ".($key+6);
+                                    $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
+                                    $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna J, Fila ".($key+6);
+                                    $error=1;
+                                    break 1;
+            
+                                }
+                        }
+                        else{
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
+                            $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna J, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+
+                    }
+                    else{
+                        if($row->c_fechanac != null && strlen($row->c_fechanac->format('Y-m-d')) != null){
+                            $bandera01=true;
+                        }
+                        else{
+                            $bandera01=false;
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna FECHA DE NACIMIENTO";
+                            $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto dd/mm/aaaa. Corrija la Columna J, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+                    // Validando c_estadociv
+
+                    $bandera01=false;
+                    if(intval($row->c_estadociv)==1 || intval($row->c_estadociv)==2 || intval($row->c_estadociv)==3 || intval($row->c_estadociv)==4){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ESTADO CIVIL";
+                        $detError="El código del Estado CIvil no corresponde a los valores posibles de ser consignados (1: Soltero (a), 2: Casado (a), 3: Viudo (a), ó 4: Divorsiado (a)). Corrija la Columna K, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_esdisca
+
+                    $bandera01=false;
+                    if(intval($row->c_esdisca)==1 || intval($row->c_esdisca)==0){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna SUFRE DISCAPACIDAD";
+                        $detError="El código de Condición de Discapacidad no corresponde a los valores posibles de ser consignados. Consigne 1 para SI o 0 para NO. Corrija la Columna L, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_disca
+
+                    //var_dump($row);
+
+                    if( intval($row->c_esdisca)==1){
+                        $bandera01=false;
+                        if(strlen(trim($row->c_disca))>0){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna DISCAPACIDAD QUE PADECE";
+                            $detError="Si ha ingresado que el Alumno es Discapacitado, ingrese la Discapacidad que padece, no puede dejar el registro en blanco. Corrija la Columna M, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+                    // Validando c_identidad
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_identidad))>0){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna IDENTIDAD ÉTNICA";
+                        $detError="Los datos de identidad étnica se encuentran en blanco. Corrija la columna N, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_licencia
+
+                    $bandera01=false;
+                    if(intval($row->c_licencia)==1 || intval($row->c_licencia)==0){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿SE ENCUENTRA DE LICENCIA?";
+                        $detError="El código de si se cuenta  de Licencia no corresponde a los valores posibles de ser consignados. Consigne 1 para SI ó 0 para NO. Corrija la Columna O, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_cargo
+
+                    $bandera01=false;
+                    if(intval($row->c_cargo)==0 || intval($row->c_cargo)==1 || intval($row->c_cargo)==2 || intval($row->c_cargo)==3 || intval($row->c_cargo)==4 ||
+                    intval($row->c_cargo)==5 || intval($row->c_cargo)==6 || intval($row->c_cargo)==7 || intval($row->c_cargo)==8 || intval($row->c_cargo)==9 ||
+                    intval($row->c_cargo)==10 || intval($row->c_cargo)==11 || intval($row->c_cargo)==12 || intval($row->c_cargo)==13 || intval($row->c_cargo)==14                    
+                    ){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna CARGO GENERAL";
+                        $detError="El código de Cargo General no corresponde a los valores posibles a ser consignados, no puede dejar el registro en blanco. Corrija la Columna P, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_dependencia
+
+                    if( intval($row->c_cargo)!=0){
+                        $bandera01=false;
+                        if(strlen(trim($row->c_dependencia))>0){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna DEPENDENCIA DE CARGO";
+                            $detError="Si consignó que el docente ocupa un cargo general en este semestre, debe de ingresar la dependencia en la que desempeña sus funciones del cargo. Corrija la Columna Q, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+                    // Validando c_tipo_per
+
+                    $bandera01=false;
+                    if(intval($row->c_tipo_per)==1 || intval($row->c_tipo_per)==2){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿TIPO DE PERSONAL ACADÉMICO?";
+                        $detError="El código de Tipo de Personal Académico no corresponde a los valores posibles a ser consignados, indique 1 para Docente o 2 para Jefe de Práctica. Corrija la Columna S, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_max_grado
+
+                    $bandera01=false;
+                    if(intval($row->c_max_grado)==0 || intval($row->c_max_grado)==1 || intval($row->c_max_grado)==2 || intval($row->c_max_grado)==3 || intval($row->c_max_grado)==4 ||
+                    intval($row->c_max_grado)==5 || intval($row->c_max_grado)==6                
+                    ){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna MAXIMO GRADO ACADÉMICO";
+                        $detError="El valor ingresado no corresponde a ninguno de los valores posibles. Corrija la Columna T, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_desc_max_grado
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_desc_max_grado))>0){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna DESCRIPCIÓN DEL MÁXIMO GRADO ACADÉMICO";
+                        $detError="Debe de ingresar la descripción del máximo grado académico del Docente. Corrija la Columna U, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                     // Validando c_univ_max_grado
+
+                     $bandera01=false;
+                     if(strlen(trim($row->c_univ_max_grado))>0){
+                         $bandera01=true;
+                         }
+                     if($bandera01==false){
+ 
+                         $errorFila="Error en la Fila ".($key+6);
+                         $errorColumna="Error en la Columna UNIVERSIDAD DEL MÁXIMO GRADO ACADÉMICO";
+                         $detError="Debe de ingresar la descripción de la Universidad del máximo grado académico del Docente. Corrija la Columna V, Fila ".($key+6);
+                         $error=1;
+                         break 1;
+                     }
+
+
+                     // Validando c_lugar_max_grado
+
+                    $bandera01=false;
+                    if(intval($row->c_lugar_max_grado)==1 || intval($row->c_lugar_max_grado)==2){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna LUGAR DEL MÁXIMO GRADO ACADÉMICO";
+                        $detError="El código de Lugar del Máximo grado académico solo debe de llevar valores de 1: Nacional o 2:Internacional. Corrija la Columna W, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_pais_max_grado
+
+                    if( intval($row->c_lugar_max_grado)==2){
+                        $bandera01=false;
+                        if(strlen(trim($row->c_pais_max_grado))>0){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna PAÍS DONDE OBTUVO EL MÁXIMO GRADO ACADÉMICO";
+                            $detError="Si ha indicado que el lugar donde obtuvo su máximo grado es internacional: Debe de ingresar la descripción del país donde el Docente obtuvo su máximo grado académico. Corrija la Columna X, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+                    // Validando c_tiene_otrogrado
+
+                    $bandera01=false;
+                    if(intval($row->c_tiene_otrogrado)==0 || intval($row->c_tiene_otrogrado)==1){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿TIENE OTRO GRADO ACADÉMICO?";
+                        $detError="El código de ¿Tiene Otro grado Académico? solo debe de llevar valores de 0 ó vacío para NO ó 1 para SI. Corrija la Columna Y, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_otrogrado
+
+                    if( intval($row->c_tiene_otrogrado)==1){
+                        $bandera01=false;
+                        if(strlen(trim($row->c_otrogrado))>0){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna OTRO GRADO ACADÉMICO";
+                            $detError="Si ha ingresado que el docente tiene otro grado académico, Debe de ingresar la descripción del Otro grado académico del Docente. Corrija la Columna Z, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+                    // Validando c_univ_otrogrado
+
+                    if( intval($row->c_tiene_otrogrado)==1){
+                        $bandera01=false;
+                        if(strlen(trim($row->c_univ_otrogrado))>0){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna UNIVERSIDAD DONDE OBTUVO EL OTRO GRADO ACADÉMICO";
+                            $detError="Si ha ingresado que el docente tiene otro grado académico, Debe de ingresar la universidad donde el Docente obtuvo este grado académico. Corrija la Columna AA, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+                    // Validando c_lugar_otrogrado
+
+                    if( intval($row->c_tiene_otrogrado)==1){
+                        $bandera01=false;
+                        if(intval($row->c_lugar_otrogrado)==1 || intval($row->c_lugar_otrogrado)==2){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna LUGAR DONDE OBTUVO EL OTRO GRADO ACADÉMICO";
+                            $detError="Si ha ingresado que el docente tiene otro grado académico, Debe de ingresar correctamente el código de Lugar donde el docente obtuvo el otro grado académico: solo debe de llevar valores de 1: Nacional o 2:Internacional. Corrija la Columna AB, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+                    // Validando c_pais_otrogrado
+
+                    if( intval($row->c_tiene_otrogrado)==1 && intval($row->c_lugar_otrogrado)==2){
+                        $bandera01=false;
+                        if(strlen(trim($row->c_pais_otrogrado))>0){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna PAÍS DONDE OBTUVO EL OTRO GRADO ACADÉMICO";
+                            $detError="Si ha ingresado que el docente tiene otro grado académico y si ha indicado que el lugar donde lo obtuvo es internacional: Debe de ingresar la descripción del país donde el Docente obtuvo su máximo grado académico. Corrija la Columna AC, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+                    // Validando c_tiene_titulo
+
+                    $bandera01=false;
+                    if(intval($row->c_tiene_titulo)==0 || intval($row->c_tiene_titulo)==1){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿TIENE TÍTULO UNIVERSITARIO?";
+                        $detError="El código de ¿Tiene Título Universitario? solo debe de llevar valores de 0 ó vacío para NO ó 1 para SI. Corrija la Columna AD, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_titulo
+
+                    if( intval($row->c_tiene_titulo)==1){
+                        $bandera01=false;
+                        if(strlen(trim($row->c_titulo))>0){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna DESCRIPCIÓN DEL TÍTULO UNIVERSITARIO";
+                            $detError="Si indicó que el Docente tiene título Universitario: Debe de ingresar la descripción del título Universitario del Docente. Corrija la Columna AE, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+
+                    // Validando c_clase
+
+                    $bandera01=false;
+                    if(intval($row->c_clase)==0 || intval($row->c_clase)==1 || intval($row->c_clase)==2 || intval($row->c_clase)==3 || intval($row->c_clase)==4 ||
+                    intval($row->c_clase)==5 || intval($row->c_clase)==6 || intval($row->c_clase)==7   || intval($row->c_clase)==8   || intval($row->c_clase)==9                  
+                    ){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna CLASE O CONDICIÓN";
+                        $detError="El código de Clase o Condición de Docente no corresponde a los valores posibles a ser consignados, no puede dejar el registro en blanco. Corrija la Columna AF, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_categoria
+
+                    $bandera01=false;
+                    if(intval($row->c_categoria)==1 || intval($row->c_categoria)==2 || intval($row->c_categoria)==3            
+                    ){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna CATEGORÍA";
+                        $detError="El código de Categoría de Docente no corresponde a los valores posibles a ser consignados, Indique 1:Auxiliar, 2:Asociado o 3:Principal. No puede dejar el registro en blanco. Corrija la Columna AG, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_regimen
+
+                    $bandera01=false;
+                    if(intval($row->c_regimen)==1 || intval($row->c_regimen)==2 || intval($row->c_regimen)==3            
+                    ){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna RÉGIMEN DE DEDICACIÓN";
+                        $detError="El código de Régimen de Dedicación del Docente no corresponde a los valores posibles a ser consignados, Indique 1:Tiempo Completo, 2:Tiempo Parcial o 3:Dedicación Exclusiva. No puede dejar el registro en blanco. Corrija la Columna AH, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_es_investigador
+
+                    $bandera01=false;
+                    if(intval($row->c_es_investigador)==0 || intval($row->c_es_investigador)==1){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿ES INVESTIGADOR?";
+                        $detError="El código de ¿Es Investigador? solo debe de llevar valores de 0 ó vacío para NO ó 1 para SI. Corrija la Columna AI, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_es_pregrado
+
+                    $bandera01=false;
+                    if(intval($row->c_es_pregrado)==0 || intval($row->c_es_pregrado)==1){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿ES DOCENTE DE PREGRADO?";
+                        $detError="El código de ¿Es Docente Pregrado? solo debe de llevar valores de 0 ó vacío para NO ó 1 para SI. Corrija la Columna AJ, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_es_postgrado
+
+                    $bandera01=false;
+                    if(intval($row->c_es_postgrado)==0 || intval($row->c_es_postgrado)==1){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿ES DOCENTE DE POSTGRADO?";
+                        $detError="El código de ¿Es Docente Postgrado? solo debe de llevar valores de 0 ó vacío para NO ó 1 para SI. Corrija la Columna AK, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_es_destacado
+
+                    $bandera01=false;
+                    if(intval($row->c_es_destacado)==0 || intval($row->c_es_destacado)==1){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿ES DOCENTE DESTACADO?";
+                        $detError="El código de ¿Es Docente Destacado? solo debe de llevar valores de 0 ó vacío para NO ó 1 para SI. Corrija la Columna AL, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_horas_lectivas
+
+                    $bandera01=true;
+                    if(intval($row->c_horas_lectivas)<0){
+                        $bandera01=false;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna HORAS LECTIVAS";
+                        $detError="El dato consignado no es correcto debe de ingresar un dato númerico. Corrija la Columna AM, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_horas_no_lectivas
+
+                    $bandera01=true;
+                    if(intval($row->c_horas_no_lectivas)<0){
+                        $bandera01=false;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna HORAS NO LECTIVAS";
+                        $detError="El dato consignado no es correcto debe de ingresar un dato númerico. Corrija la Columna AN, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_horas_investigacion
+
+                    $bandera01=true;
+                    if(intval($row->c_horas_investigacion)<0){
+                        $bandera01=false;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna HORAS DE INVESTIGACIÓN";
+                        $detError="El dato consignado no es correcto debe de ingresar un dato númerico. Corrija la Columna AO, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_horas_dedicacion
+
+                    $bandera01=true;
+                    if(intval($row->c_horas_dedicacion)<0){
+                        $bandera01=false;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna HORAS DE DEDICACIÓN";
+                        $detError="El dato consignado no es correcto debe de ingresar un dato númerico. Corrija la Columna AP, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_fecha_ingreso
+
+                    if(strlen(trim($row->c_fecha_ingreso))==10){
+
+                        if(checkdate(intval(substr($row->c_fecha_ingreso, -7,2)), intval(substr($row->c_fecha_ingreso, -10,2)), intval(substr($row->c_fecha_ingreso, -4)))){
+                            $var=pasFechaBD($row->c_fecha_ingreso);
+                            $dateTime = DateTime::createFromFormat('Y-m-d', $var);  //pasar a datetime
+                            $fechanac=$dateTime->format('Y-m-d');
+                            $bandera01=false;
+                            if($fechanac != null){
+                                $bandera01=true;
+                                }
+                                if($bandera01==false){
+            
+                                    $errorFila="Error en la Fila ".($key+6);
+                                    $errorColumna="Error en la Columna FECHA DE INGRESO A LA UNIVERISAD";
+                                    $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto. Corrija la Columna AQ, Fila ".($key+6);
+                                    $error=1;
+                                    break 1;
+            
+                                }
+                        }
+                        else{
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna FECHA DE INGRESO A LA UNIVERISAD";
+                            $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto. Corrija la Columna AQ, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+
+                    }
+                    else{
+                        if($row->c_fecha_ingreso != null && strlen($row->c_fecha_ingreso->format('Y-m-d')) != null){
+                            $bandera01=true;
+                        }
+                        else{
+                            $bandera01=false;
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna FECHA DE INGRESO A LA UNIVERISAD";
+                            $detError="EL dato ingresado se encuentran en blanco o no tiene un formato correcto. Corrija la Columna AQ, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+
+                    // Validando c_modalidad_ingreso
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_modalidad_ingreso))>0){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna MODALIDAD DE INGRESO";
+                        $detError="Debe de ingresar la descripción de la modalidad de Ingreso del Docente a la Universidad. Corrija la Columna AR, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+
+                    // Validando c_hizo_intercambio
+
+                    $bandera01=false;
+                    if(intval($row->c_hizo_intercambio)==1 || intval($row->c_hizo_intercambio)==0){
+                        $bandera01=true;
+                        }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna ¿REALIZÓ INTERCAMBIO?";
+                        $detError="El código de ¿Realizó Intercambio? solo debe de llevar valores de 0 ó vacío para NO ó 1 para SI. Corrija la Columna AS, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_univ_intercambio
+
+                    if( intval($row->c_hizo_intercambio)==1){
+                        $bandera01=false;
+                        if(strlen(trim($row->c_univ_intercambio))>0){
+                            $bandera01=true;
+                            }
+                        if($bandera01==false){
+
+                            $errorFila="Error en la Fila ".($key+6);
+                            $errorColumna="Error en la Columna UNIVERSIDAD DONDE REALIZÓ INTERCAMBIO";
+                            $detError="Si ha ingresado que el Docente realizóIntercambio, ingrese el Nombre de la Universidad donde lo realizó, no puede dejar el registro en blanco. Corrija la Columna AT, Fila ".($key+6);
+                            $error=1;
+                            break 1;
+                        }
+                    }
+
+
+
+                    // Validando c_pais
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_pais))>0){
+                    $bandera01=true;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna PAÍS DE PROCEDENCIA";
+                        $detError="El País de Procedencia ingresado se encuentran en blanco. Corrija la Columna AU, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_depar
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_depar))>0){
+                    $bandera01=true;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna DEPARTAMENTO DE PROCEDENCIA";
+                        $detError="El Departamento de Procedencia ingresado se encuentran en blanco. Corrija la Columna AV, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_prov
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_prov))>0){
+                    $bandera01=true;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna PROVINCIA DE PROCEDENCIA";
+                        $detError="La Provincia de Procedencia ingresado se encuentran en blanco. Corrija la Columna AW, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_dist
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_dist))>0){
+                    $bandera01=true;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna DISTRITO DE PROCEDENCIA";
+                        $detError="El Distrito de Procedencia ingresado se encuentran en blanco. Corrija la Columna AX, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_mail_insti
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_mail_insti))>0 && is_valid_email(trim($row->c_mail_insti))){
+                    $bandera01=true;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna CORREO ELECTRÓNICO INSTITUCIONAL";
+                        $detError="El Valor ingresado se encuentran en blanco, o cuenta con un formato incorrecto. Corrija la Coumna AY, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_direc   
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_direc))>0){
+                    $bandera01=true;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna DIRECCIÓN DEL DOCENTE";
+                        $detError="El Valor ingresado se encuentran en blanco. Corrija la Columna AZ, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+
+                    // Validando c_email 
+
+                    $bandera01=false;
+                    if(strlen(trim($row->c_email))>0 && is_valid_email(trim($row->c_email))){
+                    $bandera01=true;
+                    }
+                    if($bandera01==false){
+
+                        $errorFila="Error en la Fila ".($key+6);
+                        $errorColumna="Error en la Columna CORREO ELECTRÓNICO PERSONAL";
+                        $detError="El Valor ingresado se encuentran en blanco, o cuenta con un formato incorrecto. Corrija la Coumna BA, Fila ".($key+6);
+                        $error=1;
+                        break 1;
+                    }
+
+                    
+
+
+                    }
+
+                    if($error==1){
+                    Storage::disk('infoFile')->delete($archivo);
+                    $msj=$detError.' Por lo Que no se realizó la Importación de Datos.';
+                    $result='0';
+                    }
+                    else{
+
+                    $msj="Datos Importados Exitosamente";
+
+
+                    
+                    foreach ($resultado as $key => $row) {
+
+                        $persona_id="0";
+                        $idDocente="0";
+
+                        $persona=Persona::where('doc',(trim($row->c_numdoc)))->where('tipodoc',intval($row->c_tipodoc))->get();
+
+                        foreach ($persona as $key => $dato) {
+                            $persona_id=$dato->id;
+                        }
+                        
+
+                        $newGenero="M";
+                        if(trim($row->c_genero)=="M" || trim($row->c_genero)=="m" )
+                        {
+                            $newGenero="M";
+                        }elseif(trim($row->c_genero)=="F" || trim($row->c_genero)=="f")
+                        {
+                            $newGenero="F";
+                        }
+
+                        $discapacidad="";
+                        if(intval($row->c_esdisca)==0)
+                        {
+                            $discapacidad="";
+                        }else{
+                            $discapacidad=trim($row->c_disca);
+                        }
+
+                        $fechanac= null;
+                        if(strlen(trim($row->c_fechanac))==10){
+
+                            $fechanac=pasFechaBD($row->c_fechanac);
+                        }
+                        else{
+                            $fechanac=$row->c_fechanac->format('Y-m-d');
+                        }
+
+
+                        //Docente
+
+                        $cargo = "0";
+                        $dependencia = "";
+                        $descCargo = "";
+                        $tipoPersonal = "";
+                        $maximoGrado = "";
+                        $lugarMaximoGrado = "";
+                        $paisMaximoGrado = "";
+                        $tuvoOtroGrado = "No";
+                        $otroGrado = "";
+                        $UnivotroGrado = "";
+                        $lugarOtroGrado = "";
+                        $paisOtroGrado = "";
+                        $tituloUniversitario= "";
+                        $tuvoTitulo = "No";
+                        $Titulo = "";
+                        $clase = "";
+                        $categoria = "";
+                        $regimen = "";
+                        $fechaIngreso = null;
+                        $UniversidadIntercambio = "";
+                        $idFacultad = 0;
+
+                        
+
+                        switch (intval($row->c_cargo)) {
+                            case 0:
+                                $cargo = "0";
+                                break;
+                            case 1:
+                                $cargo = "Rector";
+                                break;
+                            case 2:
+                                $cargo = "Vicerrector Académico";
+                                break;
+                            case 3:
+                                $cargo = "Vicerrector de Investigación";
+                                break;
+                            case 4:
+                                $cargo = "Vicerrector Administrativo";
+                                break;
+                            case 5:
+                                $cargo = "Decano";
+                                break;
+                            case 6:
+                                $cargo = "Director de Escuela";
+                                break;
+                            case 7:
+                                $cargo = "Director de Oficina";
+                                break;
+                            case 8:
+                                $cargo = "Jefe de Oficina";
+                                break;
+                            case 9:
+                                $cargo = "Jefe de Departamento Académico";
+                                break;
+                            case 10:
+                                $cargo = "Coordinador";
+                                break;
+                            case 11:
+                                $cargo = "Asesor";
+                                break;
+                            case 12:
+                                $cargo = "Asistente Administrativo";
+                                break;
+                            case 13:
+                                $cargo = "Especialista";
+                                break;
+                            case 14:
+                                $cargo = "Analista";
+                                break;
+                        }
+
+                        if(intval($row->c_cargo)!=0){
+                            $dependencia = trim($row->c_dependencia);
+                            $descCargo = trim($row->c_desc_cargo);
+                        }
+
+                        if(intval($row->c_tipo_per)==1){
+                            $tipoPersonal = "Docente";
+                        }elseif(intval($row->c_tipo_per)==2){
+                            $tipoPersonal = "Jefe de Práctica";
+                        }
+
+                        switch (intval($row->c_max_grado)) {
+                            case 0:
+                                $maximoGrado = "0";
+                                break;
+                            case 1:
+                                $maximoGrado = "Primaria completa";
+                                break;
+                            case 2:
+                                $maximoGrado = "Secundaria completa";
+                                break;
+                            case 3:
+                                $maximoGrado = "Técnico";
+                                break;
+                            case 4:
+                                $maximoGrado = "Bachiller";
+                                break;
+                            case 5:
+                                $maximoGrado = "Maestro";
+                                break;
+                            case 6:
+                                $maximoGrado = "Doctor";
+                        }
+
+                        if(intval($row->c_lugar_max_grado)==1){
+                            $lugarMaximoGrado = "Nacional";
+                            $paisMaximoGrado = "PERÚ";
+                        }elseif(intval($row->c_lugar_max_grado)==2){
+                            $lugarMaximoGrado = "Internacional";
+                            $paisMaximoGrado = trim($row->c_pais_max_grado);
+                        }
+
+                        if( intval($row->c_tiene_otrogrado)==1){
+                            $tuvoOtroGrado = "Si";
+                            $otroGrado = trim($row->c_otrogrado);
+                            $UnivotroGrado = trim($row->c_univ_otrogrado);
+
+                            if(intval($row->c_lugar_otrogrado)==1){
+                                $lugarOtroGrado = "Nacional";
+                                $paisOtroGrado = "PERÚ";
+                            }elseif(intval($row->c_lugar_otrogrado)==2){
+                                $lugarOtroGrado = "Internacional";
+                                $paisOtroGrado = trim($row->c_pais_otrogrado);
+                            }
+                        }
+
+
+                        if( intval($row->c_tiene_titulo)==1){
+                            $tuvoTitulo = "Si";
+                            $Titulo = trim($row->c_titulo);
+                        }
+
+
+                        switch (intval($row->c_clase)) {
+                            case 0:
+                                $clase = "Ninguno";
+                                break;
+                            case 1:
+                                $clase = "Nombrado";
+                                break;
+                            case 2:
+                                $clase = "Ordinario";
+                                break;
+                            case 3:
+                                $clase = "Contratado a plazo determinado";
+                                break;
+                            case 4:
+                                $clase = "Contratado a plazo determinado –a";
+                                break;
+                            case 5:
+                                $clase = "Contratado a plazo determinado –b";
+                                break;
+                            case 6:
+                                $clase = "Contratado a plazo indeterminado";
+                                break;
+                            case 7:
+                                $clase = "CAS";
+                                break;
+                            case 8:
+                                $clase = "Locación de servicios";
+                                break;
+                            case 9:
+                                $clase = "Extraordinario";
+                                break;
+                        }
+
+                        switch (intval($row->c_categoria)) {
+                            case 1:
+                                $categoria = "Auxiliar";
+                                break;
+                            case 2:
+                                $categoria = "Asociado";
+                                break;
+                            case 3:
+                                $categoria = "Principal";
+                                break;
+                        }
+
+                        switch (intval($row->c_regimen)) {
+                            case 1:
+                                $regimen = "Tiempo completo";
+                                break;
+                            case 2:
+                                $regimen = "Tiempo parcial";
+                                break;
+                            case 3:
+                                $regimen = "Dedicación exclusiva";
+                                break;
+                        }
+
+
+                        if(strlen(trim($row->c_fecha_ingreso))==10){
+
+                            $fechaIngreso=pasFechaBD($row->c_fecha_ingreso);
+                        }
+                        else{
+                            $fechaIngreso=$row->c_fecha_ingreso->format('Y-m-d');
+                        }
+
+
+                        if( intval($row->c_hizo_intercambio)==1){
+                            $UniversidadIntercambio = trim($row->c_univ_intercambio);
+                        }
+
+
+                        foreach ($departamentos as $key4 => $dato) {
+                            if(intval($row->c_depar_academico)==$dato->id)
+                            {
+                                $idFacultad = $dato->facultad_id;
+                                break;
+                            }
+                        }
+
+                        
+                        
+
+
+                        if(intval($persona_id)!=0)
+                        {
+                            $editPersona =Persona::find($persona_id);
+
+                            $editPersona->tipodoc = intval($row->c_tipodoc);
+                            $editPersona->doc = trim($row->c_numdoc);
+                            $editPersona->nombres = trim($row->c_noms);
+                            $editPersona->apellidopat = trim($row->c_apepat);
+                            $editPersona->apellidomat = trim($row->c_apemat);
+                            $editPersona->genero = $newGenero;
+                            $editPersona->estadocivil = intval($row->c_estadociv);
+                            $editPersona->fechanac = $fechanac;
+                            $editPersona->esdiscapacitado = intval($row->c_esdisca);
+                            $editPersona->discapacidad = $discapacidad;
+                            $editPersona->pais = trim($row->c_pais);
+                            $editPersona->departamento = trim($row->c_depar);
+                            $editPersona->provincia = trim($row->c_prov);
+                            $editPersona->distrito = trim($row->c_dist);
+                            $editPersona->direccion = trim($row->c_direc);
+                            $editPersona->email = trim($row->c_email);
+                            $editPersona->telefono = trim($row->c_telf);
+                            $editPersona->correoinstitucional = trim($row->c_mail_insti);
+                            $editPersona->identidadetnica = trim($row->c_identidad);
+                
+                            $editPersona->save();
+                        }
+                        else{
+                            $newPersona = new Persona();
+                            $newPersona->tipodoc = intval($row->c_tipodoc);
+                            $newPersona->doc = trim($row->c_numdoc);
+                            $newPersona->nombres = trim($row->c_noms);
+                            $newPersona->apellidopat = trim($row->c_apepat);
+                            $newPersona->apellidomat = trim($row->c_apemat);
+                            $newPersona->genero = $newGenero;
+                            $newPersona->estadocivil = intval($row->c_estadociv);
+                            $newPersona->fechanac = $fechanac;
+                            $newPersona->esdiscapacitado = intval($row->c_esdisca);
+                            $newPersona->discapacidad = $discapacidad;
+                            $newPersona->pais = trim($row->c_pais);
+                            $newPersona->departamento = trim($row->c_depar);
+                            $newPersona->provincia = trim($row->c_prov);
+                            $newPersona->distrito = trim($row->c_dist);
+                            $newPersona->direccion = trim($row->c_direc);
+                            $newPersona->email = trim($row->c_email);
+                            $newPersona->telefono = trim($row->c_telf);
+                            $newPersona->correoinstitucional = trim($row->c_mail_insti);
+                            $newPersona->identidadetnica = trim($row->c_identidad);
+                            $newPersona->activo = '1';
+                            $newPersona->borrado = '0';
+                
+                            $newPersona->save();
+                
+                            $persona_id=$newPersona->id;
+                        }
+
+                        $docentes=Docente::where('persona_id',$persona_id)->where('semestre_id',intval($row->c_sem))->get();
+                        $idDocente=0;
+
+                        
+
+                        
+
+                        foreach ($docentes as $key => $dato) {
+                            $idDocente=$dato->id;
+                        }
+                
+                        if(intval($idDocente)==0)
+                        {
+
+                            $newDocente = new Docente();
+
+                            $newDocente->personalacademico=$tipoPersonal;
+                            $newDocente->cargogeneral=$cargo;
+                            $newDocente->descripcioncargo=$descCargo;
+                            $newDocente->maximogrado=$maximoGrado;
+                            $newDocente->descmaximogrado=trim($row->c_desc_max_grado);
+                            $newDocente->universidadgrado=trim($row->c_univ_max_grado);
+                            $newDocente->lugarmaximogrado=$lugarMaximoGrado;
+                            $newDocente->paismaximogrado=$paisMaximoGrado;
+                            $newDocente->otrogrado=$otroGrado;
+                            $newDocente->estadootrogrado=$tuvoOtroGrado;
+                            $newDocente->univotrogrado=$UnivotroGrado;
+                            $newDocente->lugarotrogrado=$lugarOtroGrado;
+                            $newDocente->paisotrogrado=$paisOtroGrado;
+                            $newDocente->titulo=$tuvoTitulo;
+                            $newDocente->descripciontitulo=$Titulo;
+                            $newDocente->condicion=$clase;
+                            $newDocente->categoria=$categoria;
+                            $newDocente->regimen=$regimen;
+                            $newDocente->investigador=intval($row->c_es_investigador);
+                            $newDocente->pregrado=intval($row->c_es_pregrado);
+                            $newDocente->postgrado=intval($row->c_es_postgrado);
+                            $newDocente->esdestacado=intval($row->c_es_destacado);
+                            $newDocente->fechaingreso=$fechaIngreso;
+                            $newDocente->modalidadingreso=trim($row->c_modalidad_ingreso);
+                            $newDocente->observaciones=trim($row->c_obs);
+                            $newDocente->persona_id=$persona_id;
+                            $newDocente->horaslectivas=intval($row->c_horas_lectivas);
+                            $newDocente->horasnolectivas=intval($row->c_horas_no_lectivas);
+                            $newDocente->horasinvestigacion=intval($row->c_horas_investigacion);
+                            $newDocente->horasdedicacion=intval($row->c_horas_dedicacion);
+                            $newDocente->dependencia=$dependencia;
+                            $newDocente->departamentoacademico_id=intval($row->c_depar_academico);
+                            $newDocente->facultad_id=$idFacultad;
+                            $newDocente->semestre_id=intval($row->c_sem);
+                            $newDocente->email=trim($row->c_email);
+                            $newDocente->hizointercambio=intval($row->c_hizo_intercambio);
+                            $newDocente->universidadintercambio=$UniversidadIntercambio;
+                            $newDocente->eslicencia=intval($row->c_licencia);
+                            $newDocente->activo='1';
+                            $newDocente->borrado='0';
+
+                            $newDocente->save();
+    
+                        } 
+                        else
+                        {
+
+                            $editDocente = Docente::find($idDocente);
+
+                            $editDocente->personalacademico=$tipoPersonal;
+                            $editDocente->cargogeneral=$cargo;
+                            $editDocente->descripcioncargo=$descCargo;
+                            $editDocente->maximogrado=$maximoGrado;
+                            $editDocente->descmaximogrado=trim($row->c_desc_max_grado);
+                            $editDocente->universidadgrado=trim($row->c_univ_max_grado);
+                            $editDocente->lugarmaximogrado=$lugarMaximoGrado;
+                            $editDocente->paismaximogrado=$paisMaximoGrado;
+                            $editDocente->otrogrado=$otroGrado;
+                            $editDocente->estadootrogrado=$tuvoOtroGrado;
+                            $editDocente->univotrogrado=$UnivotroGrado;
+                            $editDocente->lugarotrogrado=$lugarOtroGrado;
+                            $editDocente->paisotrogrado=$paisOtroGrado;
+                            $editDocente->titulo=$tuvoTitulo;
+                            $editDocente->descripciontitulo=$Titulo;
+                            $editDocente->condicion=$clase;
+                            $editDocente->categoria=$categoria;
+                            $editDocente->regimen=$regimen;
+                            $editDocente->investigador=intval($row->c_es_investigador);
+                            $editDocente->pregrado=intval($row->c_es_pregrado);
+                            $editDocente->postgrado=intval($row->c_es_postgrado);
+                            $editDocente->esdestacado=intval($row->c_es_destacado);
+                            $editDocente->fechaingreso=$fechaIngreso;
+                            $editDocente->modalidadingreso=trim($row->c_modalidad_ingreso);
+                            $editDocente->observaciones=trim($row->c_obs);
+                            $editDocente->persona_id=$persona_id;
+                            $editDocente->horaslectivas=intval($row->c_horas_lectivas);
+                            $editDocente->horasnolectivas=intval($row->c_horas_no_lectivas);
+                            $editDocente->horasinvestigacion=intval($row->c_horas_investigacion);
+                            $editDocente->horasdedicacion=intval($row->c_horas_dedicacion);
+                            $editDocente->dependencia=$dependencia;
+                            $editDocente->departamentoacademico_id=intval($row->c_depar_academico);
+                            $editDocente->facultad_id=$idFacultad;
+                            $editDocente->semestre_id=intval($row->c_sem);
+                            $editDocente->email=trim($row->c_email);
+                            $editDocente->hizointercambio=intval($row->c_hizo_intercambio);
+                            $editDocente->universidadintercambio=$UniversidadIntercambio;
+                            $editDocente->eslicencia=intval($row->c_licencia);
+
+                            $editDocente->save();
+
+
+                        }               
+  
+                    }
+
+                }
+                   
+
+            })->get(); 
+        
+    }
+
+        $errtitulo = $errorColumna.' '.$errorFila;
+        return response()->json(["result"=>$result,'msj'=>$msj,'selector'=>$selector, 'errtitulo'=>$errtitulo]);
+   
+    }
+
 }

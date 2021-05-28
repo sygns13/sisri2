@@ -359,7 +359,7 @@
         
                 <div class="col-md-12" style="padding-top: 15px;">
                     <div class="form-group">
-                        <label for="txtdescGrado" class="col-sm-2 control-label">Descripción del Máximo Grado:</label>
+                        <label for="txtdescGrado" class="col-sm-2 control-label">Descripción del Máximo Grado:<spam style="color:red;">*</spam></label>
                         <div class="col-sm-10">
                     <input type="text" class="form-control" id="txtdescGrado" name="txtdescGrado" placeholder="Grado Académico"
                             maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="descmaximogrado">
@@ -432,7 +432,7 @@
     
                   <div class="col-md-12" style="padding-top: 15px;">
                     <div class="form-group">
-                        <label for="txtdescGrado2" class="col-sm-2 control-label">Otro Grado Académico:</label>
+                        <label for="txtdescGrado2" class="col-sm-2 control-label">Otro Grado Académico:<spam style="color:red;">*</spam></label>
                         <div class="col-sm-10">
                     <input type="text" class="form-control" id="txtdescGrado2" name="txtdescGrado2" placeholder="Otro Grado Académico"
                             maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="otrogrado">

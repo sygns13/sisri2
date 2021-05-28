@@ -167,6 +167,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('alumnopregradoR/importardata1','AlumnoController@importarArchivo1');
     Route::post('alumnopregradoR/importardata2','AlumnoController@importarArchivo2');
     Route::post('postulantesR/importardata','PostulanteController@importarArchivo2');
+    Route::post('alumnopostgradoR/importardata1','AlumnoController@importarArchivo3');
+    Route::post('alumnopostgradoR/importardata2','AlumnoController@importarArchivo4');
+    Route::post('docentes/importardata','DocenteController@importarArchivo');
 
 
 
@@ -216,7 +219,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('locales/exportarExcel','LocalController@descargarExcel');
     Route::get('facultades/exportarExcel','FacultadController@descargarExcel');
     Route::get('escuelas/exportarExcel','EscuelaController@descargarExcel');
-    Route::get('departamentoacademico/exportarExcel','DepartamentoacademicoController@descargarExcel');
+    Route::get('departamentoacademicos/exportarExcel','DepartamentoacademicoController@descargarExcel');
     Route::get('modalidadadmision/exportarExcel','ModalidadadmisionController@descargarExcel');
     Route::get('condicion/exportarExcel','CondicionsocioeconomicaController@descargarExcel');
     Route::get('actividades/exportarExcel','ActividadesController@descargarExcel');
