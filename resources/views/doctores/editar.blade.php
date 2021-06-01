@@ -163,13 +163,13 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="txtDirE" class="col-sm-2 control-label">Dirección:</label>
+                <label for="txtDirE" class="col-sm-2 control-label">Dirección:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="txtDirE" name="txtDirE" placeholder="Av. Jr. Psje."
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.direccion">
                 </div>
   
-                <label for="txtemailE" class="col-sm-2 control-label">Email:</label>
+                <label for="txtemailE" class="col-sm-2 control-label">Email:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="email" class="form-control" id="txtemailE" name="txtemailE" placeholder="example@domain.com"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.email">
@@ -182,7 +182,7 @@
           <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
   
-                  <label for="txtfonoE" class="col-sm-2 control-label">Teléfono:<spam style="color:red;">*</spam></label>
+                  <label for="txtfonoE" class="col-sm-2 control-label">Teléfono:</label>
                   <div class="col-sm-2">
                     <input type="text" class="form-control" id="txtfonoE" name="txtfonoE" placeholder="Telef / Cell"
                       maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.telefono">
@@ -207,7 +207,7 @@
       <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
   
-                <label for="txtprogramaestudiosE" class="col-sm-2 control-label">Programa de Estudios:</label>
+                <label for="txtprogramaestudiosE" class="col-sm-2 control-label">Programa de Estudios:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" id="txtprogramaestudiosE" name="txtprogramaestudiosE" placeholder="Nombre del Programa de Estudios"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.programaEstudios">
@@ -221,7 +221,7 @@
       <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
 
-              <label for="txtgradoE" class="col-sm-2 control-label">Nombre del Grado:</label>
+              <label for="txtgradoE" class="col-sm-2 control-label">Nombre del Grado:<spam style="color:red;">*</spam></label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="txtgradoE" name="txtgradoE" placeholder="Nombre del Grado"
                   maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.nombreGrado">
@@ -236,7 +236,7 @@
             <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
   
-                <label for="txttrabajoinvestigacionE" class="col-sm-3 control-label">Trabajo de Investigación para la Obtención del Grado:</label>
+                <label for="txttrabajoinvestigacionE" class="col-sm-3 control-label">Trabajo de Investigación para la Obtención del Grado:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="txttrabajoinvestigacionE" name="txttrabajoinvestigacionE" placeholder="Título del Trabajo de Investigación"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.trabajoinvestigacion">
@@ -275,7 +275,7 @@
             <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
     
-                  <label for="txtmodalidadObtencionE" class="col-sm-2 control-label">Modalidad de Obtención:</label>
+                  <label for="txtmodalidadObtencionE" class="col-sm-2 control-label">Modalidad de Obtención:<spam style="color:red;">*</spam></label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" id="txtmodalidadObtencionE" name="txtmodalidadObtencionE" placeholder="Modalidad de Obtención"
                       maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.modalidadObtencion">
@@ -289,7 +289,7 @@
               <div class="col-md-12" style="padding-top: 15px;">
                 <div class="form-group">
       
-                    <label for="txtnumresolE" class="col-sm-2 control-label">N° de Resolución de Grado:</label>
+                    <label for="txtnumresolE" class="col-sm-2 control-label">N° de Resolución de Grado:<spam style="color:red;">*</spam></label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" id="txtnumresolE" name="txtnumresolE" placeholder="N° de Resolución"
                         maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.numResolucion">
@@ -301,7 +301,7 @@
                         maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.fechaResol">
                     </div>
 
-                    <label for="txtnumdiplomaE" class="col-sm-1 control-label">N° de Diploma:</label>
+                    <label for="txtnumdiplomaE" class="col-sm-1 control-label">N° de Diploma:<spam style="color:red;">*</spam></label>
                       <div class="col-sm-2">
                         <input type="text" class="form-control" id="txtnumdiplomaE" name="txtnumdiplomaE" placeholder="N° de Diploma"
                           maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filldoctores.numeroDiploma">

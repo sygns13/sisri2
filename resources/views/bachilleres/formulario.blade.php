@@ -165,13 +165,13 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="txtDir" class="col-sm-2 control-label">Dirección:</label>
+                <label for="txtDir" class="col-sm-2 control-label">Dirección:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="txtDir" name="txtDir" placeholder="Av. Jr. Psje."
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="direccion">
                 </div>
   
-                <label for="txtemail" class="col-sm-2 control-label">Email:</label>
+                <label for="txtemail" class="col-sm-2 control-label">Email:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="email" class="form-control" id="txtemail" name="txtemail" placeholder="example@domain.com"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="email">
@@ -184,7 +184,7 @@
           <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
   
-                  <label for="txtfono" class="col-sm-2 control-label">Teléfono:<spam style="color:red;">*</spam></label>
+                  <label for="txtfono" class="col-sm-2 control-label">Teléfono:</label>
                   <div class="col-sm-2">
                     <input type="text" class="form-control" id="txtfono" name="txtfono" placeholder="Telef / Cell"
                       maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="telefono">
@@ -227,7 +227,7 @@
       <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
 
-              <label for="txtgrado" class="col-sm-2 control-label">Nombre del Grado:</label>
+              <label for="txtgrado" class="col-sm-2 control-label">Nombre del Grado:<spam style="color:red;">*</spam></label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="txtgrado" name="txtgrado" placeholder="Nombre del Grado"
                   maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="nombreGrado">
@@ -240,7 +240,7 @@
           <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
   
-                <label for="txtprogramaestudios" class="col-sm-2 control-label">Programa de Estudios:</label>
+                <label for="txtprogramaestudios" class="col-sm-2 control-label">Programa de Estudios:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" id="txtprogramaestudios" name="txtprogramaestudios" placeholder="Nombre del Programa de Estudios"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="programaEstudios">
@@ -279,7 +279,7 @@
             <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
     
-                  <label for="txtmodalidadObtencion" class="col-sm-2 control-label">Modalidad de Obtención:</label>
+                  <label for="txtmodalidadObtencion" class="col-sm-2 control-label">Modalidad de Obtención:<spam style="color:red;">*</spam></label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" id="txtmodalidadObtencion" name="txtmodalidadObtencion" placeholder="Modalidad de Obtención"
                       maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="modalidadObtencion">
@@ -293,7 +293,7 @@
               <div class="col-md-12" style="padding-top: 15px;">
                 <div class="form-group">
       
-                    <label for="txtnumresol" class="col-sm-2 control-label">N° de Resolución de Grado:</label>
+                    <label for="txtnumresol" class="col-sm-2 control-label">N° de Resolución de Grado:<spam style="color:red;">*</spam></label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" id="txtnumresol" name="txtnumresol" placeholder="N° de Resolución"
                         maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="numResolucion">
@@ -305,7 +305,7 @@
                         maxlength="10" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="fechaResol">
                     </div>
 
-                    <label for="txtnumdiploma" class="col-sm-1 control-label">N° de Diploma:</label>
+                    <label for="txtnumdiploma" class="col-sm-1 control-label">N° de Diploma:<spam style="color:red;">*</spam></label>
                       <div class="col-sm-2">
                         <input type="text" class="form-control" id="txtnumdiploma" name="txtnumdiploma" placeholder="N° de Diploma"
                           maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="numeroDiploma">
