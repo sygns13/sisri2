@@ -113,6 +113,11 @@ data:{
 
     tipoGeneral:1, 
 
+    divNuevoImporte:false,
+    divloaderNuevoImporte:false,
+    uploadReady: true,
+    archivo:[],
+
 
 },
 created:function () {
@@ -551,10 +556,78 @@ var url='persona/buscarDNI';
    },
 
 
-   descargarPlantilla:function(){
-    //window.location="graduados/imprimirExcel/"+buscar+"/"+fech+"/"+fec1+"/"+fec2+"/"+tipoP+"";
-    window.location="graduados/imprimirExcel/"+3;
-   },
+   nuevaExportación:function () {
+            this.divNuevoImporte=true;
+            //$("#txtespecialidad").focus();
+            //$('#txtespecialidad').focus();
+            this.$nextTick(function () {
+            this.cancelFormImporteForm();
+          })
+            
+        },
+
+
+        cerrarFormImportacion: function () {
+            this.divNuevoImporte=false;
+            this.cancelFormImporteForm();
+        },
+        cancelFormImporteForm: function () {
+                    this.uploadReady = false
+                        this.$nextTick(() => {
+                            this.uploadReady = true;
+
+                        })
+        },
+
+        getArchivo:function(event){
+                //Asignamos la imagen a  nuestra data
+
+                if (!event.target.files.length)
+                {
+                  this.archivo=null;
+                }
+                else{
+                this.archivo = event.target.files[0];
+                }
+            },
+
+    
+            createImportacion:function () {
+            var url='bachiller/importardata1';
+            $("#btnGuardarImporte").attr('disabled', true);
+            $("#btnCancelImporte").attr('disabled', true);
+            $("#btnCloseImporte").attr('disabled', true);
+            this.divloaderNuevoImporte=true;
+
+            var data = new  FormData();
+            data.append('archivo', this.archivo);
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+            axios.post(url, data, config).then(response=>{
+                //console.log(response.data);
+
+                $("#btnGuardarImporte").removeAttr("disabled");
+                $("#btnCancelImporte").removeAttr("disabled");
+                $("#btnCloseImporte").removeAttr("disabled");
+                this.divloaderNuevoImporte=false;
+
+                //console.log(response.data.result);
+
+                if(String(response.data.result)=='1'){
+                    this.getBachilleres(this.thispage);
+                    this.errors=[];
+                    this.cerrarFormImportacion();
+                    toastr.success(response.data.msj);
+                }else{
+                    //console.log(response.data.msj);
+                    //toastr.error(response.data.errorFinal);
+                    this.cancelFormImporteForm();
+                     swal.fire(response.data.errtitulo, response.data.msj, "error");
+                }
+            }).catch(error=>{
+                //this.errors=error.response.data
+            })
+        },
 }
 });
 </script>

@@ -170,6 +170,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('alumnopostgradoR/importardata1','AlumnoController@importarArchivo3');
     Route::post('alumnopostgradoR/importardata2','AlumnoController@importarArchivo4');
     Route::post('docentes/importardata','DocenteController@importarArchivo');
+    Route::post('bachiller/importardata1','GraduadoController@importarArchivo1');
+    Route::post('titulado/importardata2','GraduadoController@importarArchivo2');
+    Route::post('maestro/importardata3','GraduadoController@importarArchivo3');
+    Route::post('doctor/importardata4','GraduadoController@importarArchivo4');
 
 
 
