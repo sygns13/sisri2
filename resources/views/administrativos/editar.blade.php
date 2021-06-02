@@ -169,13 +169,13 @@
         <div class="col-md-12" style="padding-top: 15px;">
             <div class="form-group">
 
-                <label for="txtDirE" class="col-sm-2 control-label">Dirección:</label>
+                <label for="txtDirE" class="col-sm-2 control-label">Dirección:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="txtDirE" name="txtDirE" placeholder="Av. Jr. Psje."
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.direccion">
                 </div>
   
-                <label for="txtemailE" class="col-sm-2 control-label">Email:</label>
+                <label for="txtemailE" class="col-sm-2 control-label">Email:<spam style="color:red;">*</spam></label>
                 <div class="col-sm-4">
                   <input type="email" class="form-control" id="txtemailE" name="txtemailE" placeholder="example@domain.com"
                     maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.email">
@@ -188,7 +188,7 @@
           <div class="col-md-12" style="padding-top: 15px;">
               <div class="form-group">
   
-                  <label for="txtfonoE" class="col-sm-2 control-label">Teléfono:<spam style="color:red;">*</spam></label>
+                  <label for="txtfonoE" class="col-sm-2 control-label">Teléfono:</label>
                   <div class="col-sm-2">
                     <input type="text" class="form-control" id="txtfonoE" name="txtfonoE" placeholder="Telef / Cell"
                       maxlength="50" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.telefono">
@@ -345,7 +345,7 @@
       <div class="col-md-12" style="padding-top: 15px;">
           <div class="form-group">
 
-              <label for="txtdesccargoE" class="col-sm-2 control-label">Descripción del Cargo:</label>
+              <label for="txtdesccargoE" class="col-sm-2 control-label">Descripción del Cargo:<spam style="color:red;">*</spam></label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="txtdesccargoE" name="txtdesccargoE" placeholder="Nombre del Cargo"
                   maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.descripcionCargo">
@@ -395,7 +395,7 @@
 
                 <div class="col-md-12" style="padding-top: 15px;" v-if="filladministrativos.grado!='0'">
                     <div class="form-group">
-                        <label for="txtdescGradoE" class="col-sm-2 control-label">Descripción del Máximo Grado:</label>
+                        <label for="txtdescGradoE" class="col-sm-2 control-label">Descripción del Máximo Grado:<spam style="color:red;">*</spam></label>
                         <div class="col-sm-10">
                     <input type="text" class="form-control" id="txtdescGradoE" name="txtdescGradoE" placeholder="Grado Académico"
                             maxlength="500" @keydown="$event.keyCode === 13 ? $event.preventDefault() : false" v-model="filladministrativos.descripcionGrado">

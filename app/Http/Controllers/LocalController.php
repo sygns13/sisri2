@@ -412,14 +412,14 @@ class LocalController extends Controller
                 /* $sheet->mergeCells('B1:D1');
                 $sheet->mergeCells('B2:H2'); */
 
-                $sheet->mergeCells('A3:H3');
-                $sheet->cells('A3:H3',function($cells)
+                $sheet->mergeCells('A3:I3');
+                $sheet->cells('A3:I3',function($cells)
                 {
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
-                $sheet->setBorder('A3:H3', 'thin');
-                $sheet->cells('A3:H3', function($cells)
+                $sheet->setBorder('A3:I3', 'thin');
+                $sheet->cells('A3:I3', function($cells)
                 {
                     $cells->setBackground('#0C73E8');
                     $cells->setFontColor('#FFFFFF');
@@ -430,7 +430,23 @@ class LocalController extends Controller
                     #Borders
                 });
                 
-                $sheet->cells('A4:H4', function($cells)
+                $sheet->cells('A4:A4', function($cells)
+                {
+                    $cells->setBackground('#B4B9E1');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+                $sheet->cells('B4:B4', function($cells)
+                {
+                    $cells->setBackground('#E02F2F');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+
+                });
+
+                $sheet->cells('C4:I4', function($cells)
                 {
                     $cells->setBackground('#B4B9E1');
                     $cells->setAlignment('center');
@@ -447,13 +463,14 @@ class LocalController extends Controller
                 $sheet->setWidth(array
                 (
                 'A'=>'7',
-                'B'=>'45',
+                'B'=>'40',
                 'C'=>'50',
                 'D'=>'45',
-                'E'=>'45',
-                'F'=>'45',
-                'G'=>'45',
-                'H'=>'20',
+                'E'=>'25',
+                'F'=>'25',
+                'G'=>'25',
+                'H'=>'25',
+                'I'=>'20',
                 )
                 );
 
@@ -469,8 +486,8 @@ class LocalController extends Controller
                 array_push($data, array(''));
                 array_push($data, array($titulo));
 
-                $sheet->setBorder('A4:H4', 'thin');
-                array_push($data, array('N°','NOMBRE','DIRECCIÓN','PAÍS','DEPARRTAMENTO','PROVINCIA','DISTRITO','ESTADO'));
+                $sheet->setBorder('A4:I4', 'thin');
+                array_push($data, array('N°','CÓDIGO PARA IMPORTACIÓN DE DATOS','NOMBRE','DIRECCIÓN','PAÍS','DEPARRTAMENTO','PROVINCIA','DISTRITO','ESTADO'));
 
                 $cont=5;
                 $cont2=5;
@@ -495,18 +512,19 @@ class LocalController extends Controller
      ->get();
 
         foreach ($locals as $key => $dato) {
-            $rango='A'.strval((intval($cont)+intval($key))).':H'.strval((intval($cont)+intval($key)));
+            $rango='A'.strval((intval($cont)+intval($key))).':I'.strval((intval($cont)+intval($key)));
             $sheet->setBorder($rango, 'thin');
 
 
            array_push($data, array($key+1,
+           $dato->id,
 		   $dato->nombre,
 		   $dato->direccion,
 		   $dato->pais,
 		   $dato->departamento,
 		   $dato->provincia,
 		   $dato->distrito,
-		   activoInactivo($dato->activo)        
+		   activoInactivo($dato->activo)     
         ));
             
             $cont2++;
