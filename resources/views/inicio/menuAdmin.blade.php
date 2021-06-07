@@ -69,7 +69,7 @@
             <li><a href="{{URL::to('investigadores')}}"><i class='fa fa-gg'></i> Investigadores</a></li>
             <li><a href="{{URL::to('investigaciones')}}"><i class='fa fa-gg'></i> Investigaciones</a></li>
             <li><a href="{{URL::to('tesis')}}"><i class='fa fa-gg'></i> Tesis</a></li>
-            <li><a href="{{URL::to('revistas')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
+            <li><a href="{{URL::to('revistaspublicaciones')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
         </ul>
     </li>
     @endif
@@ -300,7 +300,7 @@
                     <li><a href="{{URL::to('investigadores')}}"><i class='fa fa-gg'></i> Investigadores</a></li>
                     <li><a href="{{URL::to('investigaciones')}}"><i class='fa fa-gg'></i> Investigaciones</a></li>
                     <li><a href="{{URL::to('tesis')}}"><i class='fa fa-gg'></i> Tesis</a></li>
-                    <li><a href="{{URL::to('revistas')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
+                    <li><a href="{{URL::to('revistaspublicaciones')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
                     @else
 
                     @foreach ($permisoSubModulos as $permiso2)
@@ -317,7 +317,7 @@
                         @endif
 
                         @if($permiso2->submodulo_id==20)
-                        <li><a href="{{URL::to('revistas')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
+                        <li><a href="{{URL::to('revistaspublicaciones')}}"><i class='fa fa-gg'></i> Revistas y Publicaciones</a></li>
                         @endif
 
 
@@ -535,9 +535,12 @@
     <li class="treeview" v-bind:class="classMenu9">
         <a href="#"><i class='fa fa-cogs'></i> <span>Configuraciones</span> <i class="fa fa-angle-left pull-right"></i></a>
         <ul class="treeview-menu">
-                @if(accesoUser([1]))<li><a href="usuarios"><i class='fa fa-gg'></i> Gestión de Usuarios</a></li>@endif
-            <li><a href="miperfil"><i class='fa fa-gg'></i> Mi Perfil</a></li>
-            <li><a href="salir" ><i class='fa fa-gg'></i> <b>Cerrar Sesión</b></a></li>
+                @if(accesoUser([1]))
+                  <li><a href="{{URL::to('usuarios')}}"><i class='fa fa-gg'></i> Gestión de Usuarios</a></li>
+                  <li><a href="{{URL::to('programacion')}}"><i class='fa fa-gg'></i> Gestión y Programación de Módulos</a></li>
+                @endif
+            <li><a href="{{URL::to('miperfil')}}"><i class='fa fa-gg'></i> Mi Perfil</a></li>
+            <li><a href="{{URL::to('salir')}}" ><i class='fa fa-gg'></i> <b>Cerrar Sesión</b></a></li>
         </ul>
     </li>
 

@@ -108,7 +108,11 @@ data:{
 
 
 
-    persona_id:'0',       
+    persona_id:'0',    
+
+    idSubmodulo:0,
+    motivoProrroga:'',
+    divloaderProrroga:false    
 
 
 },
@@ -545,10 +549,47 @@ var url='persona/buscarDNI';
    },
 
 
-   descargarPlantilla:function(){
-    //window.location="proyectos/imprimirExcel/"+buscar+"/"+fech+"/"+fec1+"/"+fec2+"/"+tipoP+"";
-    window.location="proyectos/imprimirExcel/"+3;
-   },
+   nuevaProrroga:function (id) {
+
+        this.idSubmodulo = id;
+        this.motivoProrroga = '';
+
+        $("#boxTituloProrroga").text('Submódulo: Gestión de Campañas Itinerantes y Proyectos');
+        $("#modalProrroga").modal('show');
+        $("#motivoProrroga").focus();
+        },
+
+
+        solicitarProrroga:function () {
+        var url="prorroga";
+        $("#btnSaveProrroga").attr('disabled', true);
+        $("#btnCancelProrroga").attr('disabled', true);
+        this.divloaderProrroga=true;
+
+        axios.post(url, {idSubmodulo:this.idSubmodulo, motivoProrroga:this.motivoProrroga }).then(response=>{
+
+        $("#btnSaveProrroga").removeAttr("disabled");
+        $("#btnCancelProrroga").removeAttr("disabled");
+        this.divloaderProrroga=false;
+
+        if(response.data.result=='1'){   
+        $("#modalProrroga").modal('hide');
+        //toastr.success(response.data.msj);
+        Swal.fire(
+        'Solicitud Registrada',
+        response.data.msj,
+        'success'
+        );
+
+        }else{
+        $('#'+response.data.selector).focus();
+        toastr.error(response.data.msj);
+        }
+
+        }).catch(error=>{
+        //this.errors=error.response.data
+        })
+        },
 }
 });
 </script>

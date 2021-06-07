@@ -17,6 +17,9 @@ use App\Departamento;
 use App\Provincia;
 use App\Distrito;
 
+use App\Permisomodulo;
+use App\Permisossubmodulo;
+
 use Excel;
 set_time_limit(600);
 
@@ -37,9 +40,12 @@ class LocalController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="local";
-            return view('local.index',compact('tipouser','modulo'));
+            return view('local.index',compact('tipouser','modulo','permisoModulos','permisoSubModulos'));
         }
         else
         {

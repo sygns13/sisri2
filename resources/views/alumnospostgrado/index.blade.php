@@ -10,6 +10,10 @@
   width: 70% !important;
 }
 
+#modaltamanioP{
+  width: 70% !important;
+}
+
 .swal2-popup{
 	font-size: 1.175em !important;
 }

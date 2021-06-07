@@ -16,6 +16,10 @@ use App\User;
 
 use Excel;
 set_time_limit(600);
+
+use App\Submodulo;
+use App\Permisomodulo;
+use App\Permisossubmodulo;
 class ConvenioController extends Controller
 {
     /**
@@ -32,9 +36,37 @@ class ConvenioController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $submodulo=Submodulo::find(31);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="conveniosmarco";
-            return view('conveniosmarco.index',compact('tipouser','modulo'));
+            return view('conveniosmarco.index',compact('tipouser','modulo','submodulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {
@@ -50,9 +82,37 @@ class ConvenioController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $submodulo=Submodulo::find(32);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="conveniosespecificos";
-            return view('conveniosespecificos.index',compact('tipouser','modulo'));
+            return view('conveniosespecificos.index',compact('tipouser','modulo','submodulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {
@@ -68,9 +128,37 @@ class ConvenioController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $submodulo=Submodulo::find(33);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="convenioscolaboracion";
-            return view('convenioscolaboracion.index',compact('tipouser','modulo'));
+            return view('convenioscolaboracion.index',compact('tipouser','modulo','submodulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {

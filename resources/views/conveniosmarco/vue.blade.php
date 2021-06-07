@@ -78,6 +78,10 @@ data:{
    estado:1,
    tipo:1,
 
+   idSubmodulo:0,
+    motivoProrroga:'',
+    divloaderProrroga:false  
+
 
 
 },
@@ -312,6 +316,48 @@ methods: {
            this.errors=error.response.data
        })
    },
+
+   nuevaProrroga:function (id) {
+
+        this.idSubmodulo = id;
+        this.motivoProrroga = '';
+
+        $("#boxTituloProrroga").text('Submódulo: Gestión de Convenios Marco');
+        $("#modalProrroga").modal('show');
+        $("#motivoProrroga").focus();
+        },
+
+
+        solicitarProrroga:function () {
+        var url="prorroga";
+        $("#btnSaveProrroga").attr('disabled', true);
+        $("#btnCancelProrroga").attr('disabled', true);
+        this.divloaderProrroga=true;
+
+        axios.post(url, {idSubmodulo:this.idSubmodulo, motivoProrroga:this.motivoProrroga }).then(response=>{
+
+        $("#btnSaveProrroga").removeAttr("disabled");
+        $("#btnCancelProrroga").removeAttr("disabled");
+        this.divloaderProrroga=false;
+
+        if(response.data.result=='1'){   
+        $("#modalProrroga").modal('hide');
+        //toastr.success(response.data.msj);
+        Swal.fire(
+        'Solicitud Registrada',
+        response.data.msj,
+        'success'
+        );
+
+        }else{
+        $('#'+response.data.selector).focus();
+        toastr.error(response.data.msj);
+        }
+
+        }).catch(error=>{
+        //this.errors=error.response.data
+        })
+        },
 
 }
 });

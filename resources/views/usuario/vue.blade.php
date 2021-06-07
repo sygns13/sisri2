@@ -37,6 +37,9 @@
         classMenu7:'',
         classMenu8:'',
         classMenu9:'active',
+        classMenu10:'',
+        classMenu11:'',
+        classMenu12:'',
 
 
         usuarios: [],

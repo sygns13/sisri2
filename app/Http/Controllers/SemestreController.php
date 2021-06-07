@@ -13,6 +13,8 @@ use DB;
 use App\Persona;
 use App\Tipouser;
 use App\User;
+use App\Permisomodulo;
+use App\Permisossubmodulo;
 
 
 use Excel;
@@ -34,9 +36,12 @@ class SemestreController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="semestres";
-            return view('semestres.index',compact('tipouser','modulo'));
+            return view('semestres.index',compact('tipouser','modulo','permisoModulos','permisoSubModulos'));
         }
         else
         {

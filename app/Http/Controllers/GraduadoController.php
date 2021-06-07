@@ -24,6 +24,10 @@ set_time_limit(600);
 use Storage;
 use DateTime;
 
+use App\Submodulo;
+use App\Permisomodulo;
+use App\Permisossubmodulo;
+
 class GraduadoController extends Controller
 {
     /**
@@ -49,10 +53,38 @@ class GraduadoController extends Controller
             ->select('escuelas.id','escuelas.nombre','escuelas.activo','escuelas.borrado','escuelas.facultad_id','facultads.nombre as facultad')
             ->get();
 
+            $submodulo=Submodulo::find(13);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="bachilleres";
 
-            return view('bachilleres.index',compact('tipouser','modulo','escuelas'));
+            return view('bachilleres.index',compact('tipouser','modulo','escuelas','submodulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {
@@ -77,10 +109,37 @@ class GraduadoController extends Controller
             ->select('escuelas.id','escuelas.nombre','escuelas.activo','escuelas.borrado','escuelas.facultad_id','facultads.nombre as facultad')
             ->get();
 
+            $submodulo=Submodulo::find(14);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
 
             $modulo="titulados";
 
-            return view('titulados.index',compact('tipouser','modulo','escuelas'));
+            return view('titulados.index',compact('tipouser','modulo','escuelas','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {
@@ -96,9 +155,37 @@ class GraduadoController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $submodulo=Submodulo::find(15);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
             $modulo="maestros";
 
-            return view('maestros.index',compact('tipouser','modulo'));
+            return view('maestros.index',compact('tipouser','modulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {
@@ -114,9 +201,37 @@ class GraduadoController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $submodulo=Submodulo::find(16);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
             $modulo="doctores";
 
-            return view('doctores.index',compact('tipouser','modulo'));
+            return view('doctores.index',compact('tipouser','modulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {

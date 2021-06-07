@@ -213,6 +213,13 @@ desired effect
 @elseif($modulo=="actividades")
 @include('actividades.vue')
 
+
+@elseif($modulo=="programacion")
+@include('programacion.vue')
+
+@elseif($modulo=="prorroga")
+@include('prorroga.vue')
+
 @endif
 
 <script type="text/javascript">

@@ -7,7 +7,10 @@
       
       <div class="box-body" style="border: 1px solid #3c8dbc;">
           <div class="form-group form-primary">
+
+            @if($activoModulo == 1 || $activoModulo == 3 || accesoUser([1]))
             <button type="button" class="btn btn-primary" id="btnCrear" @click.prevent="nuevo()"><i class="fa fa-plus-square-o" aria-hidden="true" ></i> Nuevo Convenio Específico</button>
+            @endif
 
             <a type="button" class="btn btn-success" id="btnDescargarPlantilla" v-bind:href="'conveniosespecificos/exportarExcel2?busca='+buscar+'&tipo='+tipogen" data-placement="top" data-toggle="tooltip" title="Descargar Base de Datos Según el Filtro de Búsqueda Empleado"><i class="fa fa-file-excel-o" aria-hidden="true" ></i> Descargar Base de Datos</a>
 
@@ -15,7 +18,36 @@
           </div>
       
       
+          @if($activoModulo == 0 && !accesoUser([1]))
+          <div class="col-sm-12" style="padding-top:15px;">
+            <h4 style="color:red;">El módulo está cerrado para realizar registros, en caso de requerir su habilitación, coordinar con el administrador</h4>
+          </div>
+          @endif
 
+          @if($activoModulo == 1 && !accesoUser([1]))
+          <div class="col-sm-12" style="padding-top:15px;">
+            <h4 style="color:blue;">Actualmente el módulo está activo para permitir el registro</h4>
+          </div>
+          @endif
+
+          @if($activoModulo == 2 && !accesoUser([1]))
+          <div class="col-sm-12" style="padding-top:15px;">
+            <h4 style="color:red;">La fecha de programacion aun no inicia. El módulo está programado para permitir el registro desde el {{pasFechaVista($submodulo->fechaini)}} hasta el {{pasFechaVista($submodulo->fechafin)}}</h4>
+          </div>
+          @endif
+
+          @if($activoModulo == 3 && !accesoUser([1]))
+          <div class="col-sm-12" style="padding-top:15px;">
+            <h4 style="color:blue;">El módulo está activo para permitir el registro según la programación desde el {{pasFechaVista($submodulo->fechaini)}} hasta el {{pasFechaVista($submodulo->fechafin)}}</h4>
+          </div>
+          @endif
+
+          @if($activoModulo == 4 && !accesoUser([1]))
+          <div class="col-sm-12" style="padding-top:15px;">
+            <h4 style="color:red;">La fecha de programacion ha finalizado. El módulo estaba programado para permitir el registro desde el {{pasFechaVista($submodulo->fechaini)}} hasta el {{pasFechaVista($submodulo->fechafin)}}. Si requiere una prórroga de ampliación puede solicitarlo picando click en el siguiente botón</h4>
+            <button type="button" class="btn btn-danger" id="btnCrear" @click.prevent="nuevaProrroga({{$submodulo->id}})"><i class="fa fa-calendar-plus-o" aria-hidden="true" ></i> Solicitar Prórroga</button>
+          </div>
+          @endif
       
           </div>
       
@@ -192,7 +224,9 @@
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 10%;">Fecha de Inicio de Convenio</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 10%;">Fecha de Finalización de Convenio</th>
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 9%;">Estado</th>
+              @if($activoModulo == 1 || $activoModulo == 3 || accesoUser([1]))
               <th style="font-size: 11px;border:1px solid #ddd;padding: 5px; width: 9%;">Gestión</th>
+              @endif
             </tr>
             <tr v-for="convenio, key in convenios">
               <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">@{{key+pagination.from}}</td>
@@ -206,6 +240,7 @@
                 <span v-if="parseInt(convenio.estado)==1">Vigente</span>
                 <span v-if="parseInt(convenio.estado)==0">Finalizado</span>
               </td>
+              @if($activoModulo == 1 || $activoModulo == 3 || accesoUser([1]))
              <td style="border:1px solid #ddd;font-size: 11px; padding: 5px;">
       <center>
          
@@ -213,6 +248,7 @@
                <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="borrar(convenio)" data-placement="top" data-toggle="tooltip" title="Borrar convenio"><i class="fa fa-trash"></i></a>
       </center>
              </td>
+             @endif
            </tr>
       
          </tbody></table>
@@ -427,3 +463,77 @@
       </div>
       </form>
       
+
+
+      
+      
+      <form method="post" v-on:submit.prevent="solicitarProrroga()">
+        <div class="modal bs-example-modal-lg" id="modalProrroga" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+          <div class="modal-dialog modal-lg" role="document" id="modaltamanioP">
+            <div class="modal-content" style="border: 1px solid #3c8dbc;">
+              <div class="modal-header" style="border: 1px solid #3c8dbc;background-color: #3c8dbc; color: white;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size: 35px;">&times;</span></button>
+                <h4 class="modal-title" id="desEditarTituloProrroga" style="font-weight: bold;text-decoration: underline;">SOLICITAR PRORROGA DE AMPLIACIÓN</h4>
+      
+              </div> 
+              <div class="modal-body">
+                <input type="hidden" id="idSubmodulo" value="0">
+      
+                <div class="row">
+      
+                  <div class="box" id="o" style="border:0px; box-shadow:none;" >
+                    <div class="box-header with-border">
+                      <h3 class="box-title" id="boxTituloProrroga">Submódulo:</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+      
+                    <div class="box-body">
+      
+                      <div class="form-group">
+                        <label for="txtmotivoProrroga" class="col-sm-2 control-label">Motivo:*</label>
+      
+                        <div class="col-sm-8">
+                          <textarea type="text" class="form-control" id="txtmotivoProrroga" name="txtmotivoProrroga" placeholder="Indique el Motivo de Solicitud de Prórroga de Ampliación" maxlength="5000" autofocus v-model="motivoProrroga" ></textarea>
+                        </div>
+                      </div>
+                    </div>
+      
+       
+                    <div class="col-md-12" style="padding-top: 15px;">
+                      <h4 style="color:red;">Nota: Solo se puede solicitar un máximo de 05 veces una prórroga ampliación de plazo para realizar el registro de datos por cada programación realizada por el administrador. En caso de no haber cumplido con el registro luego de haber recibido 05 prórrogas, por favor cominicarse con el administrador del sistema o con la OGTISE</h4>
+
+      
+                    </div>
+      
+      
+      
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" id="btnSaveProrroga"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+      
+                  <button type="button" id="btnCancelProrroga" class="btn btn-default" data-dismiss="modal"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar</button>
+      
+                  <div class="sk-circle" v-show="divloaderProrroga">
+                    <div class="sk-circle1 sk-child"></div>
+                    <div class="sk-circle2 sk-child"></div>
+                    <div class="sk-circle3 sk-child"></div>
+                    <div class="sk-circle4 sk-child"></div>
+                    <div class="sk-circle5 sk-child"></div>
+                    <div class="sk-circle6 sk-child"></div>
+                    <div class="sk-circle7 sk-child"></div>
+                    <div class="sk-circle8 sk-child"></div>
+                    <div class="sk-circle9 sk-child"></div>
+                    <div class="sk-circle10 sk-child"></div>
+                    <div class="sk-circle11 sk-child"></div>
+                    <div class="sk-circle12 sk-child"></div>
+                  </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </form>

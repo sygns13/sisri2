@@ -26,6 +26,10 @@ set_time_limit(600);
 use Storage;
 use DateTime;
 
+use App\Submodulo;
+use App\Permisomodulo;
+use App\Permisossubmodulo;
+
 class PostulanteController extends Controller
 {
     /**
@@ -54,6 +58,35 @@ class PostulanteController extends Controller
             $semestres=Semestre::where('activo','1')->where('borrado','0')->orderBy('fechafin','desc')->get();
             $modalidadAdmision=Modalidadadmision::where('activo','1')->where('borrado','0')->get();
 
+            $submodulo=Submodulo::find(6);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+            
+
             $semestresel="0";
             $contse=0;
             $semestreNombre="";
@@ -68,7 +101,7 @@ class PostulanteController extends Controller
 
 
             $modulo="postulantes";
-            return view('postulantes.index',compact('tipouser','modulo','escuelas','semestres','modalidadAdmision','semestresel','contse','semestreNombre'));
+            return view('postulantes.index',compact('tipouser','modulo','escuelas','semestres','modalidadAdmision','semestresel','contse','semestreNombre','submodulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {
@@ -109,9 +142,37 @@ class PostulanteController extends Controller
                 }
             }
 
+            $submodulo=Submodulo::find(9);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="postulantespostgrado";
-            return view('postulantespostgrado.index',compact('tipouser','modulo','escuelas','semestres','modalidadAdmision','semestresel','contse','semestreNombre'));
+            return view('postulantespostgrado.index',compact('tipouser','modulo','escuelas','semestres','modalidadAdmision','semestresel','contse','semestreNombre','submodulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {

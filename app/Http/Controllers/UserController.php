@@ -39,13 +39,16 @@ class UserController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="usuario";
             $tipousers=Tipouser::orderBy('id')->where('borrado','0')->get();
             $modulos=Modulo::orderBy('id')->where('borrado','0')->get();
             $submodulos=Submodulo::orderBy('id')->where('borrado','0')->get();
 
-            return view('usuario.index',compact('tipouser','modulo','tipousers','modulos','submodulos'));
+            return view('usuario.index',compact('tipouser','modulo','tipousers','modulos','submodulos','permisoModulos','permisoSubModulos'));
         }
         else
         {
@@ -61,9 +64,12 @@ class UserController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="miperfil";
-            return view('miperfil.index',compact('tipouser','modulo'));
+            return view('miperfil.index',compact('tipouser','modulo','permisoModulos','permisoSubModulos'));
         }
         else
         {

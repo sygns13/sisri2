@@ -15,6 +15,9 @@ use App\Persona;
 use App\Tipouser;
 use App\User;
 
+use App\Permisomodulo;
+use App\Permisossubmodulo;
+
 use Excel;
 set_time_limit(600);
 
@@ -37,9 +40,12 @@ class DepartamentoacademicoController extends Controller
             $idtipouser=Auth::user()->tipouser_id;
             $tipouser=Tipouser::find($idtipouser);
 
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
 
             $modulo="departamentoacademico";
-            return view('departamentoacademico.index',compact('tipouser','modulo'));
+            return view('departamentoacademico.index',compact('tipouser','modulo','permisoModulos','permisoSubModulos'));
         }
         else
         {

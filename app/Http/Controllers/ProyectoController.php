@@ -23,6 +23,10 @@ use App\User;
 use Excel;
 set_time_limit(600);
 
+use App\Submodulo;
+use App\Permisomodulo;
+use App\Permisossubmodulo;
+
 class ProyectoController extends Controller
 {
     /**
@@ -63,8 +67,37 @@ class ProyectoController extends Controller
             }
 
 
+            $submodulo=Submodulo::find(28);
+            $activoModulo = 0; //Estado Cerrado sin Importar la Programacion
+
+            if($submodulo->estado == '1'){
+                $activoModulo = 1; //Estado Abierto sin Importar la Programacion
+            }
+            elseif($submodulo->estado == '2'){
+
+                $h=Date('Y-m-d');
+                $hoy = new DateTime($h);
+
+                $fechaini = new DateTime($submodulo->fechaini);
+                $fechafin = new DateTime($submodulo->fechafin);
+
+                if($fechaini >$hoy){
+                    $activoModulo = 2; //Estado Programado: La fecha de programacion aun no inicia
+                }
+                elseif($hoy >=$fechaini && $hoy<=$fechafin){
+                    $activoModulo = 3; //Estado Programado: La fecha de programacion esta vigente
+                }
+                elseif($hoy>$fechafin){
+                    $activoModulo = 4; //Estado Programado: La fecha de programacion ya finalizo
+                }
+            }
+
+            $permisoModulos=Permisomodulo::where('user_id',Auth::user()->id)->get();
+            $permisoSubModulos=Permisossubmodulo::where('user_id',Auth::user()->id)->get();
+
+
             $modulo="proyectos";
-            return view('proyectos.index',compact('tipouser','modulo','escuelas','semestres','semestresel','contse','semestreNombre'));
+            return view('proyectos.index',compact('tipouser','modulo','escuelas','semestres','semestresel','contse','semestreNombre','submodulo','activoModulo','permisoModulos','permisoSubModulos'));
         }
         else
         {

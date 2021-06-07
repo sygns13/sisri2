@@ -80,6 +80,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('miperfil','UserController@index2');
     Route::get('condicion','CondicionsocioeconomicaController@index1');
     Route::get('actividades','ActividadesController@index1');
+    Route::get('programacion','ProgramacionController@index1');
+    Route::get('prorrogas','ProrrogaController@index1');
     
     
     Route::resource('semestre','SemestreController');
@@ -129,6 +131,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('condicioneconomica','CondicionsocioeconomicaController');
     Route::resource('actividad','ActividadesController');
+    Route::resource('programacions','ProgramacionController');
+    Route::resource('prorroga','ProrrogaController');
     
     
     
@@ -150,6 +154,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('investigaciones/obtenerPublicacion/{var}','InvestigacionController@obtenerPublicacion');
     Route::get('personas/obtenerDatos','PersonaController@obtenerDatos');
     Route::get('personas/obtenerAutors/{var}','PersonaController@obtenerAutors');
+
+    Route::get('programacion/altabaja/{id}/{var}','ProgramacionController@altabaja');
     
 
 
@@ -230,84 +236,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('condicion/exportarExcel','CondicionsocioeconomicaController@descargarExcel');
     Route::get('actividades/exportarExcel','ActividadesController@descargarExcel');
     
-    
-    
- /*    
-    Route::get('entidades','EntidadController@index1');
-    
-   
-    Route::get('bancos','BancoController@index1');
-    Route::get('categorias','CategoriaController@index1');
-    Route::get('rubros','RubroController@index1');
-    Route::get('precios','PrecioController@index1');
-    Route::get('personas','PersonaController@index1');
-    Route::get('recibos','ReciboController@index1');
-    Route::get('recibosemitidos','Detalle_reciboController@index1');
-    Route::get('reportesgenerales','ReporteGeneralController@index1');
-    Route::get('reportedestallados','ReporteDetalladoController@index1');
-    
-    Route::get('reporteslocales','LocalController@index2');
-    Route::get('reportesentidades','EntidadController@index2');
-    Route::get('reportescategorias','CategoriaController@index2');
-    Route::get('reportesrubros','RubroController@index2');
-    Route::get('reportesprecios','PrecioController@index2');
-    Route::get('reportespersonas','PersonaController@index2');
-    
-    Route::get('procesar','ReciboController@index2');
-    Route::get('recibosprocesados','ReporteDetalladoController@index2');
-    Route::get('auditarrecibos','ReciboController@indexAudi');
-
-
-    
-    Route::resource('entidad','EntidadController');
-    
-   
-    Route::resource('banco','BancoController');
-    Route::resource('categoria','CategoriaController');
-    Route::resource('rubro','RubroController');
-    Route::resource('precio','PrecioController');
-    Route::resource('persona','PersonaController');
-    Route::resource('recibo','ReciboController');
-    Route::resource('reciboemitido','Detalle_reciboController');
-    Route::resource('reportegeneral','ReporteGeneralController');
-    Route::resource('reportedetallado','ReporteDetalladoController');
-    
-    Route::resource('proceso','DetalleReciboController');
-    
-
-
-    
-    Route::get('entidad/altabaja/{id}/{var}','EntidadController@altabaja');
-    
-    
-    Route::get('banco/altabaja/{id}/{var}','BancoController@altabaja');
-    Route::get('categoria/altabaja/{id}/{var}','CategoriaController@altabaja');
-    Route::get('rubro/altabaja/{id}/{var}','RubroController@altabaja');
-    Route::get('precio/altabaja/{id}/{var}','PrecioController@altabaja');
-    Route::get('persona/altabaja/{id}/{var}','PersonaController@altabaja');
-    Route::get('reciboemitido/altabaja/{id}/{var}','Detalle_reciboController@altabaja');
-   
-    Route::get('reportedetallado/cambiarlocal/{var}','ReporteDetalladoController@cambiarlocal');
-    Route::get('reportedetallado/cambiarcategoria/{var}','ReporteDetalladoController@cambiarcategoria');
-    Route::get('reportedetallado/cambiarrubro/{var}','ReporteDetalladoController@cambiarrubro');
-    Route::get('proceso/altabaja/{id}/{var}','DetalleReciboController@altabaja');
-    Route::get('procesogetinfo','DetalleReciboController@getinfo');
-
-
-    Route::post('recibo/buscarpersona','ReciboController@buscarpersona');
-    Route::post('reciboemitido/buscarrecibo','Detalle_reciboController@buscarrecibo');
-    Route::post('reportegeneral/buscarDatos','ReporteGeneralController@buscarDatos');
-    Route::post('reportegeneral/buscarDatosImp','ReporteGeneralController@buscarDatosImp');
-    Route::post('reportedetallado/buscarDatos','ReporteDetalladoController@buscarDatos');
-    Route::post('reportedetallado/buscarDatosImp','ReporteDetalladoController@buscarDatosImp');
-    Route::post('local/buscarDatosImp','LocalController@buscarDatosImp');
-    Route::post('entidad/buscarDatosImp','EntidadController@buscarDatosImp');
-    Route::post('categoria/buscarDatosImp','CategoriaController@buscarDatosImp');
-    Route::post('precio/buscarDatosImp','PrecioController@buscarDatosImp');
-    Route::post('persona/buscarDatosImp','PersonaController@buscarDatosImp');
-    
-
-    Route::post('proceso/buscarDatos','DetalleReciboController@buscarDatos');
-    Route::post('proceso/buscarDatosImp','DetalleReciboController@buscarDatosImp');
-    Route::post('auditarrecibo','ReciboController@auditarrecibo'); */
+ 
 });
